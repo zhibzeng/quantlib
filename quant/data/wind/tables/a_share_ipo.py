@@ -9,7 +9,7 @@ BaseModel = declarative_base()
 
 class AShareIPO(BaseModel):
     """A股IPO信息
-    Columns:
+    Fields:
         object_id: 主键
         s_info_windcode: 万得代码， eg. 600030.SH
         s_ipo_listdate: 上市日期, YYYYMMDD

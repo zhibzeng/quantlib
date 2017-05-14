@@ -44,7 +44,7 @@ class ConfigManager:
                     break
             if true_value is None:
                 raise ValueError("unexpected error in config: `%s`" % line)
-            cfg[key] = {'default': true_value, 'type': type(true_value)}
+            cfg[key.upper()] = {'default': true_value, 'type': type(true_value)}
             self.parser.add_argument("--%s" % key, default=true_value, type=type(true_value), help=help_text)
         return cfg
 
@@ -67,6 +67,7 @@ class ConfigManager:
     def __getattr__(self, item):
         if not self.ready:
             self.update()
+        item = item.upper()
         try:
             return self.data[item]['value']
         except KeyError:
@@ -94,6 +95,7 @@ class ConfigManager:
         """从命令行参数中更新所有配置"""
         args = self.parser.parse_args()
         for key, value in args._get_kwargs():
+            key = key.upper()
             try:
                 self.data[key]['value'] = value
             except KeyError:
@@ -106,13 +108,13 @@ def create_default_config():
     """Create default config file"""
     with open(CONFIG_PATH, "w") as config_file:
         config_file.writelines([
-            "wind_db_driver = 'pymysql'",
-            "wind_db_type = 'mysql'",
-            "wind_host = 'localhost'",
-            "wind_port = 3306",
-            "wind_username = 'wind'",
-            "wind_password = 'password'",
-            "wind_db_name = 'quant",
+            "wind_db_driver = 'pymysql'\n",
+            "wind_db_type = 'mysql'\n",
+            "wind_host = 'localhost'\n",
+            "wind_port = 3306\n",
+            "wind_username = 'wind'\n",
+            "wind_password = 'password'\n",
+            "wind_db_name = 'quant\n",
         ])
 
 

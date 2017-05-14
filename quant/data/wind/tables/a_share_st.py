@@ -4,7 +4,7 @@ from ....common.db.sql import BaseModel, Column, VARCHAR, Numeric, DateTime
 
 class AShareST(BaseModel):
     """A股ST信息
-    Columns:
+    Fields:
         object_id: 主键
         s_info_windcode: 万得代码， eg. 600030.SH
         s_type_st: ST类型

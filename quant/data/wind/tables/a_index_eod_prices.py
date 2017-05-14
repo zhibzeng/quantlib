@@ -4,7 +4,7 @@ from ....common.db.sql import BaseModel, Column, VARCHAR, Numeric, DateTime
 
 class AIndexEODPrices(BaseModel):
     """A股指数每日收盘行情
-    Columns:
+    Fields:
         object_id: 主键
         s_info_windcode: 万得代码， eg. 600030.SH
         trade_dt: 日期 YYYYMMDD

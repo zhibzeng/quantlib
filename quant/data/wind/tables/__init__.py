@@ -1,4 +1,12 @@
-"""Wind数据库数据表"""
+"""Wind数据库数据表
+Tables:
+    AIndexEODPrices: A股指数每日收盘行情
+    AShareEODDerivativeIndicator: A股股票每日收盘指标
+    AShareEODPrices: A股股票每日收盘行情
+    AShareIPO: A股股票IPO信息
+    AShareST: A股股票ST信息
+    AShareTTMHist:
+"""
 
 from .a_index_eod_prices import AIndexEODPrices
 from .a_share_eod_derivative_indicator import AShareEODDerivativeIndicator

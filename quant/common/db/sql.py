@@ -53,10 +53,11 @@ class SQLClient:
         return self.engine.has_table(table_name, schema)
 
     def __getattribute__(self, name):
-        if hasattr(self, name):
+        try:
             return object.__getattribute__(self, name)
-        elif hasattr(self.session, name):
-            return getattr(self.session, name)
-        else:
-            raise AttributeError
+        except:
+            if hasattr(self.session, name):
+                return getattr(self.session, name)
+            else:
+                raise AttributeError
 
