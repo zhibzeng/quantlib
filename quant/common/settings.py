@@ -81,6 +81,15 @@ class ConfigManager:
         """列出所有可用的参数名"""
         return self.data.keys()
 
+    def items(self):
+        """遍历键值对"""
+        for key, item in self.data.items():
+            try:
+                value = item["value"]
+            except KeyError:
+                value = item["default"]
+            yield key, value
+
     def update(self):
         """从命令行参数中更新所有配置"""
         args = self.parser.parse_args()
@@ -98,9 +107,12 @@ def create_default_config():
     with open(CONFIG_PATH, "w") as config_file:
         config_file.writelines([
             "wind_db_driver = 'pymysql'",
+            "wind_db_type = 'mysql'",
             "wind_host = 'localhost'",
+            "wind_port = 3306",
             "wind_username = 'wind'",
             "wind_password = 'password'",
+            "wind_db_name = 'quant",
         ])
 
 

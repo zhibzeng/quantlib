@@ -66,7 +66,7 @@ class LocalizeWrapper:
     则每次调用函数时会优先调用pd.read_hdf(filename, key)，key是函数的字符串参数的拼接，从本地读取缓存，如果读取失败才调用原函数，并将返回值储存在对应的文件内。
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path):
         self.path = path
 
     def wrap(self, filename=None, time=None, exclude=None):
@@ -81,27 +81,26 @@ class LocalizeWrapper:
                 ...
             会自动把函数的返回值以`code`为键本地化到`data.h5`中
         """
-        def true_wrapper(fn):
+        def true_wrapper(wrapped):
             nonlocal filename
-            filename = filename or fn.__name__
+            filename = filename or wrapped.__name__
             if not filename.endswith("h5"):
                 filename = filename + ".h5"
             path = os.path.join(self.path, filename)  # 将指定的文件名或函数名作为文件名
 
-            @functools.wraps(fn)
-            def wrapped(*args, **kwargs):
+            @functools.wraps(wrapped)
+            def func(*args, **kwargs):
                 """装饰后的函数"""
-                key = REGISTER.register(fn, path, args, kwargs, time=time, exclude=exclude)
+                key = REGISTER.register(wrapped, path, args, kwargs, time=time, exclude=exclude)
                 # 从注册器注册该函数及参数，并获得对应的键名
                 try:
                     data = pd.read_hdf(path, key)
                 except (FileNotFoundError, KeyError):
-                    data = fn(*args, **kwargs)
+                    data = wrapped(*args, **kwargs)
                     data.to_hdf(path, key)
                 return data
 
-            # return decorate(fn, wrapped)
-            return wrapped
+            return func
 
         return true_wrapper
 
