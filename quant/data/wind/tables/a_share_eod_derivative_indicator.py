@@ -2,8 +2,8 @@ from ....common.db.sql import BaseModel, Column, VARCHAR, Numeric, DateTime
 
 
 class AShareEODDerivativeIndicator(BaseModel):
-    __tablename__ = "AShareEODDerivativeIndicator".upper()
-    OBJECT_ID = Column(VARCHAR(100), primary_key=True)
+    __tablename__ = "AShareEODDerivativeIndicator"
+    object_id = Column(VARCHAR(100), primary_key=True)
     s_info_windcode = Column(VARCHAR(40))
     trade_dt = Column(VARCHAR(8))
     crncy_code = Column(VARCHAR(10))

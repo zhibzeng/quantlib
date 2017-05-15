@@ -2,8 +2,8 @@
 import sys
 import pandas as pd
 from sqlalchemy.sql import select
-from ...common.localize import LOCALIZER
 from . import tables
+from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG
 from ...common.db.sql import SQLClient
 
@@ -25,23 +25,33 @@ def __get_field(table, fieldname):
     raise AttributeError("Table `%s` has no field `%s`" % (table.__tablename__, fieldname))
 
 
-@LOCALIZER.wrap("wind", exclude=['index', 'columns'])
-def get_wind_data(table, field, index="trade_dt", columns="s_info_windcode"):
+@LOCALIZER.wrap("wind", exclude=['index', 'columns', 'parse_dates'])
+def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     """从Wind数据库获取数据
+
     Args:
         table: 要读的SQL表, 参考`quant.data.wind.tables`
+
         field: 作为值的字段
+
         index: 作为index的字段
+
         columns: 作为columns的字段
+
     Returns: pd.DataFrame
     """
     if isinstance(table, str):
         table = getattr(tables, table)
+    field = field or tables.DEFAULT_FIELDS[table]["columns"]
+    index = index or tables.DEFAULT_FIELDS[table]["index"]
     field_ = __get_field(table, field)
     index_ = __get_field(table, index)
     columns_ = __get_field(table, columns)
     sql_statement = select([field_, index_, columns_])
     data = pd.read_sql(sql_statement, WIND_CONNECTION.engine)
-    return data.pivot(index=index, columns=columns, values=field)
+    data = data.pivot(index=index, columns=columns, values=field)
+    if parse_dates:
+        data.index = data.index.to_datetime()
+    return data
 
 

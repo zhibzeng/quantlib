@@ -45,7 +45,8 @@ class ConfigManager:
             if true_value is None:
                 raise ValueError("unexpected error in config: `%s`" % line)
             cfg[key.upper()] = {'default': true_value, 'type': type(true_value)}
-            self.parser.add_argument("--%s" % key, default=true_value, type=type(true_value), help=help_text)
+            self.parser.add_argument("--%s" % key, default=true_value,
+                                     type=type(true_value), help=help_text)
         return cfg
 
     @staticmethod
@@ -66,7 +67,10 @@ class ConfigManager:
 
     def __getattr__(self, item):
         if not self.ready:
-            self.update()
+            try:
+                self.update()
+            except:
+                pass
         item = item.upper()
         try:
             return self.data[item]['value']
@@ -74,7 +78,7 @@ class ConfigManager:
             return self.data[item]['default']
 
     def add_argument(self, *args, **kwargs):
-        """除了配置文件已有的参数外，新增命令行参数"""
+        """除了配置文件已有的参数外，新增命令行参数，与`argparse.ArgumentParser.add_argument`相同"""
         # TODO: 如果新增的参数和配置文件中的重复，可能有冲突
         self.parser.add_argument(*args, **kwargs)
 

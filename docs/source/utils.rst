@@ -3,9 +3,9 @@ data.utils
 
 ..  currentmodule:: quant.common.localize
 
-..  automodule:: quant.common.localize
+..  autoclass:: quant.common.localize.LocalizeWrapper
     :members:
-    :undoc-members:
 
-..  autoclass:: Localizer
+..  autoclass:: quant.common.settings.ConfigManager
     :members:
+

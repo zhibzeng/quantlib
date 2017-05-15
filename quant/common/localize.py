@@ -68,22 +68,30 @@ class Register:
 class LocalizeWrapper:
     """
     这是一个装饰器，使用@localizer.wrap(filename)来装饰一个函数，该函数应该返回pandas对象。
-    则每次调用函数时会优先调用pd.read_hdf(filename, key)，key是函数的字符串参数的拼接，从本地读取缓存，如果读取失败才调用原函数，并将返回值储存在对应的文件内。
+    则每次调用函数时会优先调用pd.read_hdf(filename, key)，key是函数的字符串参数的拼接，从本地读取缓存，
+    如果读取失败才调用原函数，并将返回值储存在对应的文件内。
     """
 
     def __init__(self, path):
         self.path = path
 
     def wrap(self, filename=None, time=None, exclude=None):
-        """装饰器，被装饰过的函数都会自动本地化
+        """
+        装饰器，被装饰过的函数都会自动本地化
         Args:
+
             filename (str):数据要保存的h5文件名
+
             time (str): 对应于数据时间的参数名，便于日后更新数据
+
             exclude (list): 哪些参数不需要记录到键名中
+
         Example:
-            @LOCALIZER.wrap("data")
-            def get_data(code):
-                ...
+            ..  code-block:: python
+
+                @LOCALIZER.wrap("data")
+                def get_data(code):
+                    ...
             会自动把函数的返回值以`code`为键本地化到`data.h5`中
         """
         def true_wrapper(wrapped):
