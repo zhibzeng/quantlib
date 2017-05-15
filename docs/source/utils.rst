@@ -1,7 +1,7 @@
-data.utils
+quant.utils
 ==========
 
-..  currentmodule:: quant.common.localize
+..  currentmodule:: quant.utils
 
 ..  autoclass:: quant.common.localize.LocalizeWrapper
     :members:

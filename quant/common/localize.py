@@ -78,14 +78,14 @@ class LocalizeWrapper:
     def wrap(self, filename=None, time=None, exclude=None):
         """
         装饰器，被装饰过的函数都会自动本地化
-        Args:
 
-            filename (str):数据要保存的h5文件名
-
-            time (str): 对应于数据时间的参数名，便于日后更新数据
-
-            exclude (list): 哪些参数不需要记录到键名中
-
+        Parameters:
+            filename (str):
+                数据要保存的h5文件名
+            time (str):
+                对应于数据时间的参数名，便于日后更新数据
+            exclude (list):
+                哪些参数不需要记录到键名中
         Example:
             ..  code-block:: python
 

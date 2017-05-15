@@ -4,12 +4,18 @@ from ....common.db.sql import BaseModel, Column, VARCHAR, Numeric, DateTime
 
 class AShareST(BaseModel):
     """A股ST信息
+
     Fields:
         object_id: 主键
+
         s_info_windcode: 万得代码， eg. 600030.SH
+
         s_type_st: ST类型
+
         entry_dt: 进入ST日期 YYYYMMDD
+
         remove_dt: 退出ST日期 YYYYMMDD
+        
         ann_dt: 公告日期 YYYYMMDD
     """
     __tablename__ = "AShareST".upper()

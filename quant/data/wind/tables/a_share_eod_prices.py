@@ -6,7 +6,6 @@ class AShareEODPrices(BaseModel):
     """A股股票每日收盘行情
 
     Fields:
-
         object_id: 主键
 
         s_info_windcode: 万得代码， eg. 600030.SH
