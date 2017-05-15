@@ -2,7 +2,7 @@
 import os
 import pickle
 import functools
-from inspect import signature
+from inspect import signature, isclass, isfunction
 import pandas as pd
 from .settings import DATA_PATH, MAIN_PATH
 
@@ -34,9 +34,14 @@ class Register:
         sig = signature(func)
         bounded = sig.bind(*args, **kwargs)
         bounded.apply_defaults()
-        keys = ["x"] + [
-            value for pname, value in bounded.arguments.items() if isinstance(value, str) and pname not in exclude
-        ]
+        keys = [""]
+        for pname, value in bounded.arguments.items():
+            if pname in exclude:
+                pass
+            elif isinstance(value, str):
+                keys.append(value)
+            elif isclass(value) or isfunction(value):
+                keys.append(value.__name__)
         key = "_".join(keys)  # 将函数的所有字符串参数连接起来作为hdf的key
         module = func.__module__
         func_name = func.__name__

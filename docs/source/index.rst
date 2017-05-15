@@ -10,6 +10,10 @@ Welcome to quantlib's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   data
+   transform
+   utils
+
 
 
 Indices and tables

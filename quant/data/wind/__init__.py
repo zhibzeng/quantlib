@@ -1,4 +1,7 @@
 """Wind数据库接口"""
+import sys
+import pandas as pd
+from sqlalchemy.sql import select
 from ...common.localize import LOCALIZER
 from . import tables
 from ...common.settings import CONFIG
@@ -10,6 +13,7 @@ WIND_CONNECTION = SQLClient(
     port=CONFIG.WIND_PORT,
     db_driver=CONFIG.WIND_DB_DRIVER,
     db_type=CONFIG.WIND_DB_TYPE,
+    db_name=CONFIG.WIND_DB_NAME,
     username=CONFIG.WIND_USERNAME,
     password=CONFIG.WIND_PASSWORD,
 )
@@ -19,29 +23,25 @@ def __get_field(table, fieldname):
     if hasattr(table, fieldname):
         return getattr(table, fieldname)
     raise AttributeError("Table `%s` has no field `%s`" % (table.__tablename__, fieldname))
-    
 
 
-def __get_fields(table, fieldnames):
-    if isinstance(fieldnames, list):
-        return [__get_field(table, fieldname) for fieldname in fieldnames]
-    else:
-        return __get_field(table, fieldnames)
-
-
-def get_wind_data(table, fields=None, **kwargs):
+@LOCALIZER.wrap("wind", exclude=['index', 'columns'])
+def get_wind_data(table, field, index="trade_dt", columns="s_info_windcode"):
     """从Wind数据库获取数据
+    Args:
+        table: 要读的SQL表, 参考`quant.data.wind.tables`
+        field: 作为值的字段
+        index: 作为index的字段
+        columns: 作为columns的字段
+    Returns: pd.DataFrame
     """
-    if fields:
-        fields = __get_fields(table, fields)
-    else:
-        fields = table
-    query = WIND_CONNECTION.session.query(fields)
-    for key, value in kwargs.items():
-        field = __get_field(table, key)
-        if isinstance(value, list):
-            query = query.filter(field.in_(value))
-        else:
-            query = query.filter(field == value)
-    data = query.all()
+    if isinstance(table, str):
+        table = getattr(tables, table)
+    field_ = __get_field(table, field)
+    index_ = __get_field(table, index)
+    columns_ = __get_field(table, columns)
+    sql_statement = select([field_, index_, columns_])
+    data = pd.read_sql(sql_statement, WIND_CONNECTION.engine)
+    return data.pivot(index=index, columns=columns, values=field)
+
 
