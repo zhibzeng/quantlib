@@ -17,9 +17,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import sys
+import os
+import sphinx_rtd_theme
+sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("."))
 
 
 # -- General configuration ------------------------------------------------
@@ -31,11 +34,6 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-import sys
-import os
-import sphinx_rtd_theme
-sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("..."))
 
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.todo',
@@ -143,7 +141,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'quantlib.tex', 'quantlib Documentation',
-     'HenryXiang, SnowWalkerJ', 'manual'),
+     'SnowWalkerJ', 'manual'),
 ]
 
 
