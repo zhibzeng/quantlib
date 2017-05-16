@@ -31,18 +31,21 @@ def __get_field(table, fieldname):
 def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     """从Wind数据库获取数据
 
-    Parameters:
-        table:
-            要读的SQL表, 参考`quant.data.wind.tables`
-        field:
-            作为值的字段
-        index:
-            作为index的字段
-        columns:
-            作为columns的字段
-        parse_dates (bool):
-            是否将index字段转换为datetime
-    Returns:
+    Parameters
+    ----------
+    table
+        要读的SQL表, 参考`quant.data.wind.tables`
+    field
+        作为值的字段
+    index
+        作为index的字段
+    columns
+        作为columns的字段
+    parse_dates: bool, optional
+        是否将index字段转换为datetime
+
+    Returns
+    -------
         pd.DataFrame
     """
     if isinstance(table, str):

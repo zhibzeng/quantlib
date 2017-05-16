@@ -8,11 +8,17 @@ BaseModel = declarative_base()
 
 
 class AShareIPO(BaseModel):
-    """A股IPO信息
-    Fields:
-        object_id: 主键
-        s_info_windcode: 万得代码， eg. 600030.SH
-        s_ipo_listdate: 上市日期, YYYYMMDD
+    """
+    A股IPO信息
+
+    Attributes
+    ----------
+    object_id
+        主键
+    s_info_windcode
+        万得代码， eg. 600030.SH
+    s_ipo_listdate
+        上市日期, YYYYMMDD
     """
     __tablename__ = "AShareIPO"
     object_id = Column(VARCHAR(100), primary_key=True)

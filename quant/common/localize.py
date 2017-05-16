@@ -29,6 +29,21 @@ class Register:
     def register(self, func, path, args, kwargs, time=None, exclude=None):
         """
         记录本地化数据的来源（函数、参数）以及目标（文件名、键名），便于日后更新
+
+        Parameters
+        ----------
+        func
+            注册的函数
+        path: str
+        本地化的文件路径
+        args: tuple
+            调用函数的无关键字参数
+        kwargs: dict
+            调用函数的关键字参数
+        time: str, optional
+            无用
+        exclude: list, optional
+            指定哪些参数名不会被加入到本地化键名中
         """
         exclude = exclude or []
         sig = signature(func)
@@ -79,20 +94,23 @@ class LocalizeWrapper:
         """
         装饰器，被装饰过的函数都会自动本地化
 
-        Parameters:
-            filename (str):
-                数据要保存的h5文件名
-            time (str):
-                对应于数据时间的参数名，便于日后更新数据
-            exclude (list):
+        Parameters
+        ----------
+        filename: str, optional
+            数据要保存的h5文件名
+        time: str, optional
+            对应于数据时间的参数名，便于日后更新数据
+        exclude: list, optional
                 哪些参数不需要记录到键名中
-        Example:
-            ..  code-block:: python
 
-                @LOCALIZER.wrap("data")
-                def get_data(code):
+        Examples
+        --------
+        ..  code-block:: python
+
+            @LOCALIZER.wrap("data")
+            def get_data(code):
                     ...
-            会自动把函数的返回值以`code`为键本地化到`data.h5`中
+        会自动把函数的返回值以`code`为键本地化到`data.h5`中
         """
         def true_wrapper(wrapped):
             nonlocal filename

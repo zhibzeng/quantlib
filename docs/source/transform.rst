@@ -3,10 +3,10 @@ quant.transform
 
 ..  currentmodule:: quant.transform
 
-quant.transform.normalize
--------------------------
+quant.transform.distribution
+----------------------------
 
-..  currentmodule:: quant.transform.normalize
+..  currentmodule:: quant.transform.distribution
 
-..  automodule:: quant.transform.normalize
+..  automodule:: quant.transform.distribution
     :members:

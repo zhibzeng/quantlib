@@ -5,38 +5,39 @@ from ....common.db.sql import BaseModel, Column, VARCHAR, Numeric, DateTime
 class AIndexEODPrices(BaseModel):
     """A股指数每日收盘行情
 
-    Fields:
-        object_id: 主键
+    Attributes
+    ----------
+    object_id
+        主键
+    s_info_windcode
+        万得代码， eg. 600030.SH
+    trade_dt
+        日期 YYYYMMDD
+    crnry_code
+        货币代码
+    s_dq_preclose
+        前收盘价
+    s_dq_open
+        开盘价
+    s_dq_high
+        最高价
+    s_dq_low
+        最低价
+    s_dq_close
+        收盘价
+    s_dq_change
+        涨跌
+    s_dq_pctchange
+        涨跌幅
+    s_dq_volume
+        成交量
+    s_dq_amount
+        成交额
+    sec_id
 
-        s_info_windcode: 万得代码， eg. 600030.SH
+    opdata
 
-        trade_dt: 日期 YYYYMMDD
-
-        crnry_code: 货币代码
-
-        s_dq_preclose: 前收盘价
-
-        s_dq_open: 开盘价
-
-        s_dq_high: 最高价
-
-        s_dq_low: 最低价
-
-        s_dq_close: 收盘价
-
-        s_dq_change: 涨跌
-
-        s_dq_pctchange: 涨跌幅
-        
-        s_dq_volume: 成交量
-
-        s_dq_amount: 成交额
-
-        sec_id:
-
-        opdata:
-
-        opmode:
+    opmode
     """
     __tablename__ = "AIndexEODPrices"
     object_id = Column(VARCHAR(100), primary_key=True)
