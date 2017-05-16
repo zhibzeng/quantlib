@@ -10,15 +10,17 @@ from ...common.db.sql import SQLClient
 __all__ = ['WIND_CONNECTION', 'tables', 'get_wind_data']
 
 
-WIND_CONNECTION = SQLClient(
-    host=CONFIG.WIND_HOST,
-    port=CONFIG.WIND_PORT,
-    db_driver=CONFIG.WIND_DB_DRIVER,
-    db_type=CONFIG.WIND_DB_TYPE,
-    db_name=CONFIG.WIND_DB_NAME,
-    username=CONFIG.WIND_USERNAME,
-    password=CONFIG.WIND_PASSWORD,
-)
+def get_sql_connection():
+    """Returns a SQLClient object with settings in `config.cfg`"""
+    return SQLClient(
+        host=CONFIG.WIND_HOST,
+        port=CONFIG.WIND_PORT,
+        db_driver=CONFIG.WIND_DB_DRIVER,
+        db_type=CONFIG.WIND_DB_TYPE,
+        db_name=CONFIG.WIND_DB_NAME,
+        username=CONFIG.WIND_USERNAME,
+        password=CONFIG.WIND_PASSWORD,
+    )
 
 
 def __get_field(table, fieldname):
@@ -56,7 +58,8 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     index_ = __get_field(table, index)
     columns_ = __get_field(table, columns)
     sql_statement = select([field_, index_, columns_])
-    data = pd.read_sql(sql_statement, WIND_CONNECTION.engine)
+    wind_connection = get_sql_connection()
+    data = pd.read_sql(sql_statement, wind_connection.engine)
     data = data.pivot(index=index, columns=columns, values=field)
     if parse_dates:
         data.index = data.index.to_datetime()

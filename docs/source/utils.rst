@@ -3,9 +3,9 @@ quant.utils
 
 ..  currentmodule:: quant.utils
 
-..  autoclass:: quant.common.localize.LocalizeWrapper
+..  autoclass:: quant.utils.LocalizeWrapper
     :members:
 
-..  autoclass:: quant.common.settings.ConfigManager
+..  autoclass:: quant.utils.ConfigManager
     :members:
 
