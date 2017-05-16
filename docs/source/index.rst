@@ -8,8 +8,9 @@ Welcome to quantlib's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: API:
 
+   analysis
    data
    transform
    utils
