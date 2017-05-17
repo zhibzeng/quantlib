@@ -118,7 +118,7 @@ def create_default_config():
             "wind_port = 3306\n",
             "wind_username = 'wind'\n",
             "wind_password = 'password'\n",
-            "wind_db_name = 'quant\n",
+            "wind_db_name = 'quant'\n",
         ])
 
 

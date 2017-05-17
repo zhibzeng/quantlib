@@ -1,8 +1,9 @@
 # Quantlib
 
 [![Documentation Status](https://readthedocs.org/projects/quantlib/badge/?version=latest)](http://quantlib.readthedocs.io/?badge=latest)
+[![Build Status](https://travis-ci.org/SnowWalkerJ/quantlib.svg?branch=master)](https://travis-ci.org/SnowWalkerJ/quantlib)
 
-Quantlib是一个个人维护、使用的量化模块，主要用于金融数据的获取、清晰、变换和分析等功能。
+Quantlib是一个个人维护、使用的量化模块，主要用于金融数据的获取、清洗、变换和分析等功能。
 
 ------------------
 

@@ -26,7 +26,7 @@ class Register:
     def __getitem__(self, item):
         return self.data[item]
 
-    def register(self, func, path, args, kwargs, time=None, exclude=None):
+    def register(self, func, path, args, kwargs, update=None, exclude=None):
         """
         记录本地化数据的来源（函数、参数）以及目标（文件名、键名），便于日后更新
 
@@ -40,8 +40,8 @@ class Register:
             调用函数的无关键字参数
         kwargs: dict
             调用函数的关键字参数
-        time: str, optional
-            无用
+        update: {'overwrite', 'append'}, optional
+            更新数据时是覆盖还是只添加新数据
         exclude: list, optional
             指定哪些参数名不会被加入到本地化键名中
         """
@@ -57,7 +57,8 @@ class Register:
                 keys.append(value)
             elif isclass(value) or isfunction(value):
                 keys.append(value.__name__)
-        key = "_".join(keys)  # 将函数的所有字符串参数连接起来作为hdf的key
+        key = "_".join(keys)               # 将函数的所有字符串参数连接起来作为hdf的key
+        key = key or "default"             # 防止有些函数没有参数导致key为空
         module = func.__module__
         func_name = func.__name__
         meta_key = "%s/%s/%s" % (module, func_name, key)
@@ -68,7 +69,7 @@ class Register:
                 "key": key,
                 "params": bounded,
                 "path": path,
-                "time": time,
+                "update": update,
                 "exclude": exclude,
             }
             self.save()
@@ -90,7 +91,7 @@ class LocalizeWrapper:
     def __init__(self, path):
         self.path = path
 
-    def wrap(self, filename=None, time=None, exclude=None):
+    def wrap(self, filename=None, update="overwrite", exclude=None):
         """
         装饰器，被装饰过的函数都会自动本地化
 
@@ -98,8 +99,8 @@ class LocalizeWrapper:
         ----------
         filename: str, optional
             数据要保存的h5文件名
-        time: str, optional
-            对应于数据时间的参数名，便于日后更新数据
+        update: {'overwrite', 'append'}, optional
+            更新数据时是覆盖还是只添加新数据
         exclude: list, optional
                 哪些参数不需要记录到键名中
 
@@ -122,7 +123,7 @@ class LocalizeWrapper:
             @functools.wraps(wrapped)
             def func(*args, **kwargs):
                 """装饰后的函数"""
-                key = REGISTER.register(wrapped, path, args, kwargs, time=time, exclude=exclude)
+                key = REGISTER.register(wrapped, path, args, kwargs, update=update, exclude=exclude)
                 # 从注册器注册该函数及参数，并获得对应的键名
                 try:
                     data = pd.read_hdf(path, key)

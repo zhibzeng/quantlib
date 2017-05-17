@@ -1,7 +1,13 @@
+# core
 sqlalchemy
 pandas
 scipy
 
+# optional
+# pymysql
+# lxml
+
+# For sphinx documentation only
 sphinxcontrib-fulltoc
 numpydoc
 sphinx_rtd_theme
