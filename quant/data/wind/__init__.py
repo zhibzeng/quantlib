@@ -29,9 +29,26 @@ def __get_field(table, fieldname):
     raise AttributeError("Table `%s` has no field `%s`" % (table.__tablename__, fieldname))
 
 
+@LOCALIZER.wrap("wind")
+def get_wind_rawdata(table):
+    """从Wind数据库获取数据
+
+    Parameters
+    ----------
+    table
+        要读的SQL表, 参考`quant.data.wind.tables`
+    """
+    if isinstance(table, str):
+        table = getattr(tables, table)
+    columns = table.__table__.columns
+    wind_connection = get_sql_connection()
+    data = pd.read_sql(select(columns), wind_connection.engine)
+    return data
+
+
 @LOCALIZER.wrap("wind", exclude=['index', 'columns', 'parse_dates'])
 def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
-    """从Wind数据库获取数据
+    """从Wind数据库获取数据，并转换为以股票代码为列、日期为行的格式
 
     Parameters
     ----------
