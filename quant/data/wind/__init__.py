@@ -52,7 +52,7 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     """
     if isinstance(table, str):
         table = getattr(tables, table)
-    columns = field or tables.DEFAULT_FIELDS[table]["columns"]
+    columns = columns or tables.DEFAULT_FIELDS[table]["columns"]
     index = index or tables.DEFAULT_FIELDS[table]["index"]
     field_ = __get_field(table, field)
     index_ = __get_field(table, index)
@@ -62,7 +62,7 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     data = pd.read_sql(sql_statement, wind_connection.engine)
     data = data.pivot(index=index, columns=columns, values=field)
     if parse_dates:
-        data.index = data.index.to_datetime()
+        data.index = pd.to_datetime(data.index)
     return data
 
 
