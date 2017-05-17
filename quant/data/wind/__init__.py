@@ -52,7 +52,7 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     """
     if isinstance(table, str):
         table = getattr(tables, table)
-    field = field or tables.DEFAULT_FIELDS[table]["columns"]
+    columns = field or tables.DEFAULT_FIELDS[table]["columns"]
     index = index or tables.DEFAULT_FIELDS[table]["index"]
     field_ = __get_field(table, field)
     index_ = __get_field(table, index)
