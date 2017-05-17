@@ -6,7 +6,7 @@ setup(
     version='1.0.1',
     packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script"]),
     # scripts=["scripts/quantlib"],
-    url='',
+    url='http://quantlib.readthedocs.io/',
     license='BSD',
     author='SnowWalkerJ',
     author_email='jike3212001@163.com',

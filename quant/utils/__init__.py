@@ -2,3 +2,4 @@
 
 from ..common.localize import LocalizeWrapper
 from ..common.settings import ConfigManager
+from . import calendar
