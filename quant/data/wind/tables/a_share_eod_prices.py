@@ -13,7 +13,7 @@ class AShareEODPrices(BaseModel):
         万得代码， eg. 600030.SH
     trade_dt
         日期 YYYYMMDD
-    crnry_code
+    crncy_code
 
     s_dq_preclose
         前收盘价
@@ -60,7 +60,7 @@ class AShareEODPrices(BaseModel):
     object_id = Column(VARCHAR(100), primary_key=True)
     s_info_windcode = Column(VARCHAR(40))
     trade_dt = Column(VARCHAR(8))
-    crnry_code = Column(VARCHAR(10))
+    crncy_code = Column(VARCHAR(10))
     s_dq_preclose = Column(Numeric(20, 4, asdecimal=False))
     s_dq_open = Column(Numeric(20, 4, asdecimal=False))
     s_dq_high = Column(Numeric(20, 4, asdecimal=False))

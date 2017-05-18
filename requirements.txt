@@ -2,10 +2,11 @@
 sqlalchemy
 pandas
 scipy
+richenum
+lxml
 
 # optional
 # pymysql
-# lxml
 
 # For sphinx documentation only
 sphinxcontrib-fulltoc
