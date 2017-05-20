@@ -3,12 +3,12 @@ from ..common.events import EventManager, EventType
 from ..common.mods import MODS
 from ..common.fund import Fund
 from ..common.market import AShareMarket
-from ...data import wind
+from ..mods import *
 from ...utils.calendar import TradingCalendar
 
 
 class AbstractStrategy(metaclass=ABCMeta):
-    """策略基类"""
+    """股票回测策略基类"""
     start_date = None
     end_date = None
     mods = None
@@ -18,9 +18,9 @@ class AbstractStrategy(metaclass=ABCMeta):
         self.calendar = TradingCalendar()
         self.load_mods()
         self.market = None
-        self.market_data = None
         self.fund = None
         self.today = None
+        self.today_position = None
 
     def load_mods(self):
         """加载外部模块"""
@@ -45,17 +45,25 @@ class AbstractStrategy(metaclass=ABCMeta):
         self.event_manager.trigger(EventType.INIT_AFTER_SET_FUND, self.fund)
 
     def run(self):
+        """运行回测过程"""
         self.initialize_market_data()
         self.initialize_fund()
         self.event_manager.trigger(EventType.BACKTEST_START)
         for day in self.market.trading_days:
             self.today = day
+            self.market.on_newday(day)
+            self.fund.on_newday(day)
+            self.today_position = self.fund.position.loc[day].copy()
             self.event_manager.trigger(EventType.BACKTEST_NEWDAY, self.today)
-            universe = self.market.today_market.index
+            universe = list(self.market.today_market.index)
             self.event_manager.trigger(EventType.GET_UNIVERSE, universe)
             self.handle(day, universe)
             self.event_manager.trigger(EventType.BACKTEST_AFTER_HANDLE)
-        self.event_manager.trigger(EventType.BACKTEST_FINISH, self)
+        self.event_manager.trigger(EventType.BACKTEST_FINISH, self.fund)
+
+    @property
+    def net_value(self):
+        return self.fund.net_value
 
     def change_position(self, tobuy_pct):
         """更新持仓比例
@@ -70,4 +78,21 @@ class AbstractStrategy(metaclass=ABCMeta):
     @abstractmethod
     def handle(self, today, universe):
         raise NotImplementedError
+
+
+class SimpleStrategy(AbstractStrategy):
+    def __init__(self, predicted):
+        self.predicted = predicted
+
+    def handle(self, today, universe):
+        try:
+            self.predicted.loc[today]
+        except IndexError:
+            return
+        predicted = self.predicted.loc[today, universe].dropna().sort_values()
+        buy = predicted.index[:100]
+        share_per_stock = 1 / len(buy)
+        self.change_position({stock: share_per_stock for stock in buy})
+
+
 

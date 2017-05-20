@@ -14,11 +14,11 @@ class AbstractMod(metaclass=ABCMeta):
         pass
 
     @classmethod
-    def __subclasshook__(cls, subclass):
-        if cls is AbstractMod:
-            key = subclass.__name__
-            if key in MODS:
-                Logger.error("Mod `%s` has already been registered." % key)
-                # raise KeyError("Mod `%s` has already been registered." % key)
-            else:
-                MODS[key] = subclass
+    def register(cls, subclass):
+        global MODS
+        key = subclass.__name__
+        if key in MODS:
+            Logger.error("Mod `%s` has already been registered." % key)
+        else:
+            MODS[key] = subclass
+        return subclass

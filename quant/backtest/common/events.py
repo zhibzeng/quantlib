@@ -35,7 +35,9 @@ class EventManager:
         """
         if event_type in self.event_types:
             if callback not in self.hooks[event_type]:
-                bisect.insort(self.hooks[event_type], (index, callback))
+                position = [x[0] for x in self.hooks[event_type]]
+                position = bisect.bisect_right(position, index)
+                self.hooks[event_type].insert(position, (index, callback))
         else:
             raise KeyError("Event `%s` not recognized" % event_type.name)
 

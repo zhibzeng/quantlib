@@ -4,6 +4,7 @@ pandas
 scipy
 richenum
 lxml
+matplotlib
 
 # optional
 # pymysql

@@ -22,13 +22,20 @@ class SQLClient:
         """
         获得数据库连接
         Args:
-            host (str): 数据库地址
-            port (str): 数据库端口
-            username (str): 用户名
-            password (str): 密码
-            db_name (str): 数据库名
-            db_type (str): 数据库类型，如mysql, mssql
-            db_driver (str): 数据库驱动，如pymysql
+            host (str):
+                数据库地址
+            port (str):
+                数据库端口
+            username (str):
+                用户名
+            password (str):
+                密码
+            db_name (str):
+                数据库名
+            db_type (str):
+                数据库类型，如mysql, mssql
+            db_driver (str):
+                数据库驱动，如pymysql
         """
         self.sqlalchemy_conn_string = \
             '%(db_type)s+%(db_driver)s://%(username)s:%(password)s@%(host)s:%(port)s/%(db_name)s' %\

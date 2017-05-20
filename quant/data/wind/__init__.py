@@ -30,19 +30,21 @@ def __get_field(table, fieldname):
 
 
 @LOCALIZER.wrap("wind")
-def get_wind_rawdata(table):
+def get_wind_rawdata(table, parse_dates=None):
     """从Wind数据库获取数据
 
     Parameters
     ----------
-    table
+    table: str
         要读的SQL表, 参考`quant.data.wind.tables`
+    parse_dates
+        参考`pd.read_sql`
     """
     if isinstance(table, str):
         table = getattr(tables, table)
     columns = table.__table__.columns
     wind_connection = get_sql_connection()
-    data = pd.read_sql(select(columns), wind_connection.engine)
+    data = pd.read_sql(select(columns), wind_connection.engine, parse_dates=parse_dates)
     return data
 
 

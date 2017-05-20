@@ -4,6 +4,7 @@ from ..common.events import EventType
 from ...data.wind import get_wind_rawdata, get_wind_data
 
 
+@AbstractMod.register
 class NoSTUniverse(AbstractMod):
     """NoSTUniverse模块
     会自动将universe中ST的股票去除。
@@ -14,7 +15,7 @@ class NoSTUniverse(AbstractMod):
 
     @staticmethod
     def get_st_list():
-        st = get_wind_rawdata("AShareST")
+        st = get_wind_rawdata("AShareST", parse_dates={"entry_dt": "%Y%m%d", "remove_dt": "%Y%m%d"})
         st["entry_dt"] = pd.to_datetime(st["entry_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
@@ -32,6 +33,7 @@ class NoSTUniverse(AbstractMod):
                 universe.remove(stock)
 
 
+@AbstractMod.register
 class ActivelyTraded(AbstractMod):
     """ActivelyTraded模块
     会自动将universe中交易额小于阈值的股票去除。

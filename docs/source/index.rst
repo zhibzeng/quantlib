@@ -11,6 +11,7 @@ Welcome to quantlib's documentation!
    :caption: API:
 
    analysis
+   backtest
    data
    transform
    utils
