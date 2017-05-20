@@ -9,6 +9,7 @@ from ...utils.calendar import TradingCalendar
 
 class AbstractStrategy(metaclass=ABCMeta):
     """股票回测策略基类"""
+    name = "strategy"
     start_date = None
     end_date = None
     mods = None
@@ -55,7 +56,7 @@ class AbstractStrategy(metaclass=ABCMeta):
             self.fund.on_newday(day)
             self.today_position = self.fund.position.loc[day].copy()
             self.event_manager.trigger(EventType.BACKTEST_NEWDAY, self.today)
-            universe = list(self.market.today_market.index)
+            universe = list(self.market.today_market.dropna().index)
             self.event_manager.trigger(EventType.GET_UNIVERSE, universe)
             self.handle(day, universe)
             self.event_manager.trigger(EventType.BACKTEST_AFTER_HANDLE)
@@ -81,8 +82,10 @@ class AbstractStrategy(metaclass=ABCMeta):
 
 
 class SimpleStrategy(AbstractStrategy):
-    def __init__(self, predicted):
+    def __init__(self, predicted, name=None):
         self.predicted = predicted
+        self.name = name
+        self.start_date, self.end_date = predicted.index[0], predicted.index[-1]
 
     def handle(self, today, universe):
         try:

@@ -34,10 +34,9 @@ class EventManager:
             如果注册的事件类型不在事件管理器支持的类型中则触发异常
         """
         if event_type in self.event_types:
-            if callback not in self.hooks[event_type]:
-                position = [x[0] for x in self.hooks[event_type]]
-                position = bisect.bisect_right(position, index)
-                self.hooks[event_type].insert(position, (index, callback))
+            position = [x[0] for x in self.hooks[event_type]]
+            position = bisect.bisect_right(position, index)
+            self.hooks[event_type].insert(position, (index, callback))
         else:
             raise KeyError("Event `%s` not recognized" % event_type.name)
 

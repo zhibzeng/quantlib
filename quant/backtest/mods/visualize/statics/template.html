@@ -1,0 +1,211 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.css" type="text/css"> 
+</head>
+
+<body>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-primary active" id="absolute">
+            <input type="radio" name="options" id="absolute" autocomplete="off" checked> 绝对收益
+          </label>
+          <label class="btn btn-primary" id="relative">
+            <input type="radio" name="options" id="relative" autocomplete="off"> 相对收益
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="row">
+            <ul class="list-group">
+            	<li class="list-group-item basics" id="strategyName">{{ strategy_name}} </li>
+            	<li class="list-group-item basics" id="dates">{{start_date}} - {{end_date}}</li>
+            	<li class="list-group-item basics" id="feeRate"></li>
+              <li class="list-group-item statistics" id="mean">年化收益： </li>
+            	<li class="list-group-item statistics" id="std">年化波动：</li>
+            	<li class="list-group-item statistics" id="sharpe">年化夏普：</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-9 ">
+          <div class="row">
+            <div id="container" style="height: 400px; width: 100%; min-width: 310px"></div>
+          </div>
+          <div class="row">
+            <table class="positionList">
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+  <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+  <script>
+    function mean(data){
+      return eval(data.join("+")) / data.length;
+    }
+    function std(data){
+      avg = mean(data);
+      v = 0;
+      for (var i=0; i<data.length; i++){
+        e = data[i] - avg;
+        v += e * e;
+      }
+      return Math.sqrt(v / (data.length-1));
+    }
+
+    function diff(netValue, compound){
+      var rtns = [];
+      var lastValue = netValue[0][1];
+      for (var i=0; i<netValue.length; i++){
+        var item = netValue[i];
+        var key = item[0], value = item[1];
+        if (compound){
+          rtns[i] = value / lastValue - 1;
+        } else {
+          rtns[i] = value - lastValue;
+        }
+        lastValue = value;
+      }
+      return rtns;
+    }
+    function xround(x, num){
+      return Math.round(x * Math.pow(10, num)) / Math.pow(10, num);
+    }
+
+  </script>
+  <script>
+      var netValue = {{net_value}};
+      var benchmark = {{benchmark}};
+      var relative = {{relative}};
+      var stocks = {{stocks}};
+      function showBasics(){
+          $("li.basics#strategyName").text("策略名称：{{strategy_name}}")
+          $("li.basics#dates").html("起止日期：<br>{{start_date}}<br>{{end_date}}")
+          $("li.basics#feeRate").text("费率：{{fee_rate}}")
+      }
+
+      function showStatistics(profits){
+        var m = mean(profits) * 100 * 252;
+        var s = std(profits) * 100 * Math.sqrt(252);
+        var sharpe = m / s;
+        $("li.statistics#mean").text("年化收益率：" + xround(m, 2) + "%");
+        $("li.statistics#std").text("年化波动率：" + xround(s, 2) + "%");
+        $("li.statistics#sharpe").text("年化夏普率：" + xround(sharpe, 2));
+      }
+
+      function onSelection(event){
+        var start_timestamp = event.min, end_timestamp = event.max;
+        var start_date = Highcharts.dateFormat("%Y-%m-%d", start_timestamp), end_date = Highcharts.dateFormat("%Y-%m-%d", end_timestamp);
+        $("li.basics#dates").html("起止日期:<br>" + start_date + "<br>" + end_date);
+        var isAbsolute = $(".btn#absolute").hasClass("active");
+        var data = isAbsolute ? netValue : relative, newData = [];
+        var j = 0;
+        for (var i=0; i<data.length; i++){
+          if (data[i][0] >= start_timestamp && data[i][0] <= end_timestamp){
+            newData[j++] = data[i];
+          }
+        }
+        rtns = diff(newData, isAbsolute);
+        showStatistics(rtns);
+      }
+
+      function onSeriesClick(event){
+        var stockList = stocks[event.point.x];
+        $(".positionList").html("");
+        for (var stock in stockList){
+          $(".positionList").append("<tr><td>" + stockList[stock][0] + "</td><td>" + xround(stockList[stock][1], 3) + "</td></tr>");
+        }
+      }
+
+      function showCharts(data){
+          Highcharts.stockChart('container', {
+            xAxis:{
+              events:{
+                  setExtremes: onSelection
+              }
+            },
+            rangeSelector: {
+                selected: 5
+            },
+            title: {
+                text: 'NetValue'
+            },
+            series: data
+        });
+      }
+
+      function showRelative(){
+        series = [{
+            name: '{{strategy_name}}(相对收益)',
+            data: relative,
+            tooltip: {
+              valueDecimals: 2
+            },
+            events: {
+              click: onSeriesClick
+            }
+        }]
+        showCharts(series);
+        var profits = diff(relative, false);
+        showStatistics(profits);
+        $(".btn#absolute").removeClass("btn-active");
+        $(".btn#relative").addClass("btn-active");
+      }
+
+      function showAbsolute(){
+        series = [
+          {
+            name: '{{strategy_name}}',
+            data: netValue,
+            tooltip: {
+              valueDecimals: 3
+            },
+            events: {
+              click: onSeriesClick
+            }
+          },
+          {
+            name: 'Benchmark(000905.SH)',
+            data: benchmark,
+            tooltip: {
+              valueDecimals: 3
+            }
+          }
+        ];
+        showCharts(series);
+        var profits = diff(netValue, true);
+        showStatistics(profits);
+        $(".btn#absolute").addClass("btn-active");
+        $(".btn#relative").removeClass("btn-active");
+      }
+
+      $(document).ready(function(){
+        $(".btn#relative").click(showRelative);
+        $(".btn#absolute").click(showAbsolute);
+        showBasics();
+        showAbsolute();
+      });
+      </script>
+</body>
+
+</html>

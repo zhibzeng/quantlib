@@ -27,9 +27,3 @@ class AShareMarket:
         """封装wind.get_wind_data,避免未来数据"""
         data = wind.get_wind_data(*args, **kwargs)
         return data.truncate(None, self.today)
-
-    def get_wind_rawdata(self, *args, **kwargs):
-        """封装wind.get_wind_rawdata,避免未来数据"""
-        today = self.strategy.today
-        data = wind.get_wind_rawdata(*args, **kwargs)
-        return data.truncate(None, today)

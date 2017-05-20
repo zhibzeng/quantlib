@@ -112,6 +112,7 @@ def create_default_config():
     """Create default config file"""
     with open(CONFIG_PATH, "w") as config_file:
         config_file.writelines([
+            "# Wind\n",
             "wind_db_driver = 'pymysql'\n",
             "wind_db_type = 'mysql'\n",
             "wind_host = 'localhost'\n",
@@ -120,7 +121,9 @@ def create_default_config():
             "wind_password = 'password'\n",
             "wind_db_name = 'quant'\n",
             "\n",
+            "# logging\n",
             "log_level = 'INFO'    # Loggin level, {'DEBUG', INFO', 'WARNING', 'ERROR', 'FATAL'}\n",
+            "\n",
         ])
 
 
