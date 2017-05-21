@@ -44,19 +44,18 @@ class Fund:
                 np.nan_to_num(self.position.iloc[self.today_idx-1] \
                               * (1 + self.market.today_market.fillna(0)))
             self.position["CASH"].iloc[self.today_idx] = self.position["CASH"].iloc[self.today_idx-1]
-            assert self.position["CASH"].iloc[self.today_idx-1] > 0, "CASH"
             self.sheet.loc[self.strategy.today, "net_value"] = self.position.iloc[self.today_idx].sum()
-            assert self.net_value > 0.8, (self.position["CASH"].iloc[self.today_idx], self.position.iloc[self.today_idx].sum())
+            # assert self.net_value > 0.8, (self.position["CASH"].iloc[self.today_idx], self.position.iloc[self.today_idx].sum())
             self.sheet.loc[self.strategy.today, "fee"] = 0
 
     def do_transactions(self):
         # TODO: trade with average prices
         if not self.__tobuy:
             return
-        old_position = self.position.iloc[self.today_idx - 1, :-1]
-        self.position.iloc[self.today_idx].update(pd.Series(self.__tobuy))
-        self.position.iloc[self.today_idx, :-1] *= self.net_value
-        new_position = self.position.iloc[self.today_idx, :-1]
+        old_position = self.position.iloc[self.today_idx, :-1].copy()
+        new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
+        new_position.update(pd.Series(self.__tobuy) * self.net_value)
+        self.position.iloc[self.today_idx, :-1] = new_position
         fee = abs(new_position - old_position).sum() * self.strategy.fee_rate
         self.__tobuy = None
         self.sheet.loc[self.strategy.today, "net_value"] -= fee

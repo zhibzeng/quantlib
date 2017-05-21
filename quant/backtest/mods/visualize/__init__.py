@@ -51,6 +51,7 @@ class WebVisualizer(AbstractMod):
         info["benchmark"] = self.series2json(benchmark)
         info["relative"] = self.series2json((fund.sheet["net_value"] - benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
+        info["fee"] = fund.sheet["fee"].sum()
         with open(TEMPLATE_FILE) as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)

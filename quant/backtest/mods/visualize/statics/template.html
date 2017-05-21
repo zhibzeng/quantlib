@@ -30,6 +30,7 @@
               <li class="list-group-item statistics" id="mean">年化收益： </li>
             	<li class="list-group-item statistics" id="std">年化波动：</li>
             	<li class="list-group-item statistics" id="sharpe">年化夏普：</li>
+              <li class="list-group-item statistics" id="fee">总费用：</li>
             </ul>
           </div>
         </div>
@@ -38,7 +39,15 @@
             <div id="container" style="height: 400px; width: 100%; min-width: 310px"></div>
           </div>
           <div class="row">
-            <table class="positionList">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>股票</th>
+                  <th>持仓</th>
+                </tr>
+              </thead>
+              <tbody class="positionList">
+              </tbody>
             </table>
           </div>
         </div>
@@ -98,6 +107,7 @@
       var benchmark = {{benchmark}};
       var relative = {{relative}};
       var stocks = {{stocks}};
+      var fee = {{fee}};
       function showBasics(){
           $("li.basics#strategyName").text("策略名称：{{strategy_name}}")
           $("li.basics#dates").html("起止日期：<br>{{start_date}}<br>{{end_date}}")
@@ -111,6 +121,7 @@
         $("li.statistics#mean").text("年化收益率：" + xround(m, 2) + "%");
         $("li.statistics#std").text("年化波动率：" + xround(s, 2) + "%");
         $("li.statistics#sharpe").text("年化夏普率：" + xround(sharpe, 2));
+        $("li.statistics#fee").text("总费用：" + xround(fee, 2));
       }
 
       function onSelection(event){

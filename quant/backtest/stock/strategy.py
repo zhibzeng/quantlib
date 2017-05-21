@@ -82,18 +82,21 @@ class AbstractStrategy(metaclass=ABCMeta):
 
 
 class SimpleStrategy(AbstractStrategy):
-    def __init__(self, predicted, name=None):
+    def __init__(self, predicted, name=None, buy_count=50):
         self.predicted = predicted
         self.name = name
-        self.start_date, self.end_date = predicted.index[0], predicted.index[-1]
+        self.buy_count = buy_count
+        self.start_date = predicted.index[0].strftime("%Y-%m-%d")
+        self.end_date = predicted.index[-1].strftime("%Y-%m-%d")
+        super(SimpleStrategy, self).__init__()
 
     def handle(self, today, universe):
         try:
             self.predicted.loc[today]
-        except IndexError:
+        except KeyError:
             return
-        predicted = self.predicted.loc[today, universe].dropna().sort_values()
-        buy = predicted.index[:100]
+        predicted = self.predicted.loc[today, universe].dropna().sort_values(ascending=False)
+        buy = predicted.index[:self.buy_count]
         share_per_stock = 1 / len(buy)
         self.change_position({stock: share_per_stock for stock in buy})
 
