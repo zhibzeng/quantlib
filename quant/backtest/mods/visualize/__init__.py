@@ -32,13 +32,16 @@ class WebVisualizer(AbstractMod):
     @staticmethod
     def series2json(series):
         s = series.copy()
-        s.index = s.index.strftime("%s000")
+        s.index = s.index.astype(int) / 1e6
         return json.dumps(sorted([[int(key), value] for key, value in s.to_dict().items()]))
 
     def on_backtest_finish(self, fund):
         stocks = {}
-        for date, position in fund.position.iterrows():
-            stocks[int(date.strftime("%s000"))] = list(position[position>0].to_dict().items())
+        position = fund.position.copy()
+        position.index = position.index.astype(int) / 1e6
+        for date, pos in position.iterrows():
+            stocks[str(date)] = list(pos[pos>0].to_dict().items())
+            # stocks[date.value] = list(position[position>0].to_dict().items())
         benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")["000905.SH"] \
             .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
         benchmark /= benchmark.iloc[0]
@@ -49,18 +52,19 @@ class WebVisualizer(AbstractMod):
         info["fee_rate"] = self.strategy.fee_rate
         info["net_value"] = self.series2json(fund.sheet["net_value"])
         info["benchmark"] = self.series2json(benchmark)
-        info["relative"] = self.series2json((fund.sheet["net_value"] - benchmark).dropna())
+        info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
-        with open(TEMPLATE_FILE) as template_file:
+        with open(TEMPLATE_FILE, encoding="utf8") as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)
         if in_ipynb():
             display(HTML(html))
         else:
             filename = "%s_%s.html" % \
-                (info["strategy_name"], datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            with open(filename, "w") as output_file:
+                (info["strategy_name"], datetime.now().strftime("%Y%m%d%H%M%S"))
+            filename = os.path.abspath(filename)
+            with open(filename, "w", encoding="utf8") as output_file:
                 output_file.write(html)
             print("HTML results output to: %s" % filename)
             webbrowser.open_new_tab(filename)
