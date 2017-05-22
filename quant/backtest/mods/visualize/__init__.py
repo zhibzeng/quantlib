@@ -38,10 +38,9 @@ class WebVisualizer(AbstractMod):
     def on_backtest_finish(self, fund):
         stocks = {}
         position = fund.position.copy()
-        position.index = position.index.astype(int) // 1e6
+        position.index = position.index.astype(int) // 1000000
         for date, pos in position.iterrows():
-            stocks[str(int(date))] = list(pos[pos>0].to_dict().items())
-            # stocks[date.value] = list(position[position>0].to_dict().items())
+            stocks[str(date)] = list(pos[pos > 0].to_dict().items())
         benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")["000905.SH"] \
             .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
         benchmark /= benchmark.iloc[0]
