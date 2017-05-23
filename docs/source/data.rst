@@ -15,6 +15,10 @@ Functions
 
 ..  autofunction:: get_wind_data
 
+..  autofunction:: get_wind_rawdata
+
+..  autofunction:: get_index_weight
+
 Tables
 ++++++
 
@@ -30,11 +34,6 @@ AShareEODDerivativeIndicator
 
 ..  autoclass:: AShareEODDerivativeIndicator
 
-AIndexEODPrices
-^^^^^^^^^^^^^^^
-
-..  autoclass:: AIndexEODPrices
-
 AShareIPO
 ^^^^^^^^^
 
@@ -49,3 +48,12 @@ AShareTTMHis
 ^^^^^^^^^^^^
 
 ..  autoclass:: AShareTTMHis
+
+AIndexEODPrices
+^^^^^^^^^^^^^^^
+
+..  autoclass:: AIndexEODPrices
+
+AIndexHS300FreeWeight
+
+..  autoclass:: AIndexHS300FreeWeight

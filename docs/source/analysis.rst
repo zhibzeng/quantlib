@@ -6,5 +6,5 @@ quant.analysis.ic
 
 ..  currentmodule:: quant.analysis
 
-..  automodule:: quant.analysis.ic
+..  automodule:: quant.analysis
     :members:
