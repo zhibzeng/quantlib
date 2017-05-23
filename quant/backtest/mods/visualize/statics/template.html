@@ -83,17 +83,13 @@
       return Math.sqrt(v / (data.length-1));
     }
 
-    function diff(netValue, compound){
+    function diff(netValue){
       var rtns = [];
       var lastValue = netValue[0][1];
       for (var i=0; i<netValue.length; i++){
         var item = netValue[i];
         var key = item[0], value = item[1];
-        if (compound){
-          rtns[i] = value / lastValue - 1;
-        } else {
-          rtns[i] = value - lastValue;
-        }
+        rtns[i] = value / lastValue - 1;
         lastValue = value;
       }
       return rtns;
@@ -137,7 +133,7 @@
             newData[j++] = data[i];
           }
         }
-        rtns = diff(newData, isAbsolute);
+        rtns = diff(newData);
         showStatistics(rtns);
       }
 
@@ -178,7 +174,7 @@
             }
         }]
         showCharts(series);
-        var profits = diff(relative, false);
+        var profits = diff(relative);
         showStatistics(profits);
         $(".btn#absolute").removeClass("btn-active");
         $(".btn#relative").addClass("btn-active");
@@ -205,7 +201,7 @@
           }
         ];
         showCharts(series);
-        var profits = diff(netValue, true);
+        var profits = diff(netValue);
         showStatistics(profits);
         $(".btn#absolute").addClass("btn-active");
         $(".btn#relative").removeClass("btn-active");

@@ -125,40 +125,4 @@ def get_residual(y: pd.Series, x: pd.Series,
 
 
 
-class Transformer:
-    """数据分布转换工具，训练参数和实际转换分离"""
-    def __init__(self, distribution='norm'):
-        """新建数据分布转换对象
-
-        Parameters
-        ----------
-        distribution: str
-        假定数据的分布，如:
-            - ``norm``：正态分布
-            - ``expon``：指数分布
-            - ``uniform``：均匀分布
-        """
-        self.distribution_family = getattr(scipy.stats, distribution)
-        self.params = tuple()
-
-    def train(self, data):
-        extremes = find_extreme_values(sliced, distribution="norm")
-        score = (sliced - np.nanmedian(sliced[~extremes])) / np.nanstd(sliced[~extremes])
-        score[score > clip] = clip
-        score[score < -clip] = -clip
-        epsilon = 1e-4
-        total_err = 1.0
-        avg = np.nanmean(score[~extremes])
-        sd = np.nanstd(score[~extremes])
-        z = (score - avg) / sd
-        while total_err > epsilon:
-            if (abs(z) >= clip).any():
-                z[abs(z) >= clip] = clip * np.sign(z[abs(z) >= clip])
-            avg = np.nanmean(z)
-            err = np.nanstd(z)
-            total_err = abs(avg) + abs(err - 1)
-            z = (z - avg) / err
-
-    def transform(self, data):
-        pass
 

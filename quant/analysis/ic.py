@@ -1,5 +1,6 @@
 """IC correlation score"""
 import numpy as np
+import warnings
 
 
 def get_ic(table1, table2):
@@ -15,7 +16,12 @@ def get_ic(table1, table2):
     -------
     float
         IC值
+
+    Depreciated
+    -----------
+    Please use ``quant.analysis.get_ic``
     """
+    warnings.warn("Please use ``quant.analysis.get_ic``", DeprecationWarning)
     common_index = sorted(set(table1.index) & set(table2.index))
     ic = []
     for date_idx in common_index:

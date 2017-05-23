@@ -9,6 +9,8 @@ from ...common.db.sql import SQLClient
 
 __all__ = ['get_sql_connection', 'tables', 'get_wind_data', 'get_wind_rawdata']
 
+# TODO: A better data interface
+
 __wind_connection = None
 def get_sql_connection():
     """Returns a SQLClient object with settings in `config.cfg`"""

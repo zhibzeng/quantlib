@@ -25,10 +25,14 @@ class AbstractStrategy(metaclass=ABCMeta):
 
     def load_mods(self):
         """加载外部模块"""
-        available_mods = type(self).mods
-        mods = [MODS[m] for m in available_mods] if available_mods else list(MODS.values())
+        available_mods = type(self).mods or list(MODS.values())
         self.mods = []
-        for mod_cls in mods:
+        for mod_cls in available_mods:
+            if isinstance(mod_cls, str):
+                try:
+                    mod_cls = MODS[mod_cls]
+                except KeyError:
+                    raise KeyError("Mod `%s` not found!" % mod_cls)
             mod = mod_cls()
             mod.__plug_in__(self)
             self.mods.append(mod)
@@ -82,7 +86,19 @@ class AbstractStrategy(metaclass=ABCMeta):
 
 
 class SimpleStrategy(AbstractStrategy):
+    """简单的回测，只需要输入一个预测收益率的DataFrame，
+    每期自动等全做多预测最高的`buy_count`只股票"""
     def __init__(self, predicted, name=None, buy_count=50):
+        """
+        Parameters
+        ----------
+        predicted: pd.DataFrame
+            预测收益率
+        name: str
+            策略名称，用于显示
+        buy_count: int
+            每期做多股票数量
+        """
         self.predicted = predicted
         self.name = name
         self.buy_count = buy_count
