@@ -20,6 +20,7 @@ from .a_share_eod_prices import AShareEODPrices
 from .a_share_ipo import AShareIPO
 from .a_share_st import AShareST
 from .a_share_ttm_his import AShareTTMHis
+from .a_index_hs300_free_weight import AIndexHS300FreeWeight
 
 
 DEFAULT_FIELDS = {

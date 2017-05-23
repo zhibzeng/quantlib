@@ -7,20 +7,23 @@ from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG
 from ...common.db.sql import SQLClient
 
-__all__ = ['WIND_CONNECTION', 'tables', 'get_wind_data']
+__all__ = ['get_sql_connection', 'tables', 'get_wind_data', 'get_wind_rawdata']
 
-
+__wind_connection = None
 def get_sql_connection():
     """Returns a SQLClient object with settings in `config.cfg`"""
-    return SQLClient(
-        host=CONFIG.WIND_HOST,
-        port=CONFIG.WIND_PORT,
-        db_driver=CONFIG.WIND_DB_DRIVER,
-        db_type=CONFIG.WIND_DB_TYPE,
-        db_name=CONFIG.WIND_DB_NAME,
-        username=CONFIG.WIND_USERNAME,
-        password=CONFIG.WIND_PASSWORD,
-    )
+    global __wind_connection
+    if __wind_connection is None:
+        __wind_connection = SQLClient(
+            host=CONFIG.WIND_HOST,
+            port=CONFIG.WIND_PORT,
+            db_driver=CONFIG.WIND_DB_DRIVER,
+            db_type=CONFIG.WIND_DB_TYPE,
+            db_name=CONFIG.WIND_DB_NAME,
+            username=CONFIG.WIND_USERNAME,
+            password=CONFIG.WIND_PASSWORD,
+        )
+    return __wind_connection
 
 
 def __get_field(table, fieldname):
@@ -85,3 +88,22 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     return data
 
 
+@LOCALIZER.wrap("index_weight")
+def get_index_weight(table, s_info_windcode):
+    """从指定的表中获得指数权重
+
+    Parameters
+    ----------
+    table
+        要取权重的数据表
+    s_info_windcode
+        要取权重的指数的万得代码
+    """
+    if isinstance(table, str):
+        table = getattr(tables, table)
+    wind_connection = get_sql_connection()
+    columns = [table.i_weight, table.s_con_windcode, table.trade_dt]
+    sql_statement = select(columns).where(table.s_info_windcode == s_info_windcode)
+    data = pd.read_sql(sql_statement, wind_connection.engine, parse_dates={"trade_dt": "%Y%m%d"})
+    data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
+    return data

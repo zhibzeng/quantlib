@@ -7,7 +7,6 @@ MODS = {}
 
 class AbstractMod(metaclass=ABCMeta):
     """抽象的模块类"""
-
     @abstractmethod
     def __plug_in__(self, caller):
         """当系统载入模块时会调用该函数，允许它注册事件"""
