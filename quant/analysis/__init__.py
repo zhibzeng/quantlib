@@ -54,7 +54,8 @@ def get_factor_exposure(position, factor_value, benchmark=None):
                     break
                 except KeyError:
                     offset_days -= 1
-        absolute_exposure = (position.loc[date] * factor_value.loc[date]).sum() / position.loc[date].sum()
+        absolute_exposure = ((position.loc[date] * factor_value.loc[date]).sum()
+                             / position.loc[date].sum())
         if benchmark:
             benchmark_exposure = (weight * factor_value.loc[date]).sum()
             relative_exposure = absolute_exposure - benchmark_exposure

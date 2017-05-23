@@ -21,3 +21,4 @@ class AbstractMod(metaclass=ABCMeta):
         else:
             MODS[key] = subclass
         return subclass
+

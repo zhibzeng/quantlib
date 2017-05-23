@@ -25,7 +25,7 @@ class AbstractStrategy(metaclass=ABCMeta):
 
     def load_mods(self):
         """加载外部模块"""
-        available_mods = type(self).mods or list(MODS.values())
+        available_mods = self.mods or list(MODS.values())
         self.mods = []
         for mod_cls in available_mods:
             if isinstance(mod_cls, str):
@@ -88,7 +88,7 @@ class AbstractStrategy(metaclass=ABCMeta):
 class SimpleStrategy(AbstractStrategy):
     """简单的回测，只需要输入一个预测收益率的DataFrame，
     每期自动等全做多预测最高的`buy_count`只股票"""
-    def __init__(self, predicted, name=None, buy_count=50):
+    def __init__(self, predicted, name=None, buy_count=50, mods=None):
         """
         Parameters
         ----------
@@ -98,10 +98,14 @@ class SimpleStrategy(AbstractStrategy):
             策略名称，用于显示
         buy_count: int
             每期做多股票数量
+        mods: list
+            使用的模块列表，None则为全部已注册模块
         """
         self.predicted = predicted
         self.name = name
         self.buy_count = buy_count
+        if mods is not None:
+            self.mods = mods
         self.start_date = predicted.index[0].strftime("%Y-%m-%d")
         self.end_date = predicted.index[-1].strftime("%Y-%m-%d")
         super(SimpleStrategy, self).__init__()
