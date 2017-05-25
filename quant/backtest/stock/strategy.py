@@ -3,7 +3,6 @@ from ..common.events import EventManager, EventType
 from ..common.mods import MODS
 from ..common.fund import Fund
 from ..common.market import AShareMarket
-from ..mods import *
 from ...utils.calendar import TradingCalendar
 
 
@@ -13,7 +12,6 @@ class AbstractStrategy(metaclass=ABCMeta):
     start_date = None
     end_date = None
     mods = None
-    fee_rate = 5e-4
     def __init__(self):
         self.event_manager = EventManager(EventType)
         self.calendar = TradingCalendar()
@@ -25,7 +23,7 @@ class AbstractStrategy(metaclass=ABCMeta):
 
     def load_mods(self):
         """加载外部模块"""
-        available_mods = self.mods or list(MODS.values())
+        available_mods = self.mods if self.mods is not None else list(MODS.values())
         self.mods = []
         for mod_cls in available_mods:
             if isinstance(mod_cls, str):

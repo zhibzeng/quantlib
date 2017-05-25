@@ -12,9 +12,9 @@ DATA_PATH = os.path.join(MAIN_PATH, "data")
 class ConfigManager:
     """配置项管理，解析配置文件，并允许配置项被命令行参数重写"""
     def __init__(self, path="config.cfg"):
+        self.ready = False
         self.path = path
         self.parser = ArgumentParser()
-        self.ready = False
         with open(self.path, "r") as config_file:
             self.data = self.__parse_config_file(config_file)
 
@@ -66,16 +66,31 @@ class ConfigManager:
             raise ValueError
 
     def __getattr__(self, item):
+        try:
+            return object.__getattribute__(self, item)
+        except AttributeError:
+            pass
         if not self.ready:
             try:
                 self.update()
             except:
                 pass
         item = item.upper()
+        if item not in self.data:
+            raise KeyError("Key `%s` not found in config" % item)
         try:
             return self.data[item]['value']
         except KeyError:
             return self.data[item]['default']
+
+    def __setattr__(self, key, value):
+        if key.isupper():
+            try:
+                self.data[key]['value'] = value
+            except KeyError:
+                self.data[key] = {'value': value}
+        else:
+            object.__setattr__(self, key, value)
 
     def add_argument(self, *args, **kwargs):
         """除了配置文件已有的参数外，新增命令行参数，与`argparse.ArgumentParser.add_argument`相同"""
@@ -111,20 +126,25 @@ class ConfigManager:
 def create_default_config():
     """Create default config file"""
     with open(CONFIG_PATH, "w") as config_file:
-        config_file.writelines([
-            "# Wind\n",
-            "wind_db_driver = 'pymysql'\n",
-            "wind_db_type = 'mysql'\n",
-            "wind_host = 'localhost'\n",
-            "wind_port = 3306\n",
-            "wind_username = 'wind'\n",
-            "wind_password = 'password'\n",
-            "wind_db_name = 'quant'\n",
-            "\n",
-            "# logging\n",
-            "log_level = 'INFO'    # Loggin level, {'DEBUG', INFO', 'WARNING', 'ERROR', 'FATAL'}\n",
-            "\n",
-        ])
+        default_config = [
+            "# Wind",
+            "wind_db_driver = 'pymysql'",
+            "wind_db_type = 'mysql'",
+            "wind_host = 'localhost'",
+            "wind_port = 3306",
+            "wind_username = 'wind'",
+            "wind_password = 'password'",
+            "wind_db_name = 'quant'",
+            "",
+            "# logging",
+            "log_level = 'INFO'    # Loggin level, {'DEBUG', INFO', 'WARNING', 'ERROR', 'FATAL'}",
+            "",
+            "# backtest",
+            "benchmark = '000905.SH'   # Backtest benchmark, default if ZZ500 index",
+            "fee_rate = 0.0005",
+            "",
+        ]
+        config_file.write("\n".join(default_config))
 
 
 def make_default_settings():

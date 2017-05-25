@@ -7,6 +7,7 @@ from IPython.display import display, HTML
 from ...common.events import EventType
 from ...common.mods import AbstractMod
 from ....data import wind
+from ....common.settings import CONFIG
 
 TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "statics/template.html")
 
@@ -48,7 +49,7 @@ class WebVisualizer(AbstractMod):
         info["strategy_name"] = self.strategy.name
         info["start_date"] = self.strategy.start_date
         info["end_date"] = self.strategy.end_date
-        info["fee_rate"] = self.strategy.fee_rate
+        info["fee_rate"] = CONFIG.FEE_RATE
         info["net_value"] = self.series2json(fund.sheet["net_value"])
         info["benchmark"] = self.series2json(benchmark)
         info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())

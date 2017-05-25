@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from .events import EventType
+from ...common.settings import CONFIG
 
 
 class Fund:
@@ -45,7 +46,6 @@ class Fund:
                               * (1 + self.market.today_market.fillna(0)))
             self.position["CASH"].iloc[self.today_idx] = self.position["CASH"].iloc[self.today_idx-1]
             self.sheet.loc[self.strategy.today, "net_value"] = self.position.iloc[self.today_idx].sum()
-            # assert self.net_value > 0.8, (self.position["CASH"].iloc[self.today_idx], self.position.iloc[self.today_idx].sum())
             self.sheet.loc[self.strategy.today, "fee"] = 0
 
     def do_transactions(self):
@@ -56,7 +56,7 @@ class Fund:
         new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
         new_position.update(pd.Series(self.__tobuy) * self.net_value)
         self.position.iloc[self.today_idx, :-1] = new_position
-        fee = abs(new_position - old_position).sum() * self.strategy.fee_rate
+        fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
         self.__tobuy = None
         self.sheet.loc[self.strategy.today, "net_value"] -= fee
         self.sheet.loc[self.strategy.today, "fee"] = fee
