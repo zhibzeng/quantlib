@@ -47,7 +47,7 @@ class NoIPOUniverse(AbstractMod):
 
     def handle_universe(self, universe):
         today = self.strategy.today
-        invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate < today].s_info_windcode)
+        invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
         for stock in invalid_stock:
             if stock in universe:
                 universe.remove(stock)

@@ -42,6 +42,8 @@ Mods
 +================+===================================================+
 |NoSTUniverse    |Remove ST stocks from universe                     |
 +----------------+---------------------------------------------------+
+|NoIPOUniverse   |Remove new stocks from universe                    |
++----------------+---------------------------------------------------+
 |ActivelyTraded  |Remove inactive stocks (daily amount<10million)    |
 +----------------+---------------------------------------------------+
 |ShowBasicResults|Show simple statistic infomation after backtest    |
