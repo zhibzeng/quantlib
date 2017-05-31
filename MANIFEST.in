@@ -1,2 +1,1 @@
 include quant/backtest/mods/visualize/statics/template.html
-include quant/backtest/data/factors/statics/template.rst

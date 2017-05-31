@@ -1,3 +1,4 @@
+"""股票类回测策略"""
 from abc import abstractmethod, ABCMeta
 from ..common.events import EventManager, EventType
 from ..common.mods import MODS
@@ -8,6 +9,7 @@ from ...utils.calendar import TradingCalendar
 
 class AbstractStrategy(metaclass=ABCMeta):
     """股票回测策略基类"""
+    # TODO: 个股收益明细
     name = "strategy"
     start_date = None
     end_date = None
@@ -66,6 +68,7 @@ class AbstractStrategy(metaclass=ABCMeta):
 
     @property
     def net_value(self):
+        """净值序列， pd.Series"""
         return self.fund.net_value
 
     def change_position(self, tobuy_pct):
@@ -115,7 +118,7 @@ class SimpleStrategy(AbstractStrategy):
             return
         predicted = self.predicted.loc[today, universe].dropna().sort_values(ascending=False)
         buy = predicted.index[:self.buy_count]
-        share_per_stock = 1 / len(buy)
+        share_per_stock = 0.99 / (len(buy) + 1e-6)          # keep 0.01 for transaction fee
         self.change_position({stock: share_per_stock for stock in buy})
 
 

@@ -13,6 +13,7 @@ TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "stat
 
 
 def in_ipynb():
+    """判断当前是否为jupyter notebook环境"""
     try:
         cfg = get_ipython().config
         return cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook'
