@@ -100,7 +100,7 @@ class ConfigManager:
         # except AttributeError:
         #     pass
         item = item.upper()
-        if item not in self.__keys:
+        if item not in self.data and item in self.__keys:
             self.update()
         if item not in self.data:
             raise KeyError("Key `%s` not found in config" % item)
