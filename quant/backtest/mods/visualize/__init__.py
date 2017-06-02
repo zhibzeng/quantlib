@@ -62,8 +62,7 @@ class WebVisualizer(AbstractMod):
         if in_ipynb():
             display(HTML(html))
         else:
-            filename = "%s_%s.html" % \
-                (info["strategy_name"], datetime.now().strftime("%Y%m%d%H%M%S"))
+            filename = "%s.html" % info["strategy_name"]
             filename = os.path.abspath(filename)
             with open(filename, "w", encoding="utf8") as output_file:
                 output_file.write(html)

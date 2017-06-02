@@ -1,6 +1,6 @@
 """IC correlation score"""
-import numpy as np
 import warnings
+import numpy as np
 
 
 def get_ic(table1, table2):

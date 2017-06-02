@@ -1,3 +1,5 @@
+"""Output simple backtest results on screen"""
+
 from ..common.mods import AbstractMod
 from ..common.events import EventType
 from ...common.logging import Logger

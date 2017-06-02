@@ -2,6 +2,7 @@
 Global settings about where to store data and configurations.
 """
 import os
+import re
 from argparse import ArgumentParser
 
 MAIN_PATH = os.path.abspath(os.path.expanduser("~/.quantlib"))
@@ -12,13 +13,17 @@ DATA_PATH = os.path.join(MAIN_PATH, "data")
 class ConfigManager:
     """配置项管理，解析配置文件，并允许配置项被命令行参数重写"""
     def __init__(self, path="config.cfg"):
-        self.ready = False
         self.path = path
+        self.__keys = []
         self.parser = ArgumentParser()
         with open(self.path, "r") as config_file:
             self.data = self.__parse_config_file(config_file)
 
     def __parse_config_file(self, file):
+        """
+        Read the config file, add the items to argparser so
+        that the settings can be overrided by command arguments.
+        """
         cfg = {}
         for line in file:
             stripped = line.strip()
@@ -31,8 +36,11 @@ class ConfigManager:
             value = pair[1].strip()
             help_text = ""
             if "#" in value:
+                # Take whatever after `#` as comment. This may cause
+                # problems if value string includes `#`
                 i = value.index("#")
                 help_text = value[i+1:].strip()
+                help_text, choices = self.__parse_choices(help_text)
                 value = value[:i].strip()
             true_value = None
             for parser in (int, float, self.__boolparser, self.__strparser):
@@ -45,12 +53,31 @@ class ConfigManager:
             if true_value is None:
                 raise ValueError("unexpected error in config: `%s`" % line)
             cfg[key.upper()] = {'default': true_value, 'type': type(true_value)}
+            self.__keys.append(key.upper())
             self.parser.add_argument("--%s" % key, default=true_value,
-                                     type=type(true_value), help=help_text)
+                                     type=type(true_value), help=help_text,
+                                     choices=choices)
         return cfg
+
+    @classmethod
+    def __parse_choices(cls, help_text):
+        pattern = r", ?{((?:[^,}]+, ?)+[^,}]+)}$"
+        # Warning: this pattern may miss the occasion where
+        # `}` appears in the string value
+        match = re.search(pattern, help_text)
+        if not match:
+            choices = None
+        else:
+            help_text = help_text[:match.start()]
+            choices = [cls.__strparser(item.strip()) for item in match.groups[0].split(",")]
+        return help_text, choices
 
     @staticmethod
     def __strparser(unparsed_value):
+        """
+        Try to parse the value as str and remove the
+        quatation marks beside, if there are any.
+        """
         if unparsed_value[0] == unparsed_value[-1] == "'" \
             or unparsed_value[0] == unparsed_value[-1] == "\"":
             return unparsed_value[1: -1]
@@ -58,6 +85,7 @@ class ConfigManager:
 
     @staticmethod
     def __boolparser(unparsed_value):
+        """Parse the value as bool"""
         if unparsed_value == "False":
             return False
         elif unparsed_value == "True":
@@ -66,16 +94,13 @@ class ConfigManager:
             raise ValueError
 
     def __getattr__(self, item):
-        try:
-            return object.__getattribute__(self, item)
-        except AttributeError:
-            pass
-        if not self.ready:
-            try:
-                self.update()
-            except:
-                pass
+        # try:
+        #     return object.__getattribute__(self, item)
+        # except AttributeError:
+        #     pass
         item = item.upper()
+        if item not in self.__keys:
+            self.update()
         if item not in self.data:
             raise KeyError("Key `%s` not found in config" % item)
         try:
@@ -84,6 +109,7 @@ class ConfigManager:
             return self.data[item]['default']
 
     def __setattr__(self, key, value):
+        """Allows the value of an item be overrided by program"""
         if key.isupper():
             try:
                 self.data[key]['value'] = value
@@ -92,10 +118,15 @@ class ConfigManager:
         else:
             object.__setattr__(self, key, value)
 
+    def __contains__(self, item):
+        return item in self.__keys
+
     def add_argument(self, *args, **kwargs):
         """除了配置文件已有的参数外，新增命令行参数，与`argparse.ArgumentParser.add_argument`相同"""
         # TODO: 如果新增的参数和配置文件中的重复，可能有冲突
-        self.parser.add_argument(*args, **kwargs)
+        store_action = self.parser.add_argument(*args, **kwargs)
+        key = store_action.dest.upper()
+        self.__keys.append(key)
 
     def keys(self):
         """列出所有可用的参数名"""
@@ -112,14 +143,15 @@ class ConfigManager:
 
     def update(self):
         """从命令行参数中更新所有配置"""
-        args = self.parser.parse_args()
+        args, _ = self.parser.parse_known_args()
         for key, value in args._get_kwargs():
             key = key.upper()
+            if key in self.data and "value" in self.data[key]:
+                continue
             try:
                 self.data[key]['value'] = value
             except KeyError:
                 self.data[key] = {'value': value, 'type': type(value)}
-        self.ready = True
 
 
 
@@ -137,7 +169,7 @@ def create_default_config():
             "wind_db_name = 'quant'",
             "",
             "# logging",
-            "log_level = 'INFO'    # Loggin level, {'DEBUG', INFO', 'WARNING', 'ERROR', 'FATAL'}",
+            "log_level = 'INFO'    # Loggin level, {'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'}",
             "",
             "# backtest",
             "benchmark = '000905.SH'   # Backtest benchmark, default if ZZ500 index",

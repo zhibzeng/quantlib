@@ -35,7 +35,7 @@ def __get_field(table, fieldname):
 
 
 @LOCALIZER.wrap("wind")
-def get_wind_rawdata(table, parse_dates=None):
+def get_wind_rawdata(table, parse_dates=None) -> pd.DataFrame:
     """从Wind数据库获取数据
 
     Parameters
