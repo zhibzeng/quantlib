@@ -35,6 +35,7 @@ class ConfigManager:
             key = pair[0].strip()
             value = pair[1].strip()
             help_text = ""
+            choices = None
             if "#" in value:
                 # Take whatever after `#` as comment. This may cause
                 # problems if value string includes `#`
