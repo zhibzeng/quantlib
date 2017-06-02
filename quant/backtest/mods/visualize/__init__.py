@@ -8,6 +8,7 @@ from ...common.events import EventType
 from ...common.mods import AbstractMod
 from ....data import wind
 from ....common.settings import CONFIG
+from ....common.logging import Logger
 
 TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "statics/template.html")
 
@@ -29,6 +30,7 @@ class WebVisualizer(AbstractMod):
 
     def __plug_in__(self, caller):
         self.strategy = caller
+        CONFIG.add_argument("--no_browser", action="store_false", dest="open_browser")
         self.strategy.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
 
     @staticmethod
@@ -43,7 +45,7 @@ class WebVisualizer(AbstractMod):
         position.index = position.index.astype(int) // 1000000
         for date, pos in position.iterrows():
             stocks[str(date)] = list(pos[pos > 0].to_dict().items())
-        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")["000905.SH"] \
+        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK] \
             .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
         benchmark /= benchmark.iloc[0]
         info = {}
@@ -66,6 +68,7 @@ class WebVisualizer(AbstractMod):
             filename = os.path.abspath(filename)
             with open(filename, "w", encoding="utf8") as output_file:
                 output_file.write(html)
-            print("HTML results output to: %s" % filename)
-            webbrowser.open_new_tab(filename)
+            Logger.info("HTML results output to: %s" % filename)
+            if CONFIG.OPEN_BROWSER:
+                webbrowser.open_new_tab(filename)
 

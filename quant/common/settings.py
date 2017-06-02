@@ -3,6 +3,7 @@ Global settings about where to store data and configurations.
 """
 import os
 import re
+import warnings
 from argparse import ArgumentParser
 
 MAIN_PATH = os.path.abspath(os.path.expanduser("~/.quantlib"))
@@ -14,7 +15,7 @@ class ConfigManager:
     """配置项管理，解析配置文件，并允许配置项被命令行参数重写"""
     def __init__(self, path="config.cfg"):
         self.path = path
-        self.__keys = []
+        self.__keys = set()
         self.parser = ArgumentParser()
         with open(self.path, "r") as config_file:
             self.data = self.__parse_config_file(config_file)
@@ -54,7 +55,7 @@ class ConfigManager:
             if true_value is None:
                 raise ValueError("unexpected error in config: `%s`" % line)
             cfg[key.upper()] = {'default': true_value, 'type': type(true_value)}
-            self.__keys.append(key.upper())
+            self.__keys.add(key.upper())
             self.parser.add_argument("--%s" % key, default=true_value,
                                      type=type(true_value), help=help_text,
                                      choices=choices)
@@ -116,6 +117,7 @@ class ConfigManager:
                 self.data[key]['value'] = value
             except KeyError:
                 self.data[key] = {'value': value}
+            self.__keys.add(key)
         else:
             object.__setattr__(self, key, value)
 
@@ -124,10 +126,15 @@ class ConfigManager:
 
     def add_argument(self, *args, **kwargs):
         """除了配置文件已有的参数外，新增命令行参数，与`argparse.ArgumentParser.add_argument`相同"""
-        # TODO: 如果新增的参数和配置文件中的重复，可能有冲突
+        temp_parser = ArgumentParser()
+        store_action = temp_parser.add_argument(*args, **kwargs)
+        key = store_action.dest.upper()
+        if key in self.__keys:
+            warnings.warn("Key `%s` already in Config" % key)
+            return
         store_action = self.parser.add_argument(*args, **kwargs)
         key = store_action.dest.upper()
-        self.__keys.append(key)
+        self.__keys.add(key)
 
     def keys(self):
         """列出所有可用的参数名"""
