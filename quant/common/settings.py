@@ -70,7 +70,7 @@ class ConfigManager:
             choices = None
         else:
             help_text = help_text[:match.start()]
-            choices = [cls.__strparser(item.strip()) for item in match.groups[0].split(",")]
+            choices = [cls.__strparser(item.strip()) for item in match.groups()[0].split(",")]
         return help_text, choices
 
     @staticmethod
