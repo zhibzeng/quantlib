@@ -1,4 +1,4 @@
 """
 Quantlib
 """
-from . import data, transform, utils
+from . import data, transform, utils, analysis

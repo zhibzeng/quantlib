@@ -1,4 +1,6 @@
+"""回测结束后在网页中显示回测的详细信息"""
 import os
+import sys
 import json
 import webbrowser
 from datetime import datetime
@@ -15,11 +17,7 @@ TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "stat
 
 def in_ipynb():
     """判断当前是否为jupyter notebook环境"""
-    try:
-        cfg = get_ipython().config
-        return cfg['IPKernelApp']['parent_appname'] == 'ipython-notebook'
-    except NameError:
-        return False
+    return 'ipykernel' in sys.modules
 
 
 @AbstractMod.register
@@ -32,6 +30,7 @@ class WebVisualizer(AbstractMod):
         self.strategy = caller
         CONFIG.add_argument("--no_browser", action="store_false", dest="open_browser")
         self.strategy.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
+        Logger.info("[Mod Webvisualize] initialized.")
 
     @staticmethod
     def series2json(series):
