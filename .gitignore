@@ -61,3 +61,6 @@ target/
 # IDE
 .idea/
 .vscode/
+
+# Private
+private/

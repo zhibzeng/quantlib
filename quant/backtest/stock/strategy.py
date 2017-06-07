@@ -1,15 +1,19 @@
 """股票类回测策略"""
-from abc import abstractmethod, ABCMeta
+from abc import abstractmethod
+import numpy as np
+import pandas as pd
 from ..common.events import EventManager, EventType
 from ..common.mods import MODS
 from ..common.fund import Fund
 from ..common.market import AShareMarket
+from ...data.wind import get_index_weight
 from ...utils.calendar import TradingCalendar
 
 
-class AbstractStrategy(metaclass=ABCMeta):
+class AbstractStrategy:
     """股票回测策略基类"""
     # TODO: 个股收益明细
+    # TODO: 风险敞口
     name = "strategy"
     start_date = None
     end_date = None
@@ -118,8 +122,50 @@ class SimpleStrategy(AbstractStrategy):
             return
         predicted = self.predicted.loc[today, universe].dropna().sort_values(ascending=False)
         buy = predicted.index[:self.buy_count]
-        share_per_stock = 0.99 / (len(buy) + 1e-6)          # keep 0.01 for transaction fee
+        share_per_stock = 0.999 / (len(buy) + 1e-6)          # keep 0.001 for transaction fee
         self.change_position({stock: share_per_stock for stock in buy})
+
+
+class NeutralStrategy(SimpleStrategy):
+    """
+    中性策略，在SimpleStrategy的基础上对冲一些风险
+    """
+    def __init__(self, *args, neutral_factors={}, **kwargs):
+        self.neutral_factors = neutral_factors
+        self.factor_data = {factor.factor_name: factor.get_factor_value()
+                            for factor in neutral_factors.keys()}
+        self.index_weights = get_index_weight("AIndexHS300FreeWeight", "000905.SH")
+        super(NeutralStrategy, self).__init__(*args, **kwargs)
+
+    def handle(self, today, universe):
+        import scipy.optimize
+        try:
+            self.predicted.loc[today]
+        except KeyError:
+            return
+        predicted = self.predicted.loc[today, universe].dropna()
+        stocks = predicted.index
+
+        def objective_function(weights):
+            index_weight = self.index_weights.loc[today, stocks].fillna(0)
+            weights = np.asarray(weights) - index_weight.values
+            profits = predicted.values @ weights
+            exposion_regularizer = 0
+            for factor, regularizer_weight in self.neutral_factors.items():
+                factor_data = self.factor_data[factor.factor_name].loc[today, stocks]
+                factor_data.fillna(np.nanmean(factor_data.values))
+                exposion = factor_data.values @ weights
+                exposion_regularizer += regularizer_weight * exposion ** 2
+            return -profits + exposion_regularizer
+
+        result = scipy.optimize.minimize(objective_function,
+                                         np.zeros(len(stocks), dtype=np.float32),
+                                         bounds=[(0, None) for _ in stocks])
+        weights = pd.Series(result.x, index=stocks).sort_values(ascending=False)
+        buy = weight.index[:self.buy_count]
+        share_per_stock = 0.999 / (len(buy) + 1e-6)          # keep 0.001 for transaction fee
+        self.change_position({stock: share_per_stock for stock in buy})
+        
 
 
 

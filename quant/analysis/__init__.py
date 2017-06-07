@@ -16,17 +16,17 @@ def get_ic(table1, table2):
 
     Returns
     -------
-    float
-        IC值
+    pd.Series
+        每期的相关系数，求平均可得IC分数。
     """
     common_index = sorted(set(table1.index) & set(table2.index))
-    ic = []
+    ic = pd.Series(np.empty(len(common_index)), index=common_index)
     for date_idx in common_index:
         rk1 = table1.loc[date_idx]
         rk2 = table2.loc[date_idx]
         corr = rk1.corr(rk2, method="spearman")
-        ic.append(corr)
-    return np.mean(ic)
+        ic[date_idx] = corr
+    return ic
 
 
 def get_factor_exposure(position, factor_value, benchmark=None):

@@ -1,21 +1,24 @@
 import os
 import base64
 from io import BytesIO
-from abc import ABCMeta, abstractstaticmethod
+from abc import abstractstaticmethod
 import jinja2
 import matplotlib.pyplot as plt
 from docutils.core import publish_parts
+from ...analysis import get_ic
 from ...backtest import SimpleStrategy
 from ...common.settings import CONFIG
 from ...common.html import HTML
 from ...data.wind import get_wind_data
 
 
-class AbstractFactor(metaclass=ABCMeta):
+class AbstractFactor:
     """Abstract class for stock factors"""
     factor_name = None
     factor_type = None
+    factor_freq = None
     h = None
+
     @abstractstaticmethod
     def get_factor_value():
         """
@@ -33,17 +36,18 @@ class AbstractFactor(metaclass=ABCMeta):
         strategy.run()
         cls.h = HTML()
         with cls.h.html():
-            cls.generate_head(factor_name)
+            cls._generate_head(factor_name)
             with cls.h.body():
-                cls.generate_basics(factor_name)
-                cls.generate_backtest(strategy)
-                cls.generate_footer()
+                cls._generate_basics(factor_name)
+                # cls._generate_backtest(strategy)
+                cls._generate_ic(factor_values)
+                cls._generate_footer()
         docstring = cls.h.render()
         with open("%s.html" % factor_name, "w", encoding="utf8") as output_file:
             output_file.write(docstring)
 
     @classmethod
-    def generate_head(cls, factor_name):
+    def _generate_head(cls, factor_name):
         css_files = (
             "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
             "https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.css",
@@ -56,7 +60,7 @@ class AbstractFactor(metaclass=ABCMeta):
             cls.h.inline("title", _text=factor_name)
 
     @classmethod
-    def get_userdoc(cls):
+    def _get_userdoc(cls):
         doc = cls.__doc__.split("\n")
         for line_no, line in enumerate(doc):
             if line.startswith("    "):
@@ -66,8 +70,8 @@ class AbstractFactor(metaclass=ABCMeta):
         return parts["stylesheet"], parts["html_body"]
 
     @classmethod
-    def generate_basics(cls, factor_name):
-        style_sheet, user_doc = cls.get_userdoc()
+    def _generate_basics(cls, factor_name):
+        style_sheet, user_doc = cls._get_userdoc()
         h = cls.h
         h.print(style_sheet)
         with h.div(_class="py-5"):
@@ -83,10 +87,10 @@ class AbstractFactor(metaclass=ABCMeta):
                         h.print(user_doc)
 
     @classmethod
-    def generate_backtest(cls, strategy):
+    def _generate_backtest(cls, strategy):
         fund = strategy.fund
         net_value = fund.sheet.net_value.copy()
-        benchmark = get_wind_data("AIndexEODPrices", "s_dq_close")["000905.SH"].dropna()
+        benchmark = get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK].dropna()
         benchmark /= benchmark.iloc[0]
         net_value = (net_value / benchmark).dropna()
         rtns = net_value.pct_change()
@@ -116,11 +120,33 @@ class AbstractFactor(metaclass=ABCMeta):
                         h.inline('img', src='data:image/png;base64,{0}'.format(img_netvalue))
 
     @classmethod
-    def generate_ic(cls):
-        real_rtn
+    def _generate_ic(cls, data):
+        data = data.truncate("2005-01-01")
+        real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
+        real_price = real_price[data.index]
+        real_rtn = real_price.pct_change()
+        ic_score = get_ic(data, real_rtn)
+        print(ic_score.index, real_rtn.index, data.index)
+        ic_score = ic_score.resample("1m").mean()
+        with BytesIO() as tmp:
+            ic_score.plot.bar()
+            plt.savefig(tmp, format="png")
+            plt.cla()
+            tmp.seek(0)
+            raw_img = tmp.read()
+            img_ic = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
+        h = cls.h
+        with h.div(_class="py-5"):
+            with h.div(_class="container"):
+                with h.div(_class="row"):
+                    h.inline("h1", _text="IC")
+                    h.inline("hr")
+                with h.div(_class="row"):
+                    with h.div(_class="col-md-12"):
+                        h.inline('img', src='data:image/png;base64,{0}'.format(img_ic))
 
     @classmethod
-    def generate_footer(cls):
+    def _generate_footer(cls):
         js_files = (
             "https://code.jquery.com/jquery-3.1.1.slim.min.js",
             "https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js",
@@ -128,12 +154,3 @@ class AbstractFactor(metaclass=ABCMeta):
         )
         for url in js_files:
             cls.h.inline("script", src=url)
-
-
-class FactorDocGenerator:
-    """A class to generate document for factors"""
-    def __init__(self):
-        pass
-
-    def generate(self):
-        pass

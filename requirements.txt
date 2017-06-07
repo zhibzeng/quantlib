@@ -5,6 +5,7 @@ scipy
 richenum
 lxml
 matplotlib
+fire
 
 # optional
 # pymysql

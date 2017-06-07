@@ -16,7 +16,7 @@ class Register:
         try:
             with open(self.log_path, "rb") as file_handler:
                 self.data = pickle.load(file_handler)
-        except FileNotFoundError:
+        except (FileNotFoundError, EOFError):
             self.data = dict()
 
     def keys(self):
@@ -25,6 +25,19 @@ class Register:
 
     def __getitem__(self, item):
         return self.data[item]
+
+    def register_fixed(self, func, path, key, update=None):
+        meta_key = path
+        if meta_key not in self.data:
+            self.data[meta_key] = {
+                # "func": func,
+                "key": key,
+                "params": None,
+                "path": path,
+                "update": update,
+                "exclude": None
+            }
+            self.save()
 
     def register(self, func, path, args, kwargs, update=None, exclude=None):
         """
@@ -91,7 +104,7 @@ class LocalizeWrapper:
     def __init__(self, path):
         self.path = path
 
-    def wrap(self, filename=None, update="overwrite", exclude=None):
+    def wrap(self, filename=None, key=None, update="overwrite", exclude=None):
         """
         装饰器，被装饰过的函数都会自动本地化
 
@@ -99,6 +112,10 @@ class LocalizeWrapper:
         ----------
         filename: str, optional
             数据要保存的h5文件名
+        key: str, optional
+            要保存的键名
+        module: type, optional
+            如果被装饰函数是一个staticmethod，则此字段必须传入函数所在的类
         update: {'overwrite', 'append'}, optional
             更新数据时是覆盖还是只添加新数据
         exclude: list, optional
@@ -110,11 +127,16 @@ class LocalizeWrapper:
 
             @LOCALIZER.wrap("data")
             def get_data(code):
-                    ...
+                ...
+
         会自动把函数的返回值以`code`为键本地化到`data.h5`中
         """
         def true_wrapper(wrapped):
             nonlocal filename
+            if key:
+                REGISTER.register_fixed(wrapped, filename, key)
+            if isinstance(wrapped, staticmethod):
+                wrapped = wrapped.__get__(0)
             filename = filename or wrapped.__name__
             if not filename.endswith("h5"):
                 filename = filename + ".h5"
@@ -123,13 +145,15 @@ class LocalizeWrapper:
             @functools.wraps(wrapped)
             def func(*args, **kwargs):
                 """装饰后的函数"""
-                key = REGISTER.register(wrapped, path, args, kwargs, update=update, exclude=exclude)
+                nonlocal key
+                _key = key or REGISTER.register(wrapped, filename, args, kwargs,
+                                                update=update, exclude=exclude)
                 # 从注册器注册该函数及参数，并获得对应的键名
                 try:
-                    data = pd.read_hdf(path, key)
-                except (FileNotFoundError, KeyError):
+                    data = pd.read_hdf(path, _key)
+                except (FileNotFoundError, KeyError, OSError):
                     data = wrapped(*args, **kwargs)
-                    data.to_hdf(path, key)
+                    data.to_hdf(path, _key)
                 return data
 
             return func
