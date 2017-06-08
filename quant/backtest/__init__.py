@@ -1,2 +1,2 @@
 from . import mods
-from .stock.strategy import AbstractStrategy, SimpleStrategy
+from .stock.strategy import AbstractStrategy, SimpleStrategy, NeutralStrategy

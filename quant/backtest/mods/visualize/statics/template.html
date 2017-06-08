@@ -60,7 +60,10 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          
+          <h1>因子暴露</h1>
+          {% for factor_name, expo in exposure %}
+            <div class="risk-exposure", id="{{factor_name}}"><img src="data:image/png;base64,{{expo}}"></img></div>
+          {% endfor %}
         </div>
       </div>
     </div>

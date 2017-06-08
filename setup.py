@@ -3,8 +3,8 @@ from setuptools import find_packages
 
 setup(
     name='quantlib',
-    version='1.0.1',
-    packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script"]),
+    version='1.0.2',
+    packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script", "private"]),
     include_package_data=True,
     # scripts=["scripts/quantlib"],
     url='http://quantlib.readthedocs.io/',

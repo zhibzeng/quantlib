@@ -3,11 +3,15 @@ import os
 import sys
 import json
 import webbrowser
+import base64
+from io import BytesIO
 from datetime import datetime
 import jinja2
+import matplotlib.pyplot as plt
 from IPython.display import display, HTML
 from ...common.events import EventType
 from ...common.mods import AbstractMod
+from ....analysis import get_factor_exposure
 from ....data import wind
 from ....common.settings import CONFIG
 from ....common.logging import Logger
@@ -17,12 +21,16 @@ TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "stat
 
 def in_ipynb():
     """判断当前是否为jupyter notebook环境"""
-    return 'ipykernel' in sys.modules
+    # return 'ipykernel' in sys.modules
+    return False
 
 
 @AbstractMod.register
 class WebVisualizer(AbstractMod):
     """回测结束后在网页中显示回测的详细信息"""
+
+    risk_factors = set()
+
     def __init__(self):
         self.strategy = None
 
@@ -30,13 +38,50 @@ class WebVisualizer(AbstractMod):
         self.strategy = caller
         CONFIG.add_argument("--no_browser", action="store_false", dest="open_browser")
         self.strategy.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
-        Logger.info("[Mod Webvisualize] initialized.")
+        Logger.debug("[Mod WebVisualizer] initialized.")
+
+    @classmethod
+    def register_factor(cls, factor):
+        cls.risk_factors.add(factor)
 
     @staticmethod
     def series2json(series):
-        s = series.copy()
-        s.index = s.index.astype(int) / 1e6
-        return json.dumps(sorted([[int(key), value] for key, value in s.to_dict().items()]))
+        """把pd.Series时间序列转换为json格式"""
+        series = series.copy()
+        series.index = series.index.astype(int) / 1e6
+        return json.dumps(sorted([[int(key), value] for key, value in series.to_dict().items()]))
+
+    def get_benchmark(self):
+        """获取基准标的的净值"""
+        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK] \
+            .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
+        benchmark /= benchmark.iloc[0]
+        return benchmark
+
+    def get_exposure(self, position, factor):
+        """计算持仓的因子暴露"""
+        factor_name = factor.factor_name
+        factor_value = factor.get_factor_value()
+        exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
+        with BytesIO() as tmp:
+            ax = exposure.plot.bar()
+            xticks = ax.get_xticks()
+            xlabels = []
+            for date_idx in exposure.index:
+                if date_idx.month == 1:
+                    xlabels.append("Jun\n%d" % date_idx.year)
+                elif date_idx.month in (4, 7, 10):
+                    xlabels.append(date_idx.strftime("%b"))
+                else:
+                    xlabels.append("")
+            ax.set_xticklabels(xlabels)
+            plt.title(factor_name)
+            plt.savefig(tmp, format="png")
+            plt.cla()
+            tmp.seek(0)
+            raw_img = tmp.read()
+            img = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
+        return img
 
     def on_backtest_finish(self, fund):
         stocks = {}
@@ -44,9 +89,7 @@ class WebVisualizer(AbstractMod):
         position.index = position.index.astype(int) // 1000000
         for date, pos in position.iterrows():
             stocks[str(date)] = list(pos[pos > 0].to_dict().items())
-        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK] \
-            .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
-        benchmark /= benchmark.iloc[0]
+        benchmark = self.get_benchmark()
         info = {}
         info["strategy_name"] = self.strategy.name
         info["start_date"] = self.strategy.start_date
@@ -57,6 +100,7 @@ class WebVisualizer(AbstractMod):
         info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
+        info["exposure"] = [(factor.factor_name, self.get_exposure(fund.position, factor)) for factor in self.risk_factors]
         with open(TEMPLATE_FILE, encoding="utf8") as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)

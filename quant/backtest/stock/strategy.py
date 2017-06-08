@@ -2,10 +2,13 @@
 from abc import abstractmethod
 import numpy as np
 import pandas as pd
+from progressbar import Bar, ProgressBar, ETA, Percentage
 from ..common.events import EventManager, EventType
 from ..common.mods import MODS
 from ..common.fund import Fund
 from ..common.market import AShareMarket
+from ...common.settings import CONFIG
+from ...common.logging import Logger
 from ...data.wind import get_index_weight
 from ...utils.calendar import TradingCalendar
 
@@ -58,7 +61,8 @@ class AbstractStrategy:
         self.initialize_market_data()
         self.initialize_fund()
         self.event_manager.trigger(EventType.BACKTEST_START)
-        for day in self.market.trading_days:
+        bar = ProgressBar(widgets=[Percentage(), Bar(), ETA()])
+        for day in bar(self.market.trading_days):
             self.today = day
             self.market.on_newday(day)
             self.fund.on_newday(day)
@@ -134,38 +138,100 @@ class NeutralStrategy(SimpleStrategy):
         self.neutral_factors = neutral_factors
         self.factor_data = {factor.factor_name: factor.get_factor_value()
                             for factor in neutral_factors.keys()}
-        self.index_weights = get_index_weight("AIndexHS300FreeWeight", "000905.SH")
+        self.index_weights = get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
+                            .resample("1d").ffill() / 100
         super(NeutralStrategy, self).__init__(*args, **kwargs)
 
     def handle(self, today, universe):
-        import scipy.optimize
         try:
             self.predicted.loc[today]
         except KeyError:
             return
         predicted = self.predicted.loc[today, universe].dropna()
         stocks = predicted.index
+        weights = self.optimize(predicted, today, stocks)
+        self.change_position(dict(weights.iteritems()))
 
-        def objective_function(weights):
-            index_weight = self.index_weights.loc[today, stocks].fillna(0)
-            weights = np.asarray(weights) - index_weight.values
-            profits = predicted.values @ weights
-            exposion_regularizer = 0
-            for factor, regularizer_weight in self.neutral_factors.items():
-                factor_data = self.factor_data[factor.factor_name].loc[today, stocks]
-                factor_data.fillna(np.nanmean(factor_data.values))
-                exposion = factor_data.values @ weights
-                exposion_regularizer += regularizer_weight * exposion ** 2
-            return -profits + exposion_regularizer
+    def optimize(self, predicted, today, stocks):
+        """
+        Solve the optimization problem to maximize profits and minimize risks.
+        """
+        index_weight = self.index_weights.loc[today].fillna(0)
 
-        result = scipy.optimize.minimize(objective_function,
-                                         np.zeros(len(stocks), dtype=np.float32),
-                                         bounds=[(0, None) for _ in stocks])
-        weights = pd.Series(result.x, index=stocks).sort_values(ascending=False)
-        buy = weight.index[:self.buy_count]
-        share_per_stock = 0.999 / (len(buy) + 1e-6)          # keep 0.001 for transaction fee
-        self.change_position({stock: share_per_stock for stock in buy})
-        
+        optimizer = SimpleOptimizer(predicted.values)
+
+        for factor, regularizer_weight in self.neutral_factors.items():
+            factor_data = self.factor_data[factor.factor_name].loc[today]
+            factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
+            index_exposure = (index_weight * factor_data).sum()
+            stocks_exposure = factor_data.loc[stocks].values
+            optimizer.add_regularizer(stocks_exposure, index_exposure, regularizer_weight)
+
+        result = optimizer.optimize(x0=np.full(len(stocks), 1/len(stocks)))
+
+        weights = pd.Series(result, index=stocks)
+        return weights[weights > 0]
+
+    # def optimize(self, predicted, today, stocks):
+    #     tolerance = 1e-3
+    #     index_weight = self.index_weights.loc[today, stocks].fillna(0).values
+    #     weights_ = tf.Variable(np.zeros(len(stocks)), name="weights")
+    #     weights = weights_ - index_weight
+    #     profits = tf.reduce_sum(tf.Constant(predicted.values) * weights_)
+    #     exposion_regularizer = tf.tensor.Zero
+    #     for factor, regularizer_weight in self.neutral_factors.items():
+    #         factor_data = self.factor_data[factor.factor_name].loc[today, stocks]
+    #         factor_data.fillna(np.nanmean(factor_data.values))
+    #         exposion = tf.reduce_sum(tf.Constant(factor_data.values) * weights)
+    #         exposion_regularizer += regularizer_weight * exposion ** 2
+    #     loss = exposion_regularizer - profits + tf.reduce_sum(abs(weights_) - weights_)
+    #     trainer = tf.train.SGD(loss, learning_rate=0.0001)
+    #     last_weights = np.zeros(len(stocks))
+    #     while 1:
+    #         trainer.train()
+    #         if abs(weights_.eval() - last_weights).sum() < tolerance:
+    #             break
+    #         trainer.learning_rate *= 0.999
+    #         last_weights = weights_.eval()
+    #     weights = pd.Series(last_weights, index=stocks).sort_values(ascending=False)
+    #     weights = weights[weights > 1e-3]
+    #     weights /= weights.sum()
+    #     return weights
 
 
+class SimpleOptimizer:
+    def __init__(self, initial_weight):
+        self.initial_weight = initial_weight
+        self.regularizers = []
+
+    def add_regularizer(self, w, y, alpha=1.0):
+        self.regularizers.append((w, y, alpha))
+
+    def objective_function(self, x):
+        objective = - self.initial_weight @ x
+        jaccobi = - self.initial_weight
+        for w, y, alpha in self.regularizers:
+            objective += (w @ x - y) ** 2 * alpha
+            jaccobi += 2 * alpha * (w @ x - y) * w
+        return objective, jaccobi
+
+    def optimize(self, x0, learning_rate=1e-4):
+        best_objective = np.inf
+        x = np.array(x0)
+        steps_no_better = 0
+        while 1:
+            objective, gradient = self.objective_function(x)
+            # Logger.debug(objective)
+            if objective < best_objective - 1e-5:
+                best_objective = objective
+                steps_no_better = 0
+            else:
+                steps_no_better += 1
+                if steps_no_better > 5:
+                    break
+            x -= gradient * learning_rate
+            x[x > 1] = 1
+            x[x < 0] = 0
+            x /= (x.sum() + 1e-5)
+        return x
 

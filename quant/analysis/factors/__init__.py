@@ -32,8 +32,8 @@ class AbstractFactor:
         """Generate factor document"""
         factor_name = cls.factor_name or cls.__name__
         factor_values = cls.get_factor_value()
-        strategy = SimpleStrategy(factor_values, mods=[])
-        strategy.run()
+        # strategy = SimpleStrategy(factor_values, mods=[])
+        # strategy.run()
         cls.h = HTML()
         with cls.h.html():
             cls._generate_head(factor_name)
@@ -123,13 +123,23 @@ class AbstractFactor:
     def _generate_ic(cls, data):
         data = data.truncate("2005-01-01")
         real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
-        real_price = real_price[data.index]
+        # real_price = real_price.resample("1d").ffill()
+        real_price = real_price.loc[data.index]
         real_rtn = real_price.pct_change()
-        ic_score = get_ic(data, real_rtn)
-        print(ic_score.index, real_rtn.index, data.index)
+        ic_score = get_ic(data.shift(1), real_rtn)
         ic_score = ic_score.resample("1m").mean()
         with BytesIO() as tmp:
-            ic_score.plot.bar()
+            plt.figure(figsize=(10, 5))
+            ax = ic_score.plot(kind='bar', color='red')
+            xticks = ax.get_xticks()
+            ax.plot(xticks, ic_score.rolling(6).mean())
+            num_labels = 10
+            xlabels = [ic_score.index[i].strftime("%b %Y")
+                       if i % (len(xticks) // num_labels) == 0 else ""
+                       for i in range(len(xticks))]
+            ax.set_xticks(xticks)
+            ax.set_xticklabels(xlabels)
+            plt.xticks(rotation=10)
             plt.savefig(tmp, format="png")
             plt.cla()
             tmp.seek(0)
