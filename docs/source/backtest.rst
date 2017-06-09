@@ -37,21 +37,23 @@ Mods
 
 本回测框架提供一些可选模块来支持扩展特性，同时也允许用户自定义模块。默认提供的模块有：
 
-+----------------+---------------------------------------------------+
-|Mod Name        |Purpose                                            |
-+================+===================================================+
-|NoSTUniverse    |Remove ST stocks from universe                     |
-+----------------+---------------------------------------------------+
-|NoIPOUniverse   |Remove new stocks from universe                    |
-+----------------+---------------------------------------------------+
-|ActivelyTraded  |Remove inactive stocks (daily amount<10million)    |
-+----------------+---------------------------------------------------+
-|ShowBasicResults|Show simple statistic infomation after backtest    |
-+----------------+---------------------------------------------------+
-|WebVisualizer   |Show detailed information in webpage after backtest|
-+----------------+---------------------------------------------------+
-|Output          |Save position information to 'output.h5'           +
-+----------------+---------------------------------------------------+
++-----------------+---------------------------------------------------+
+|Mod Name         |Purpose                                            |
++================-+===================================================+
+|NoSTUniverse     |Remove ST stocks from universe                     |
++-----------------+---------------------------------------------------+
+|NoIPOUniverse    |Remove new stocks from universe                    |
++-----------------+---------------------------------------------------+
+|NoUpLimitUniverse|Remove stocks that reach up-limit from universe    |
++-----------------+---------------------------------------------------+
+|ActivelyTraded   |Remove inactive stocks (daily amount<10million)    |
++-----------------+---------------------------------------------------+
+|ShowBasicResults |Show simple statistic infomation after backtest    |
++-----------------+---------------------------------------------------+
+|WebVisualizer    |Show detailed information in webpage after backtest|
++-----------------+---------------------------------------------------+
+|Output           |Save position information to 'output.h5'           +
++-----------------+---------------------------------------------------+
 
 默认以上所有模块都会自动被加载，用户也可以在策略类的mods属性中定义自己要使用的模块，如::
 
