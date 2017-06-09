@@ -61,3 +61,22 @@ Mods
 则以上策略只会显示简单的回测信息，且不会对可选股票池作任何变化。
 
 
+API
+---
+
+..  currentmodule:: quant.backtest
+
+..  autoclass:: quant.backtest.stock.strategy.AbstractStrategy
+    :members:
+
+..  autoclass:: quant.backtest.stock.strategy.SimpleStrategy
+    :members: __init__
+
+..  autoclass:: quant.backtest.stock.strategy.NeutralStrategy
+    :members: __init__
+
+
+Developer
+---------
+
+To be expected.

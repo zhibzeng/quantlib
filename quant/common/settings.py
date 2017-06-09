@@ -113,11 +113,7 @@ class ConfigManager:
     def __setattr__(self, key, value):
         """Allows the value of an item be overrided by program"""
         if key.isupper():
-            try:
-                self.data[key]['value'] = value
-            except KeyError:
-                self.data[key] = {'value': value}
-            self.__keys.add(key)
+            self.set_value(key, value)
         else:
             object.__setattr__(self, key, value)
 
@@ -148,6 +144,27 @@ class ConfigManager:
             except KeyError:
                 value = item["default"]
             yield key, value
+
+    def __set(self, key, value, field):
+        try:
+            self.data[key][field] = value
+        except KeyError:
+            self.data[key] = {field: value}
+        self.__keys.add(key)
+
+    def set_value(self, key, value):
+        """Set the value of a setting item.
+        This will overwrite the config file
+        and commandline arguments.
+        """
+        self.__set(key.upper(), value, 'value')
+
+    def set_default(self, key, value):
+        """Set the default of a setting item.
+        This will overwrite the config file,
+        but not the commandline arguments.
+        """
+        self.__set(key.upper(), value, 'default')
 
     def update(self):
         """从命令行参数中更新所有配置"""

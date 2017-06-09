@@ -11,26 +11,30 @@ from ...common.settings import CONFIG
 from ...common.logging import Logger
 from ...data.wind import get_index_weight
 from ...utils.calendar import TradingCalendar
+from ...utils.optimize import SimpleOptimizer
 
 
 class AbstractStrategy:
     """股票回测策略基类"""
     # TODO: 个股收益明细
-    # TODO: 风险敞口
     name = "strategy"
+    """策略名称，用于结果输出"""
     start_date = None
+    """起始日期 %Y-%m-%d"""
     end_date = None
+    """结束日期 %Y-%m-%d"""
     mods = None
+    """可用Mod列表"""
     def __init__(self):
         self.event_manager = EventManager(EventType)
         self.calendar = TradingCalendar()
-        self.load_mods()
+        self._load_mods()
         self.market = None
         self.fund = None
         self.today = None
         self.today_position = None
 
-    def load_mods(self):
+    def _load_mods(self):
         """加载外部模块"""
         available_mods = self.mods if self.mods is not None else list(MODS.values())
         self.mods = []
@@ -44,13 +48,13 @@ class AbstractStrategy:
             mod.__plug_in__(self)
             self.mods.append(mod)
 
-    def initialize_market_data(self):
+    def _initialize_market_data(self):
         """初始化行情（收益率）数据"""
         self.market = AShareMarket(self)
         self.market.initalize_market(self.start_date, self.end_date)
         self.event_manager.trigger(EventType.INIT_AFTER_LOAD_DATA, self.market)
 
-    def initialize_fund(self):
+    def _initialize_fund(self):
         """初始化资金帐户"""
         self.fund = Fund(self)
         self.fund.initialize()
@@ -58,8 +62,8 @@ class AbstractStrategy:
 
     def run(self):
         """运行回测过程"""
-        self.initialize_market_data()
-        self.initialize_fund()
+        self._initialize_market_data()
+        self._initialize_fund()
         self.event_manager.trigger(EventType.BACKTEST_START)
         bar = ProgressBar(widgets=[Percentage(), Bar(), ETA()])
         for day in bar(self.market.trading_days):
@@ -91,6 +95,7 @@ class AbstractStrategy:
 
     @abstractmethod
     def handle(self, today, universe):
+        """每日调仓函数，用户逻辑，需重载"""
         raise NotImplementedError
 
 
@@ -149,14 +154,28 @@ class NeutralStrategy(SimpleStrategy):
             return
         predicted = self.predicted.loc[today, universe].dropna()
         stocks = predicted.index
-        weights = self.optimize(predicted, today, stocks)
+        weights = self.optimize(predicted, today)
         self.change_position(dict(weights.iteritems()))
 
-    def optimize(self, predicted, today, stocks):
+    def optimize(self, predicted, today):
         """
         Solve the optimization problem to maximize profits and minimize risks.
+        Note this method does not support short selling (negative weight).
+
+        Parameters
+        ----------
+        predicted: pd.Series
+            Predicted returns of the stocks at `today`
+        today: str
+            The date, %Y-%m-%d
+
+        Returns
+        -------
+        weights: pd.Series
+            The percentage of each stock to buy.
         """
         index_weight = self.index_weights.loc[today].fillna(0)
+        stocks = list(predicted.index)
 
         optimizer = SimpleOptimizer(predicted.values)
 
@@ -165,7 +184,7 @@ class NeutralStrategy(SimpleStrategy):
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
-            optimizer.add_regularizer(stocks_exposure, index_exposure, regularizer_weight)
+            optimizer.add_risk(stocks_exposure, index_exposure, regularizer_weight)
 
         result = optimizer.optimize(x0=np.full(len(stocks), 1/len(stocks)))
 
@@ -198,40 +217,4 @@ class NeutralStrategy(SimpleStrategy):
     #     weights /= weights.sum()
     #     return weights
 
-
-class SimpleOptimizer:
-    def __init__(self, initial_weight):
-        self.initial_weight = initial_weight
-        self.regularizers = []
-
-    def add_regularizer(self, w, y, alpha=1.0):
-        self.regularizers.append((w, y, alpha))
-
-    def objective_function(self, x):
-        objective = - self.initial_weight @ x
-        jaccobi = - self.initial_weight
-        for w, y, alpha in self.regularizers:
-            objective += (w @ x - y) ** 2 * alpha
-            jaccobi += 2 * alpha * (w @ x - y) * w
-        return objective, jaccobi
-
-    def optimize(self, x0, learning_rate=1e-4):
-        best_objective = np.inf
-        x = np.array(x0)
-        steps_no_better = 0
-        while 1:
-            objective, gradient = self.objective_function(x)
-            # Logger.debug(objective)
-            if objective < best_objective - 1e-5:
-                best_objective = objective
-                steps_no_better = 0
-            else:
-                steps_no_better += 1
-                if steps_no_better > 5:
-                    break
-            x -= gradient * learning_rate
-            x[x > 1] = 1
-            x[x < 0] = 0
-            x /= (x.sum() + 1e-5)
-        return x
 

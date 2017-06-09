@@ -15,6 +15,9 @@ quant.utils
 ..  autoclass:: quant.utils.ConfigManager
     :members:
 
+..  autoclass:: quant.utils.SimpleOptimizer
+    :members:
+
 
 quant.utils.calendar
 --------------------
