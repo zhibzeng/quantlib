@@ -11,7 +11,6 @@ class AShareMarket:
         self.trading_days = None
         self.today = None
         self.today_market = None
-        # self.strategy.event_manager.register(EventType.BACKTEST_NEWDAY, self.on_newday, 1)
 
     def initalize_market(self, start_date, end_date):
         self.market_data = wind.get_wind_data("AShareEODPrices",

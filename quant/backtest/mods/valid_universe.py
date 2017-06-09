@@ -1,9 +1,11 @@
 """处理Universe的Mod"""
 from datetime import timedelta
+import numpy as np
 import pandas as pd
 from ..common.mods import AbstractMod
 from ..common.events import EventType
 from ...data.wind import get_wind_rawdata, get_wind_data
+from ...utils.calendar.trading_calendar import TradingCalendar
 
 
 @AbstractMod.register
@@ -51,6 +53,28 @@ class NoIPOUniverse(AbstractMod):
         invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
         for stock in invalid_stock:
             if stock in universe:
+                universe.remove(stock)
+
+
+@AbstractMod.register
+class NoUpLimitUniverse(AbstractMod):
+    """从可交易股票池中去除涨停股票"""
+    def __init__(self):
+        self.strategy = None
+
+    def __plug_in__(self, caller):
+        self.strategy = caller
+        self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
+
+    def handle_universe(self, universe):
+        today = self.strategy.today
+        last_trading_day = today - TradingCalendar().TradingDay
+        if last_trading_day not in self.strategy.market.market_data.index:
+            return
+        for stock in universe:
+            last_change = self.strategy.market.market_data.loc[last_trading_day, stock]
+            today_change = self.strategy.market.market_data.loc[today, stock]
+            if np.isnan(last_change) or today_change > 0.09:
                 universe.remove(stock)
 
 

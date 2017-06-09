@@ -1,15 +1,18 @@
 import os
 import importlib.util
-import fire
 import glob
+import fire
+import pandas as pd
+from .backtest import SimpleStrategy
+from .common.settings import CONFIG
 
 
-def load_factor_from_file(path):
+def load_class_from_file(path):
     module_name = os.path.split(path)[-1][:-3]
     spec = importlib.util.spec_from_file_location(module_name, path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    obj_name = module_name.capitalize()
+    obj_name = "".join(x.capitalize() for x in module_name.split("_"))
     obj = getattr(module, obj_name)
     return obj_name, obj
 
@@ -26,7 +29,7 @@ class QuantMain:
         for filename in glob.glob(os.path.join(path, "*.py")):
             if os.path.split(filename)[-1].startswith("__"):
                 continue
-            obj_name, obj = load_factor_from_file(filename)
+            obj_name, obj = load_class_from_file(filename)
             if hasattr(obj, "generate_doc"):
                 Logger.info("Generating documents for %s ..." % obj_name)
                 obj.generate_doc()
@@ -51,6 +54,26 @@ class QuantMain:
                 y_for_all = True
             if confirm in ("a", "y", True):
                 os.remove(filename)
+
+    @staticmethod
+    def backtest(strategy_filename, key=None):
+        if strategy_filename.endswith(".h5"):
+            QuantMain._backtest_simple(strategy_filename, key)
+        else:
+            if not strategy_filename.endswith(".py"):
+                strategy_filename += ".py"
+            QuantMain._backtest_strategy(strategy_filename)
+
+    @staticmethod
+    def _backtest_strategy(py_file):
+        strategy_class = load_class_from_file(py_file)[1]
+        strategy_class.run()
+
+    @staticmethod
+    def _backtest_simple(h5_file, key):
+        predicted = pd.read_hdf(h5_file, key)
+        strategy = SimpleStrategy(predicted)
+        strategy.run()
 
 
 if __name__ == "__main__":

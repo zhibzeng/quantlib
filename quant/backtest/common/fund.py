@@ -40,13 +40,14 @@ class Fund:
 
     def settle(self):
         assert self.strategy.today == self.market.today
+        today = self.strategy.today
         if self.today_idx != 0:
             self.position.iloc[self.today_idx] = \
                 np.nan_to_num(self.position.iloc[self.today_idx-1] \
                               * (1 + self.market.today_market.fillna(0)))
-            self.position["CASH"].iloc[self.today_idx] = self.position["CASH"].iloc[self.today_idx-1]
-            self.sheet.loc[self.strategy.today, "net_value"] = self.position.iloc[self.today_idx].sum()
-            self.sheet.loc[self.strategy.today, "fee"] = 0
+            self.position.loc[today, "CASH"] = self.position["CASH"].iloc[self.today_idx-1]
+            self.sheet.loc[today, "net_value"] = self.position.iloc[self.today_idx].sum()
+            self.sheet.loc[today, "fee"] = 0
 
     def do_transactions(self):
         # TODO: trade with average prices
@@ -54,7 +55,12 @@ class Fund:
             return
         old_position = self.position.iloc[self.today_idx, :-1].copy()
         new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
-        new_position.update(pd.Series(self.__tobuy) * self.net_value)
+        tobuy = pd.Series(self.__tobuy) * self.net_value
+        new_position.update(tobuy)
+        for stock, pct in old_position[self.market.today_market > 0.09].iteritems():
+            new_position[stock] = min(pct, new_position[stock])   # cannot buy stocks reach up-limit
+        for stock, pct in old_position[self.market.today_market < -0.09].iteritems():
+            new_position[stock] = max(pct, new_position[stock])   # cannot buy stocks reach up-limit
         self.position.iloc[self.today_idx, :-1] = new_position
         fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
         self.__tobuy = None

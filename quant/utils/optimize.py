@@ -53,9 +53,10 @@ class SimpleOptimizer:
     def _objective_function(self, x):
         objective = - self.expected_return @ x
         jaccobi = - self.expected_return
-        for w, y, alpha in self.risks:
-            objective += (w @ x - y) ** 2 * alpha
-            jaccobi += 2 * alpha * (w @ x - y) * w
+        for w, y, lamb in self.risks:
+            objective += (w @ x - y) ** 2 * lamb
+            jaccobi += 2 * lamb * (w @ x - y) * w
+        jaccobi += 2 * (x.sum() - 1) * np.ones_like(x)      # To force x.sum() to 1.0
         return objective, jaccobi
 
     def optimize(self, x0, learning_rate=1e-4):
@@ -73,12 +74,14 @@ class SimpleOptimizer:
         -------
         np.ndarray, the optimized weights of the stocks
         """
+        direction = np.ones_like(x0) / len(x0)
+
         best_objective = np.inf
-        x = np.array(x0)
+        x = np.array(x0) / sum(x0)
         steps_no_better = 0
         while 1:
             objective, gradient = self._objective_function(x)
-            if objective < best_objective - 1e-5:
+            if objective < best_objective - 1e-6:
                 best_objective = objective
                 steps_no_better = 0
             else:
@@ -86,8 +89,14 @@ class SimpleOptimizer:
                 if steps_no_better > 5:
                     break
             x -= gradient * learning_rate
-            x[x > 1] = 1
             x[x < 0] = 0
-            x /= x.sum() + 1e-5
+            x[x > 1] = 1
+            valid_grad = np.array((x < 1) & (x > 0), dtype=np.float)
+            d = (x.sum() - 1) / valid_grad.sum()
+            x -= d * valid_grad
+            # assert abs(x.sum() - 1)<1e-5, x.sum()
+            # if x.sum() != 0:
+            #     x /= x.sum()
+        # print(max(x))
         return x
 

@@ -3,15 +3,15 @@ from abc import abstractmethod
 import numpy as np
 import pandas as pd
 from progressbar import Bar, ProgressBar, ETA, Percentage
-from ..common.events import EventManager, EventType
-from ..common.mods import MODS
-from ..common.fund import Fund
-from ..common.market import AShareMarket
-from ...common.settings import CONFIG
-from ...common.logging import Logger
-from ...data.wind import get_index_weight
-from ...utils.calendar import TradingCalendar
-from ...utils.optimize import SimpleOptimizer
+from .common.events import EventManager, EventType
+from .common.mods import MODS
+from .common.fund import Fund
+from .common.market import AShareMarket
+from ..common.settings import CONFIG
+from ..common.logging import Logger
+from ..data.wind import get_index_weight
+from ..utils.calendar import TradingCalendar
+from ..utils.optimize import SimpleOptimizer
 
 
 class AbstractStrategy:
@@ -154,7 +154,9 @@ class NeutralStrategy(SimpleStrategy):
             return
         predicted = self.predicted.loc[today, universe].dropna()
         stocks = predicted.index
-        weights = self.optimize(predicted, today)
+        weights = self.optimize(predicted, today).sort_values(ascending=False)
+        if self.buy_count:
+            weights = weights.iloc[:self.buy_count]
         self.change_position(dict(weights.iteritems()))
 
     def optimize(self, predicted, today):
@@ -190,31 +192,5 @@ class NeutralStrategy(SimpleStrategy):
 
         weights = pd.Series(result, index=stocks)
         return weights[weights > 0]
-
-    # def optimize(self, predicted, today, stocks):
-    #     tolerance = 1e-3
-    #     index_weight = self.index_weights.loc[today, stocks].fillna(0).values
-    #     weights_ = tf.Variable(np.zeros(len(stocks)), name="weights")
-    #     weights = weights_ - index_weight
-    #     profits = tf.reduce_sum(tf.Constant(predicted.values) * weights_)
-    #     exposion_regularizer = tf.tensor.Zero
-    #     for factor, regularizer_weight in self.neutral_factors.items():
-    #         factor_data = self.factor_data[factor.factor_name].loc[today, stocks]
-    #         factor_data.fillna(np.nanmean(factor_data.values))
-    #         exposion = tf.reduce_sum(tf.Constant(factor_data.values) * weights)
-    #         exposion_regularizer += regularizer_weight * exposion ** 2
-    #     loss = exposion_regularizer - profits + tf.reduce_sum(abs(weights_) - weights_)
-    #     trainer = tf.train.SGD(loss, learning_rate=0.0001)
-    #     last_weights = np.zeros(len(stocks))
-    #     while 1:
-    #         trainer.train()
-    #         if abs(weights_.eval() - last_weights).sum() < tolerance:
-    #             break
-    #         trainer.learning_rate *= 0.999
-    #         last_weights = weights_.eval()
-    #     weights = pd.Series(last_weights, index=stocks).sort_values(ascending=False)
-    #     weights = weights[weights > 1e-3]
-    #     weights /= weights.sum()
-    #     return weights
 
 
