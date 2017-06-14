@@ -18,6 +18,7 @@ def load_class_from_file(path):
 
 
 class QuantMain:
+    """Main entry for quantlib"""
     @staticmethod
     def gen_docs(path="."):
         """
@@ -25,8 +26,9 @@ class QuantMain:
         """
         from .analysis.factors import AbstractFactor
         from .common.logging import Logger
+        filenames = [path] if path.endswith(".py") else glob.glob(os.path.join(path, "*.py"))
         num = 0
-        for filename in glob.glob(os.path.join(path, "*.py")):
+        for filename in filenames:
             if os.path.split(filename)[-1].startswith("__"):
                 continue
             obj_name, obj = load_class_from_file(filename)

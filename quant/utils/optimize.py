@@ -11,8 +11,8 @@ class SimpleOptimizer:
 
         max E(R)-\sum_j{\lambda F_j}
 
-        s.t. & & 0 \le x \le 1 \\
-             & & \sum{x} = 1
+        s.t. \qquad & 0 \le x \le 1 \\
+                    & \sum{x} = 1
 
     in which:
 
@@ -90,8 +90,8 @@ class SimpleOptimizer:
                     break
             x -= gradient * learning_rate
             x[x < 0] = 0
-            x[x > 1] = 1
-            valid_grad = np.array((x < 1) & (x > 0), dtype=np.float)
+            x[x > 0.2] = 0.2
+            valid_grad = np.array((x < 0.2) & (x > 0), dtype=np.float)
             d = (x.sum() - 1) / valid_grad.sum()
             x -= d * valid_grad
             # assert abs(x.sum() - 1)<1e-5, x.sum()

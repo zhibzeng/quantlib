@@ -3,13 +3,15 @@ import base64
 from io import BytesIO
 from abc import abstractstaticmethod
 import jinja2
+import pandas as pd
 import matplotlib.pyplot as plt
 from docutils.core import publish_parts
-from ...analysis import get_ic
+from ...analysis import get_ic, get_factor_exposure
 from ...backtest import SimpleStrategy
 from ...common.settings import CONFIG
 from ...common.html import HTML
 from ...data.wind import get_wind_data
+from ...utils.calendar import TDay
 
 
 class AbstractFactor:
@@ -28,6 +30,14 @@ class AbstractFactor:
         raise NotImplementedError
 
     @classmethod
+    def get_factor_exposure(cls, position, benchmark):
+        """
+        See: quant.analysis.get_factor_exposure
+        """
+        data = cls.get_factor_value()
+        return get_factor_exposure(position, data, benchmark)
+
+    @classmethod
     def generate_doc(cls):
         """Generate factor document"""
         factor_name = cls.factor_name or cls.__name__
@@ -41,7 +51,6 @@ class AbstractFactor:
                 cls._generate_basics(factor_name)
                 # cls._generate_backtest(strategy)
                 cls._generate_ic(factor_values)
-                cls._generate_footer()
         docstring = cls.h.render()
         with open("%s.html" % factor_name, "w", encoding="utf8") as output_file:
             output_file.write(docstring)
@@ -52,11 +61,20 @@ class AbstractFactor:
             "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
             "https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.css",
         )
+        js_files = (
+            "https://code.jquery.com/jquery-3.1.1.slim.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js",
+            "https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js",
+            "https://code.highcharts.com/stock/highstock.js",
+            "https://code.highcharts.com/stock/modules/exporting.js",
+        )
         with cls.h.head():
             cls.h.inline("meta", charset="utf-8")
             cls.h.inline("meta", name="viewport", content="width=device-width, initial-scale=1")
             for url in css_files:
                 cls.h.inline("link", rel="stylesheet", href=url, type="text/css")
+            for url in js_files:
+                cls.h.inline("script", src=url)
             cls.h.inline("title", _text=factor_name)
 
     @classmethod
@@ -88,6 +106,7 @@ class AbstractFactor:
 
     @classmethod
     def _generate_backtest(cls, strategy):
+        """Not implemented"""
         fund = strategy.fund
         net_value = fund.sheet.net_value.copy()
         benchmark = get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK].dropna()
@@ -119,32 +138,80 @@ class AbstractFactor:
                     with h.div(_class="col-md-9"):
                         h.inline('img', src='data:image/png;base64,{0}'.format(img_netvalue))
 
+    # @classmethod
+    # def _generate_ic(cls, data):
+    #     data = data.truncate("2005-01-01")
+    #     if cls.factor_freq:
+    #         data = data.resample(cls.factor_freq * TDay).last()
+    #     real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
+    #     # real_price = real_price.resample("1d").ffill()
+    #     real_price = real_price.loc[data.index]
+    #     real_rtn = real_price.pct_change()
+    #     ic_score = get_ic(data, real_rtn.shift(-1))
+    #     ic_score_monthly = ic_score.resample("1m").mean()
+    #     with BytesIO() as tmp:
+    #         plt.figure(figsize=(10, 5))
+    #         ax = ic_score_monthly.plot(kind='bar', color='red')
+    #         xticks = ax.get_xticks()
+    #         ax.plot(xticks, ic_score_monthly.rolling(6).mean())
+    #         num_labels = 10
+    #         xlabels = [ic_score.index[i].strftime("%b %Y")
+    #                    if i % (len(xticks) // num_labels) == 0 else ""
+    #                    for i in range(len(xticks))]
+    #         ax.set_xticks(xticks)
+    #         ax.set_xticklabels(xlabels)
+    #         plt.xticks(rotation=10)
+    #         plt.savefig(tmp, format="png")
+    #         plt.cla()
+    #         tmp.seek(0)
+    #         raw_img = tmp.read()
+    #         img_ic = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
+    #     h = cls.h
+    #     with h.div(_class="py-5"):
+    #         with h.div(_class="container"):
+    #             with h.div(_class="row"):
+    #                 h.inline("h1", _text="IC")
+    #                 h.inline("hr")
+    #             with h.div(_class="row"):
+    #                 with h.div(_class="col-md-3"):
+    #                     with h.table(_class="table"):
+    #                         with h.tbody():
+    #                             with h.tr():
+    #                                 h.inline("td", _text="mean")
+    #                                 h.inline("td", _text="%0.3f" % ic_score.mean())
+    #                             with h.tr():
+    #                                 h.inline("td", _text="std")
+    #                                 h.inline("td", _text="%0.3f" % ic_score.std())
+    #                             with h.tr():
+    #                                 h.inline("td", _text="t-score")
+    #                                 t_score = ic_score.mean()/ic_score.std()*len(ic_score.dropna())**0.5
+    #                                 h.inline("td", _text="%0.3f" % t_score)
+    #                 with h.div(_class="col-md-9"):
+    #                     h.inline('img', src='data:image/png;base64,{0}'.format(img_ic))
+
+
     @classmethod
     def _generate_ic(cls, data):
         data = data.truncate("2005-01-01")
+        if cls.factor_freq:
+            data = data.resample(cls.factor_freq * TDay, closed='right', label='right').last()
         real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
         # real_price = real_price.resample("1d").ffill()
         real_price = real_price.loc[data.index]
-        real_rtn = real_price.pct_change()
-        ic_score = get_ic(data.shift(1), real_rtn)
-        ic_score = ic_score.resample("1m").mean()
-        with BytesIO() as tmp:
-            plt.figure(figsize=(10, 5))
-            ax = ic_score.plot(kind='bar', color='red')
-            xticks = ax.get_xticks()
-            ax.plot(xticks, ic_score.rolling(6).mean())
-            num_labels = 10
-            xlabels = [ic_score.index[i].strftime("%b %Y")
-                       if i % (len(xticks) // num_labels) == 0 else ""
-                       for i in range(len(xticks))]
-            ax.set_xticks(xticks)
-            ax.set_xticklabels(xlabels)
-            plt.xticks(rotation=10)
-            plt.savefig(tmp, format="png")
-            plt.cla()
-            tmp.seek(0)
-            raw_img = tmp.read()
-            img_ic = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
+        real_rtn = real_price.pct_change().shift(-1)
+        ic_score = get_ic(data, real_rtn)
+        ic_score_monthly = ic_score.resample("1m").mean()
+        ic_score_monthly.name = "IC Score"
+
+        mean = ic_score.mean()
+        std = ic_score.std()
+        t_score = mean / std * len(ic_score.dropna())**0.5
+        table = pd.DataFrame({'IC': [
+                "%0.3f" % mean,
+                "%0.3f" % std,
+                "%0.3f" % t_score,
+            ]}, index=['Mean', 'Std', 'T-score'])
+
         h = cls.h
         with h.div(_class="py-5"):
             with h.div(_class="container"):
@@ -152,15 +219,7 @@ class AbstractFactor:
                     h.inline("h1", _text="IC")
                     h.inline("hr")
                 with h.div(_class="row"):
-                    with h.div(_class="col-md-12"):
-                        h.inline('img', src='data:image/png;base64,{0}'.format(img_ic))
-
-    @classmethod
-    def _generate_footer(cls):
-        js_files = (
-            "https://code.jquery.com/jquery-3.1.1.slim.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js",
-            "https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js",
-        )
-        for url in js_files:
-            cls.h.inline("script", src=url)
+                    with h.div(_class="col-md-3"):
+                        h.generate_table(table, show_headers=False, _class="py-5")
+                    with h.div(_class="col-md-9"):
+                        h.highcharts("IC", ic_score_monthly, plot_type="column")

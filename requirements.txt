@@ -6,6 +6,7 @@ richenum
 lxml
 matplotlib
 fire
+jinja2
 
 # optional
 # pymysql

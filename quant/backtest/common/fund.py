@@ -55,7 +55,8 @@ class Fund:
             return
         old_position = self.position.iloc[self.today_idx, :-1].copy()
         new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
-        tobuy = pd.Series(self.__tobuy) * self.net_value
+        limited = (self.market.today_market > 0.09) | (self.market.today_market < -0.09)
+        tobuy = pd.Series(self.__tobuy) * (old_position[~limited].sum() + self.position.iloc[self.today_idx, -1])
         new_position.update(tobuy)
         for stock, pct in old_position[self.market.today_market > 0.09].iteritems():
             new_position[stock] = min(pct, new_position[stock])   # cannot buy stocks reach up-limit

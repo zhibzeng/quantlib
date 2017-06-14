@@ -26,7 +26,7 @@ def get_ic(table1, table2):
         rk2 = table2.loc[date_idx]
         corr = rk1.corr(rk2, method="spearman")
         ic[date_idx] = corr
-    return ic
+    return ic.dropna()
 
 
 def get_factor_exposure(position, factor_value, benchmark=None):
