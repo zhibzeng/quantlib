@@ -108,7 +108,7 @@ class WebVisualizer(AbstractMod):
             display(HTML(html))
         else:
             filename = "%s.html" % info["strategy_name"]
-            filename = os.path.abspath(filename)
+            filename = os.path.realpath(filename)
             with open(filename, "w", encoding="utf8") as output_file:
                 output_file.write(html)
             Logger.info("HTML results output to: %s" % filename)
