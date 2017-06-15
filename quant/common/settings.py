@@ -134,7 +134,7 @@ class ConfigManager:
 
     def keys(self):
         """列出所有可用的参数名"""
-        return self.data.keys()
+        return self.__keys
 
     def items(self):
         """遍历键值对"""
