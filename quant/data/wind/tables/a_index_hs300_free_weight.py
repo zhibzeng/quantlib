@@ -10,9 +10,9 @@ class AIndexHS300FreeWeight(BaseModel):
     object_id
         主键
     s_info_windcode
-        万得代码， eg. 600030.SH
+        指数万得代码
 	s_con_windcode
-		万得公司代码
+		股票万得代码
     trade_dt
         日期 YYYYMMDD
 	i_weight

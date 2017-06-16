@@ -49,6 +49,7 @@ def get_wind_rawdata(table, parse_dates=None) -> pd.DataFrame:
         table = getattr(tables, table)
     columns = table.__table__.columns
     wind_connection = get_sql_connection()
+    parse_dates = parse_dates or {col: "%Y%m%d" for col in columns if col.endswith("_dt")}
     data = pd.read_sql(select(columns), wind_connection.engine, parse_dates=parse_dates)
     return data
 
@@ -83,10 +84,8 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     columns_ = __get_field(table, columns)
     sql_statement = select([field_, index_, columns_])
     wind_connection = get_sql_connection()
-    data = pd.read_sql(sql_statement, wind_connection.engine)
+    data = pd.read_sql(sql_statement, wind_connection.engine, parse_dates=parse_dates)
     data = data.pivot(index=index, columns=columns, values=field)
-    if parse_dates:
-        data.index = pd.to_datetime(data.index)
     return data
 
 

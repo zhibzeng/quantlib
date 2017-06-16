@@ -65,11 +65,10 @@ class WebVisualizer(AbstractMod):
         exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
         with BytesIO() as tmp:
             ax = exposure.plot.bar()
-            xticks = ax.get_xticks()
             xlabels = []
             for date_idx in exposure.index:
                 if date_idx.month == 1:
-                    xlabels.append("Jun\n%d" % date_idx.year)
+                    xlabels.append(date_idx.strftime("%b\n%Y"))
                 elif date_idx.month in (4, 7, 10):
                     xlabels.append(date_idx.strftime("%b"))
                 else:
