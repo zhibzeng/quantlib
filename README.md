@@ -14,6 +14,20 @@ git clone git@github.com:SnowWalkerJ/quantlib.git
 python setup.py install
 ```
 
+## Wind Data
+
+```python
+import quant.data.wind as wind
+wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100   # 获取涨跌幅
+wind.get_wind_rawdata("AShareST")                               # 获取ST信息
+```
+
+## Backtest
+
+![Backtest Web Visualizer](http://quantlib.readthedocs.io/_images/backtest_web.jpg)
+
+参考相应[文档](http://quantlib.readthedocs.io/backtest.html)
+
 ## Documents
 
 文档部署在[Readthedocs](http://quantlib.readthedocs.io/)上。
