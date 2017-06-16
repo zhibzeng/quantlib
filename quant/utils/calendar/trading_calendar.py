@@ -47,6 +47,6 @@ class TradingCalendar:
         """根据获取的节假日信息生成pd.tseries.offsets.CustomBusinessDay对象"""
         return CustomBusinessDay(holidays=self.holidays)
 
-
-TDay = TradingCalendar().TradingDay
+trading_calendar = TradingCalendar()
+TDay = trading_calendar.TradingDay
 """Trading Day, as pd.tseries.offset.CustomBusinessDay"""
