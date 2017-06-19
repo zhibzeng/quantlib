@@ -1,10 +1,10 @@
 quant.backtest
-==============
+**************
 
 ..  currentmodule:: quant.backtest
 
 Get Started
------------
+===========
 
 一个简单的股票回测程序只需要继承一个抽象策略类，定义一个选股策略就可以，一个简单的例子是:
 
@@ -25,7 +25,7 @@ Get Started
 ..  image:: _static/backtest_web.jpg
 
 Data
-----
+====
 
 原则上，在回测中可以使用普通的quant.data.wind接口获取数据，但是这样难以控制获取未来数据的风险，
 为了在一定程度上减轻这个问题，用户可以使用``quant.backtest.common.market.get_wind_data``来代替
@@ -33,7 +33,7 @@ Data
 
 
 Mods
-----
+====
 
 本回测框架提供一些可选模块来支持扩展特性，同时也允许用户自定义模块。默认提供的模块有：
 
@@ -63,22 +63,7 @@ Mods
 则以上策略只会显示简单的回测信息，且不会对可选股票池作任何变化。
 
 
-API
----
-
-..  currentmodule:: quant.backtest
-
-..  autoclass:: quant.backtest.stock.strategy.AbstractStrategy
-    :members:
-
-..  autoclass:: quant.backtest.stock.strategy.SimpleStrategy
-    :members: __init__
-
-..  autoclass:: quant.backtest.stock.strategy.NeutralStrategy
-    :members: __init__
-
-
 Developer
----------
+=========
 
 To be expected.
