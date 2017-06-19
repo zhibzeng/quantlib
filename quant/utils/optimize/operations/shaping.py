@@ -1,4 +1,4 @@
-from faketf.tensor import Op, Tensor, cached, Unit, Constant
+from ..tensor import Op, Tensor, cached, Unit, Constant
 import numpy as np
 
 

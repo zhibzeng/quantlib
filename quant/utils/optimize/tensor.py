@@ -12,7 +12,7 @@ class Tensor:
     def __init__(self, shape, dtype, dependency=None, graph=None, name=None):
         self.dependency = dependency or set()
         self.direct_dependencies = self.direct_dependencies or set()
-        self.shape = shape
+        self.shape = tuple(shape)
         self.dtype = dtype
         self.graph = graph or get_graph()
         self.name = self.graph.check_name(self, name)
@@ -81,10 +81,7 @@ class Tensor:
             return self
         elif not isinstance(other, Tensor):
             other = Constant(other)
-        if self in (Zero, Unit):
-            return other.__mul__(self)
-        else:
-            return MulOp(self, other)
+        return MulOp(self, other)
 
     def __rmul__(self, other):
         return self.__mul__(other)
@@ -92,7 +89,20 @@ class Tensor:
     def __matmul__(self, other):
         if not isinstance(other, Tensor):
             other = Constant(other)
-        return MatMulOp(self, other)
+        if len(other.shape) == len(self.shape) == 2 and other.shape[0] == self.shape[1]:
+            return MatMulOp(self, other)
+        elif len(other.shape) == len(self.shape) == 1 and other.shape[0] == self.shape[0]:
+            from .operations import ReduceSumOp
+            return ReduceSumOp(MulOp(self, other))
+
+    def __rmatmul__(self, other):
+        if not isinstance(other, Tensor):
+            other = Constant(other)
+        if len(other.shape) == len(self.shape) == 2 and other.shape[1] == self.shape[0]:
+            return MatMulOp(other, self)
+        elif len(other.shape) == len(self.shape) == 1 and other.shape[0] == self.shape[0]:
+            from .operations import ReduceSumOp
+            return ReduceSumOp(MulOp(self, other))
 
     def __pow__(self, power: float, modulo=None):
         return PowerOp(self, power)
@@ -210,9 +220,9 @@ def broadcastable(shape1: tuple, shape2: tuple):
             return False, None
     elif (shape1 == shape2).all():
         return True, None
-    elif (shape1 >=shape2).all():
+    elif (shape1 >= shape2).all():
         return True, 1
-    elif (shape2 >=shape1).all():
+    elif (shape2 >= shape1).all():
         return True, 0
     else:
         return False, None
@@ -269,8 +279,9 @@ class Op(Tensor):
 
 class AddOp(Op):
     def __init__(self, t1: Tensor, t2: Tensor):
-        # if t1.shape != t2.shape:
-        #     raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
+        valid, master = broadcastable(t1.shape, t2.shape)
+        if not valid:
+            raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
         self.t1 = t1
         self.t2 = t2
         self.direct_dependencies = [t1, t2]
@@ -278,7 +289,8 @@ class AddOp(Op):
             t1: Unit,
             t2: Unit,
         }
-        super(AddOp, self).__init__(shape=t1.shape, dtype=t1.dtype, name="Add")
+        shape = t1.shape if master else t2.shape
+        super(AddOp, self).__init__(shape=shape, dtype=t1.dtype, name="Add")
 
     @cached
     def eval(self, feed_dict=None):
@@ -287,8 +299,9 @@ class AddOp(Op):
 
 class SubOp(Op):
     def __init__(self, t1: Tensor, t2: Tensor):
-        # if t1.shape != t2.shape:
-        #     raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
+        valid, master = broadcastable(t1.shape, t2.shape)
+        if not valid:
+            raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
         self.t1 = t1
         self.t2 = t2
         self.direct_dependencies = [t1, t2]
@@ -296,7 +309,8 @@ class SubOp(Op):
             t1: Unit,
             t2: Constant(-1.0),
         }
-        super(SubOp, self).__init__(shape=t1.shape, dtype=t1.dtype, name="Sub")
+        shape = t1.shape if master else t2.shape
+        super(SubOp, self).__init__(shape=shape, dtype=t1.dtype, name="Sub")
 
     @cached
     def eval(self, feed_dict=None):
@@ -305,8 +319,9 @@ class SubOp(Op):
 
 class MulOp(Op):
     def __init__(self, t1: Tensor, t2: Tensor):
-        # if t1.shape != t2.shape:
-        #     raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
+        valid, master = broadcastable(t1.shape, t2.shape)
+        if not valid:
+            raise TypeError("shape of %s and %s incompatible: `%s` and `%s`" % (t1.name, t2.name, t1.shape, t2.shape))
         self.t1 = t1
         self.t2 = t2
         self.direct_dependencies = [t1, t2]
@@ -314,7 +329,8 @@ class MulOp(Op):
             t1: t2,
             t2: t1,
         }
-        super(MulOp, self).__init__(shape=t1.shape, dtype=t1.dtype, name="Mul")
+        shape = t1.shape if master else t2.shape
+        super(MulOp, self).__init__(shape=shape, dtype=t1.dtype, name="Mul")
 
     @cached
     def eval(self, feed_dict=None):

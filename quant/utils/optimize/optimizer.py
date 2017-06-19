@@ -2,6 +2,7 @@ import numpy as np
 from .graph import get_graph
 from .tensor import Variable
 from .train import SGD
+from .operations import reduce_sum
 
 
 class Optimizer:
@@ -18,6 +19,8 @@ class Optimizer:
         return variable
 
     def set_target(self, loss):
+        if len(loss.shape) != 0:
+            loss = reduce_sum(loss)
         self.loss = loss
 
     def add_constraint(self, variable, eq=True):
@@ -34,10 +37,16 @@ class Optimizer:
 
     def get_loss(self):
         loss = self.loss
-        for regular in self.eqs:
-            loss += regular ** 2
-        for regular in self.ineqs:
-            loss += regular - abs(regular)
+        for constraint in self.eqs:
+            constraint = constraint ** 2 * 20
+            if len(constraint.shape) != 0:
+                constraint = reduce_sum(constraint)
+            loss += constraint
+        for constraint in self.ineqs:
+            constraint = (abs(constraint) - constraint) * 20
+            if len(constraint.shape) != 0:
+                constraint = reduce_sum(constraint)
+            loss += constraint
         return loss
 
     def __getitem__(self, name):
