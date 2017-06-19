@@ -7,6 +7,7 @@ lxml
 matplotlib
 fire
 jinja2
+lazy-property
 
 # optional
 # pymysql

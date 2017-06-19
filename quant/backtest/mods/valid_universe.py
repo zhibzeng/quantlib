@@ -5,7 +5,7 @@ import pandas as pd
 from ..common.mods import AbstractMod
 from ..common.events import EventType
 from ...data.wind import get_wind_rawdata, get_wind_data
-from ...utils.calendar.trading_calendar import TradingCalendar
+from ...utils.calendar import TDay
 
 
 @AbstractMod.register
@@ -61,20 +61,26 @@ class NoUpLimitUniverse(AbstractMod):
     """从可交易股票池中去除涨停股票"""
     def __init__(self):
         self.strategy = None
+        self.open_prices = None
+        self.close_prices = None
 
     def __plug_in__(self, caller):
         self.strategy = caller
         self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
+        self.open_prices = caller.market.open_prices
+        self.close_prices = caller.market.close_prices
 
     def handle_universe(self, universe):
         today = self.strategy.today
-        last_trading_day = today - TradingCalendar().TradingDay
-        if last_trading_day not in self.strategy.market.market_data.index:
+        next_trading_day = today + TDay
+        if next_trading_day not in self.strategy.market.market_data.index:
             return
-        for stock in universe:
-            last_change = self.strategy.market.market_data.loc[last_trading_day, stock]
-            today_change = self.strategy.market.market_data.loc[today, stock]
-            if np.isnan(last_change) or today_change > 0.09:
+        next_open = self.open_prices.loc[next_trading_day]
+        this_close = self.close_prices.loc[today]
+        change = next_open / this_close - 1
+        up_limit = change[change > 0.09].index
+        for stock in up_limit:
+            if stock in universe:
                 universe.remove(stock)
 
 

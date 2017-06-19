@@ -1,5 +1,97 @@
 """Position optimization"""
 import numpy as np
+from ..common.settings import CONFIG
+import tensorflow as tf
+
+
+CONFIG.add_argument("--optim_single_limit", type=float, default=0.03)
+CONFIG.add_argument("--optim_factor_limit", type=float, default=0.1)
+
+
+class LimitedOptimizer:
+    r"""
+        Simple optimizer to optimize position.
+
+    It is to solve the question:
+
+    ..  math::
+
+        max E(R)
+
+        s.t. \qquad & 0 \le x \le optim_single_limit \\
+                    & \sum{x} = 1 \\
+                    & \lambda F_j \le optim_factor_limit
+
+    in which:
+
+    ..  math::
+
+        E(R) = \sum_i{E(r_i)x_i}
+
+        F_j = \abs{\sum_i{exposure_{ij} x_i} - y_j}
+
+    :math:`y_j` is the expected exposure, which is usually set
+    as the exposure of the hedging asset.
+    """
+    def __init__(self, expected_return):
+        """
+        Parameters
+        ----------
+        expected_return: np.ndarray
+            :math:`E(r_i)`
+        """
+        self.expected_return = np.asarray(expected_return)
+        self.risks = []
+
+    def add_risk(self, w, y, lamb=1.0):
+        r"""
+        Add a risk, whose exposure to be minimized.
+
+        Parameters
+        ----------
+        w: np.ndarray
+            the exposure of the stocks
+        y: np.ndarray
+            target total exposure
+        lamb: float, optional
+            :math:`\lambda` in the formula
+        """
+        self.risks.append((w, y, lamb))
+
+    def optimize(self, x0, learning_rate=1e-3):
+        """
+        Run the optimization and return the result.
+
+        Parameters
+        ----------
+        x0: np.ndarray
+            Initial value of the weights
+        learning_rate: float, optional
+            learning rate
+
+        Returns
+        -------
+        np.ndarray, the optimized weights of the stocks
+        """
+        graph = tf.Graph()
+        sess = tf.Session(graph=graph)
+        with graph.as_default():
+            x = tf.Variable(np.ones_like(self.expected_return) / len(self.expected_return), dtype=tf.float32)
+            loss = - tf.reduce_sum(tf.constant(self.expected_return, dtype=tf.float32) * x)
+            # for w, y, lamb in self.risks:
+            #     risk = tf.reduce_sum(tf.constant(w, dtype=tf.float32) * x) - tf.constant(y, dtype=tf.float32)
+            #     loss += tf.cond(risk > 0.1, lambda: risk-0.1, lambda: tf.constant(0, dtype=tf.float32))
+            regular = tf.abs(x) + (tf.reduce_sum(x) - 1) ** 2 + tf.abs(x-1)
+            loss += regular
+            trainer = tf.train.GradientDescentOptimizer(1e-6)
+            train_op = trainer.minimize(loss)
+            sess.run(tf.global_variables_initializer())
+            for i in range(1000):
+                sess.run(train_op)
+            x = sess.run(x)
+            print(x)
+            return x
+
 
 class SimpleOptimizer:
     r"""

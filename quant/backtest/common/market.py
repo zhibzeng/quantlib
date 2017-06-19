@@ -1,5 +1,5 @@
 """回测时使用的行情接口"""
-from .events import EventType
+from lazy_property import LazyProperty
 from ...data import wind
 
 
@@ -11,11 +11,15 @@ class AShareMarket:
         self.trading_days = None
         self.today = None
         self.today_market = None
+        self.open_prices = None
+        self.close_prices = None
 
     def initalize_market(self, start_date, end_date):
         self.market_data = wind.get_wind_data("AShareEODPrices",
                                               "s_dq_pctchange").truncate(start_date, end_date) / 100
         self.market_data["CASH"] = 0
+        self.open_prices = wind.get_wind_data("AShareEODPrices", "s_dq_adjopen")
+        self.close_prices = wind.get_wind_data("AShareEODPrices", "s_dq_adjclose")
         self.trading_days = self.market_data.index
 
     def on_newday(self, today):

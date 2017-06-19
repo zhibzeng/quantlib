@@ -84,6 +84,8 @@ def get_wind_data(table, field, index=None, columns=None, parse_dates=True):
     columns_ = __get_field(table, columns)
     sql_statement = select([field_, index_, columns_])
     wind_connection = get_sql_connection()
+    if parse_dates:
+        parse_dates = {'trade_dt': '%Y%m%d'}
     data = pd.read_sql(sql_statement, wind_connection.engine, parse_dates=parse_dates)
     data = data.pivot(index=index, columns=columns, values=field)
     return data

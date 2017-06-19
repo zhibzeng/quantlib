@@ -122,7 +122,7 @@ class HTML:
                 text: '{{name}}'
             },
             series: [
-                # for s_name, s_value in data
+                {% for s_name, s_value in data %}
                 {
                     name: '{{ s_name }}',
                     data: {{ s_value }},
@@ -131,7 +131,7 @@ class HTML:
                         valueDecimals: 3
                     }
                 }
-                # endfor
+                {% endfor %}
             ]
         });
         """)

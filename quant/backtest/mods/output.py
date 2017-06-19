@@ -3,6 +3,7 @@
 """
 from ..common import AbstractMod, EventType
 from ...common.settings import CONFIG
+from ...common.logging import Logger
 
 
 @AbstractMod.register
@@ -23,5 +24,7 @@ class Output(AbstractMod):
         formats = CONFIG.OUTPUT
         if "sheet" in formats:
             fund.sheet.to_hdf(filename, "sheet")
+            Logger.info("Output sheet to %s" % filename)
         if "position" in formats:
             fund.position.to_hdf(filename, "position")
+            Logger.info("Output position to %s" % filename)

@@ -11,7 +11,7 @@ from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data.wind import get_index_weight
 from ..utils.calendar import TradingCalendar
-from ..utils.optimize import SimpleOptimizer
+from ..utils.optimize import SimpleOptimizer, LimitedOptimizer
 
 
 class AbstractStrategy:
@@ -28,7 +28,6 @@ class AbstractStrategy:
     def __init__(self):
         self.event_manager = EventManager(EventType)
         self.calendar = TradingCalendar()
-        self._load_mods()
         self.market = None
         self.fund = None
         self.today = None
@@ -64,6 +63,7 @@ class AbstractStrategy:
         """运行回测过程"""
         self._initialize_market_data()
         self._initialize_fund()
+        self._load_mods()
         self.event_manager.trigger(EventType.BACKTEST_START)
         bar = ProgressBar(widgets=[Percentage(), Bar(), ETA()])
         for day in bar(self.market.trading_days):
@@ -155,8 +155,11 @@ class NeutralStrategy(SimpleStrategy):
         predicted = self.predicted.loc[today, universe].dropna()
         stocks = predicted.index
         weights = self.optimize(predicted, today).sort_values(ascending=False)
+        weights = weights[weights > 0]
+        weights /= weights.sum()
         if self.buy_count:
             weights = weights.iloc[:self.buy_count]
+            # weights /= weights.sum()
         self.change_position(dict(weights.iteritems()))
 
     def optimize(self, predicted, today):
@@ -179,7 +182,8 @@ class NeutralStrategy(SimpleStrategy):
         index_weight = self.index_weights.loc[today].fillna(0)
         stocks = list(predicted.index)
 
-        optimizer = SimpleOptimizer(predicted.values)
+        # optimizer = SimpleOptimizer(predicted.values)
+        optimizer = LimitedOptimizer(predicted.values)
 
         for factor, regularizer_weight in self.neutral_factors.items():
             factor_data = self.factor_data[factor.factor_name].loc[today]
@@ -187,10 +191,8 @@ class NeutralStrategy(SimpleStrategy):
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
             optimizer.add_risk(stocks_exposure, index_exposure, regularizer_weight)
-
         result = optimizer.optimize(x0=np.full(len(stocks), 1/len(stocks)))
 
         weights = pd.Series(result, index=stocks)
         return weights[weights > 0]
-
 

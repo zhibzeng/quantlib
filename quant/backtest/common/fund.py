@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from .events import EventType
 from ...common.settings import CONFIG
+from ...common.logging import Logger
+from ...utils.calendar import TDay
 
 
 class Fund:
@@ -49,26 +51,78 @@ class Fund:
             self.sheet.loc[today, "net_value"] = self.position.iloc[self.today_idx].sum()
             self.sheet.loc[today, "fee"] = 0
 
+    # def do_transactions(self):
+    #     # TODO: trade with average prices
+    #     if not self.__tobuy:
+    #         return
+    #     old_position = self.position.iloc[self.today_idx, :-1].copy()
+    #     new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
+    #     limited = (self.market.today_market > 0.09) | (self.market.today_market < -0.09)
+    #     tobuy = pd.Series(self.__tobuy) * (old_position[~limited].sum() + self.position.iloc[self.today_idx, -1])
+    #     new_position.update(tobuy)
+    #     for stock, pct in old_position[self.market.today_market > 0.09].iteritems():
+    #         new_position[stock] = min(pct, new_position[stock])   # cannot buy stocks reach up-limit
+    #     for stock, pct in old_position[self.market.today_market < -0.09].iteritems():
+    #         new_position[stock] = max(pct, new_position[stock])   # cannot buy stocks reach up-limit
+    #     self.position.iloc[self.today_idx, :-1] = new_position
+    #     fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
+    #     self.__tobuy = None
+    #     self.sheet.loc[self.strategy.today, "net_value"] -= fee
+    #     self.sheet.loc[self.strategy.today, "fee"] = fee
+    #     self.position.loc[self.strategy.today, "CASH"] = \
+    #         self.net_value - self.position.iloc[self.today_idx, :-1].sum()
+
+
     def do_transactions(self):
-        # TODO: trade with average prices
         if not self.__tobuy:
             return
-        old_position = self.position.iloc[self.today_idx, :-1].copy()
-        new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
-        limited = (self.market.today_market > 0.09) | (self.market.today_market < -0.09)
-        tobuy = pd.Series(self.__tobuy) * (old_position[~limited].sum() + self.position.iloc[self.today_idx, -1])
-        new_position.update(tobuy)
-        for stock, pct in old_position[self.market.today_market > 0.09].iteritems():
-            new_position[stock] = min(pct, new_position[stock])   # cannot buy stocks reach up-limit
-        for stock, pct in old_position[self.market.today_market < -0.09].iteritems():
-            new_position[stock] = max(pct, new_position[stock])   # cannot buy stocks reach up-limit
+        today = self.strategy.today
+        old_position = self.position.iloc[self.today_idx, :-1]
+        new_position = self.handle_position(old_position)
         self.position.iloc[self.today_idx, :-1] = new_position
         fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
         self.__tobuy = None
-        self.sheet.loc[self.strategy.today, "net_value"] -= fee
-        self.sheet.loc[self.strategy.today, "fee"] = fee
-        self.position.loc[self.strategy.today, "CASH"] = \
+        self.sheet.loc[today, "net_value"] -= fee
+        self.sheet.loc[today, "fee"] = fee
+        self.position.loc[today, "CASH"] = \
             self.net_value - self.position.iloc[self.today_idx, :-1].sum()
+
+
+    def handle_position(self, old_position):
+        today = self.strategy.today.strftime("%Y%m%d")
+        new_position = old_position.copy()
+        tobuy = pd.Series(np.zeros_like(old_position), index=old_position.index)
+        tobuy.update(pd.Series(self.__tobuy))
+        uplimit, downlimit = self.get_limits()
+        wanted_position = tobuy * self.net_value
+        overflow_position = 0
+        effected_by_limit = []
+        for stock in uplimit:
+            if wanted_position[stock] > old_position[stock]:
+                overflow_position += wanted_position[stock] - old_position[stock]
+                effected_by_limit.append(stock)
+                Logger.debug("Buying up-limit stock: {date} - {stock}".format(date=today, stock=stock))
+        for stock in downlimit:
+            if wanted_position[stock] < old_position[stock]:
+                overflow_position += wanted_position[stock] - old_position[stock]
+                effected_by_limit.append(stock)
+                Logger.debug("Selling down-limit stock: {date} - {stock}".format(date=today, stock=stock))
+        others = [stock for stock in old_position.index if stock not in effected_by_limit + ["CASH"]]
+        tobuy[others] -= tobuy[others] * overflow_position / tobuy[others].sum()
+        new_position.update(tobuy[others] * self.net_value)
+        return new_position
+
+    def get_limits(self):
+        today = self.strategy.today
+        today_open = self.market.open_prices.loc[today]
+        try:
+            yesterday_close = self.market.close_prices.loc[today - TDay]    
+        except (KeyError, IndexError):
+            return [], []
+        pct_change = today_open / yesterday_close - 1
+        uplimit = list(pct_change[pct_change > 0.09].index)
+        downlimit = list(pct_change[pct_change < -0.09].index)
+        return uplimit, downlimit
 
     def change_position(self, tobuy_pct):
         self.__tobuy = tobuy_pct
