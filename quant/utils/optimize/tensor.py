@@ -1,7 +1,7 @@
 from collections import defaultdict
+from typing import Set
 import numpy as np
 from .graph import get_graph
-from typing import Set
 from .constant import *
 
 
@@ -9,12 +9,12 @@ class Tensor:
     tensor_type = None
     direct_dependencies = None
 
-    def __init__(self, shape, dtype, dependency=None, name=None):
+    def __init__(self, shape, dtype, dependency=None, graph=None, name=None):
         self.dependency = dependency or set()
         self.direct_dependencies = self.direct_dependencies or set()
         self.shape = shape
         self.dtype = dtype
-        self.graph = get_graph()
+        self.graph = graph or get_graph()
         self.name = self.graph.check_name(self, name)
         self.graph.add_tensor(self)
         self.__cache = False
@@ -102,12 +102,12 @@ class Tensor:
 
 
 class Variable(Tensor):
-    def __init__(self, values, dtype=None, trainable: bool=True, name: str=None):
+    def __init__(self, values, dtype=None, trainable: bool=True, name: str=None, **kwargs):
         self.trainable = trainable
         self.values = np.array(values, dtype=dtype)
         self.tensor_type = TYPE_VARIABLE
         name = name or "Variable"
-        super(Variable, self).__init__(shape=self.values.shape, dtype=self.values.dtype, dependency=None, name=name)
+        super(Variable, self).__init__(shape=self.values.shape, dtype=self.values.dtype, dependency=None, name=name, **kwargs)
 
     def eval(self, feed_dict: dict=None)->np.ndarray:
         if feed_dict and self in feed_dict:
@@ -138,11 +138,11 @@ class Variable(Tensor):
 
 
 class Constant(Tensor):
-    def __init__(self, values, dtype=None, name: str=None):
+    def __init__(self, values, dtype=None, name: str=None, **kwargs):
         self.values = np.array(values, dtype=dtype)
         self.tensor_type = TYPE_CONSTANT
         name = name or "Constant"
-        super(Constant, self).__init__(shape=self.values.shape, dtype=self.values.dtype, dependency=None, name=name)
+        super(Constant, self).__init__(shape=self.values.shape, dtype=self.values.dtype, dependency=None, name=name, **kwargs)
 
     def eval(self, feed_dict: dict=None)->np.ndarray:
         if feed_dict and self in feed_dict:
@@ -157,10 +157,10 @@ Zero = Constant(0.0)
 
 
 class Placeholder(Tensor):
-    def __init__(self, shape, dtype=np.float32, name: str=None):
+    def __init__(self, shape, dtype=np.float32, name: str=None, **kwargs):
         self.tensor_type = TYPE_PLACEHOLDER
         name = name or "Placeholder"
-        super(Placeholder, self).__init__(shape=shape, dtype=dtype, name=name)
+        super(Placeholder, self).__init__(shape=shape, dtype=dtype, name=name, **kwargs)
 
     def eval(self, feed_dict: dict=None)->np.ndarray:
         if not feed_dict or self not in feed_dict:

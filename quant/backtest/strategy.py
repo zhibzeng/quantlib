@@ -11,7 +11,9 @@ from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data.wind import get_index_weight
 from ..utils.calendar import TradingCalendar
-from ..utils.optimize import SimpleOptimizer, LimitedOptimizer
+from ..utils.optimize import Variable, Constant
+from ..utils.optimize.graph import Graph
+from ..utils.optimize.train import SGD
 
 
 class AbstractStrategy:
