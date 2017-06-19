@@ -74,6 +74,9 @@ class Tensor:
             other = Constant(other)
         return SubOp(other, self)
 
+    def __neg__(self):
+        return NegOp(self)
+
     def __mul__(self, other):
         if other is Zero:
             return Constant(np.zeros(self.shape, self.dtype))
@@ -367,6 +370,23 @@ class AbsOp(Op):
         if uplevel is None:
             uplevel = Constant(np.ones(self.shape, dtype=np.float32))
         return {self.income: uplevel * AbsDerivation(self.income)}
+
+
+class NegOp(Op):
+    def __init__(self, income: Tensor):
+        self.income = income
+        self.direct_dependencies = [income]
+        super(NegOp, self).__init__(shape=income.shape, dtype=income.dtype, name="Neg")
+
+    @cached
+    def eval(self, feed_dict=None):
+        down_level = self.income.eval(feed_dict)
+        return - down_level
+
+    def get_gradients(self, uplevel=None):
+        if uplevel is None:
+            uplevel = Constant(np.ones(self.shape, dtype=np.float32))
+        return {self.income: - uplevel}
 
 
 class PowerOp(Op):
