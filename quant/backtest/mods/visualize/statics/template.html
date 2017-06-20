@@ -41,6 +41,7 @@
             <div id="container" style="height: 400px; width: 100%; min-width: 310px"></div>
           </div>
           <div class="row">
+            <p class="stock-list-date"></p>
             <table class="table">
               <thead>
                 <tr>
@@ -143,6 +144,7 @@
 
       function onSeriesClick(event){
         var stockList = stocks[event.point.x];
+        $(".stock-list-date").text(Highcharts.dateFormat("%Y-%m-%d", event.point.x));
         $(".positionList").html("");
         for (var stock in stockList){
           $(".positionList").append("<tr><td>" + stockList[stock][0] + "</td><td>" + xround(stockList[stock][1], 3) + "</td></tr>");

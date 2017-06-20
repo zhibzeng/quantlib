@@ -1,5 +1,6 @@
 """股票类回测策略"""
 from abc import abstractmethod
+from scipy.optimize import linprog
 import numpy as np
 import pandas as pd
 from progressbar import Bar, ProgressBar, ETA, Percentage
@@ -11,9 +12,11 @@ from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data.wind import get_index_weight
 from ..utils.calendar import TradingCalendar
-from ..utils.optimize import Variable, Constant
-from ..utils.optimize.graph import Graph
-from ..utils.optimize.train import SGD
+# from ..utils.optimize import Variable, Constant, reduce_sum
+# from ..utils.optimize.tensor import Unit
+# from ..utils.optimize.optimizer import Optimizer
+# from ..utils.optimize.graph import Graph
+# from ..utils.optimize.train import SGD
 
 
 class AbstractStrategy:
@@ -131,6 +134,9 @@ class SimpleStrategy(AbstractStrategy):
             self.predicted.loc[today]
         except KeyError:
             return
+        import ipdb
+        if today.strftime("%Y-%m-%d") == "2015-06-25":
+            ipdb.set_trace()
         predicted = self.predicted.loc[today, universe].dropna().sort_values(ascending=False)
         buy = predicted.index[:self.buy_count]
         share_per_stock = 0.999 / (len(buy) + 1e-6)          # keep 0.001 for transaction fee
@@ -158,10 +164,9 @@ class NeutralStrategy(SimpleStrategy):
         stocks = predicted.index
         weights = self.optimize(predicted, today).sort_values(ascending=False)
         weights = weights[weights > 0]
-        weights /= weights.sum()
         if self.buy_count:
             weights = weights.iloc[:self.buy_count]
-            # weights /= weights.sum()
+            weights /= weights.sum()
         self.change_position(dict(weights.iteritems()))
 
     def optimize(self, predicted, today):
@@ -184,17 +189,38 @@ class NeutralStrategy(SimpleStrategy):
         index_weight = self.index_weights.loc[today].fillna(0)
         stocks = list(predicted.index)
 
-        # optimizer = SimpleOptimizer(predicted.values)
-        optimizer = LimitedOptimizer(predicted.values)
+        kwargs = {}
+        kwargs['c'] = - predicted.values
+        kwargs["A_eq"] = np.ones_like(predicted.values).reshape(1, -1)       # \Sum{x} == 1
+        kwargs["b_eq"] = np.ones((1, 1), dtype=np.float32)
+        A_ub = []
+        b_ub = []
 
         for factor, regularizer_weight in self.neutral_factors.items():
             factor_data = self.factor_data[factor.factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
-            optimizer.add_risk(stocks_exposure, index_exposure, regularizer_weight)
-        result = optimizer.optimize(x0=np.full(len(stocks), 1/len(stocks)))
+            import ipdb
+            # ipdb.set_trace()
+            A_ub.append(stocks_exposure)
+            b_ub.append(index_exposure + 0.1)
 
-        weights = pd.Series(result, index=stocks)
+            A_ub.append(-stocks_exposure)
+            b_ub.append(0.1 - index_exposure)
+
+        kwargs["A_ub"] = np.stack(A_ub)
+        kwargs["b_ub"] = np.stack(b_ub)
+
+        kwargs["bounds"] = [(0, 0.02)] * len(stocks)
+
+        result = linprog(**kwargs)
+
+        if not result.success:
+            Logger.warn("Optimization: %s" % result.message)
+
+        x = result.x
+        weights = pd.Series(x, index=stocks)
         return weights[weights > 0]
+
 
