@@ -115,8 +115,7 @@ class Op(Tensor):
 
 class AddOp(Op):
     def __init__(self, t1, t2):
-        
-        shape = self.shape if main == 1
+        pass
 
 
 def check_compatible(wrapped):

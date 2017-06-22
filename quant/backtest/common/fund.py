@@ -111,7 +111,7 @@ class Fund:
                 effected_by_limit.append(stock)
                 Logger.debug("Selling down-limit stock: {date} - {stock}".format(date=today, stock=stock))
         others = [stock for stock in old_position.index if stock not in effected_by_limit + ["CASH"]]
-        tobuy[others] -= tobuy[others] * overflow_position / tobuy[others].sum()
+        tobuy[others] += tobuy[others] * overflow_position / tobuy[others].sum()
         new_position.update(tobuy[others] * self.net_value)
         return new_position
 
