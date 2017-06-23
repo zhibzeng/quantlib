@@ -7,6 +7,7 @@ from ...utils.calendar import TDay
 
 
 class Fund:
+    # TODO: avoid selling when halt
     def __init__(self, strategy):
         self.strategy = strategy
         self.market = strategy.market
@@ -43,9 +44,6 @@ class Fund:
     def settle(self):
         assert self.strategy.today == self.market.today
         today = self.strategy.today
-        import ipdb
-        if today.strftime("%Y-%m-%d") == "2015-06-26":
-            ipdb.set_trace()
         if self.today_idx != 0:
             self.position.iloc[self.today_idx] = \
                 np.nan_to_num(self.position.iloc[self.today_idx-1] \

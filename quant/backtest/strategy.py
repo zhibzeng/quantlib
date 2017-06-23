@@ -11,7 +11,7 @@ from .common.market import AShareMarket
 from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data.wind import get_index_weight
-from ..utils.calendar import TradingCalendar
+from ..utils.calendar import TradingCalendar, TDay
 # from ..utils.optimize import Variable, Constant, reduce_sum
 # from ..utils.optimize.tensor import Unit
 # from ..utils.optimize.optimizer import Optimizer
@@ -134,9 +134,6 @@ class SimpleStrategy(AbstractStrategy):
             self.predicted.loc[today]
         except KeyError:
             return
-        import ipdb
-        if today.strftime("%Y-%m-%d") == "2015-06-25":
-            ipdb.set_trace()
         predicted = self.predicted.loc[today, universe].dropna().sort_values(ascending=False)
         buy = predicted.index[:self.buy_count]
         share_per_stock = 0.999 / (len(buy) + 1e-6)          # keep 0.001 for transaction fee

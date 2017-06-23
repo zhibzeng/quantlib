@@ -200,6 +200,8 @@ class AbstractFactor:
         real_price = real_price.loc[data.index]
         real_rtn = real_price.pct_change().shift(-1)
         ic_score = get_ic(data, real_rtn)
+        import ipdb
+        ipdb.set_trace()
         ic_score_monthly = ic_score.resample("1m").mean()
         ic_score_monthly.name = "IC Score"
 
