@@ -7,7 +7,6 @@ from ...utils.calendar import TDay
 
 
 class Fund:
-    # TODO: avoid selling when halt
     def __init__(self, strategy):
         self.strategy = strategy
         self.market = strategy.market
@@ -95,6 +94,9 @@ class Fund:
         tobuy = pd.Series(np.zeros_like(old_position), index=old_position.index)
         tobuy.update(pd.Series(self.__tobuy))
         uplimit, downlimit = self.get_limits()
+        halt = halt(self.market.today_market[self.market.today_market.isnull()].index)
+        uplimit += halt
+        downlimit += halt
         wanted_position = tobuy * self.net_value
         overflow_position = 0
         effected_by_limit = []
