@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from .events import EventType
 from ...common.settings import CONFIG
 from ...common.logging import Logger
 from ...utils.calendar import TDay
@@ -51,27 +50,6 @@ class Fund:
             self.sheet.loc[today, "net_value"] = self.position.iloc[self.today_idx].sum()
             self.sheet.loc[today, "fee"] = 0
 
-    # def do_transactions(self):
-    #     # TODO: trade with average prices
-    #     if not self.__tobuy:
-    #         return
-    #     old_position = self.position.iloc[self.today_idx, :-1].copy()
-    #     new_position = pd.Series(np.zeros(len(self.universe)), index=self.universe)
-    #     limited = (self.market.today_market > 0.09) | (self.market.today_market < -0.09)
-    #     tobuy = pd.Series(self.__tobuy) * (old_position[~limited].sum() + self.position.iloc[self.today_idx, -1])
-    #     new_position.update(tobuy)
-    #     for stock, pct in old_position[self.market.today_market > 0.09].iteritems():
-    #         new_position[stock] = min(pct, new_position[stock])   # cannot buy stocks reach up-limit
-    #     for stock, pct in old_position[self.market.today_market < -0.09].iteritems():
-    #         new_position[stock] = max(pct, new_position[stock])   # cannot buy stocks reach up-limit
-    #     self.position.iloc[self.today_idx, :-1] = new_position
-    #     fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
-    #     self.__tobuy = None
-    #     self.sheet.loc[self.strategy.today, "net_value"] -= fee
-    #     self.sheet.loc[self.strategy.today, "fee"] = fee
-    #     self.position.loc[self.strategy.today, "CASH"] = \
-    #         self.net_value - self.position.iloc[self.today_idx, :-1].sum()
-
 
     def do_transactions(self):
         if not self.__tobuy:
@@ -94,7 +72,7 @@ class Fund:
         tobuy = pd.Series(np.zeros_like(old_position), index=old_position.index)
         tobuy.update(pd.Series(self.__tobuy))
         uplimit, downlimit = self.get_limits()
-        halt = halt(self.market.today_market[self.market.today_market.isnull()].index)
+        halt = list(self.market.today_market[self.market.today_market.isnull()].index)
         uplimit += halt
         downlimit += halt
         wanted_position = tobuy * self.net_value
@@ -104,22 +82,34 @@ class Fund:
             if wanted_position[stock] > old_position[stock]:
                 overflow_position += wanted_position[stock] - old_position[stock]
                 effected_by_limit.append(stock)
-                Logger.debug("Buying up-limit stock: {date} - {stock}".format(date=today, stock=stock))
+                if stock in halt:
+                    Logger.debug("Selling halt stock: {date} - {stock}".format(date=today, stock=stock))
+                else:
+                    Logger.debug("Buying up-limit stock: {date} - {stock}".format(date=today, stock=stock))
         for stock in downlimit:
             if wanted_position[stock] < old_position[stock]:
                 overflow_position += wanted_position[stock] - old_position[stock]
                 effected_by_limit.append(stock)
-                Logger.debug("Selling down-limit stock: {date} - {stock}".format(date=today, stock=stock))
+                if stock in halt:
+                    Logger.debug("Selling halt stock: {date} - {stock}".format(date=today, stock=stock))
+                else:
+                    Logger.debug("Selling down-limit stock: {date} - {stock}".format(date=today, stock=stock))
         others = [stock for stock in old_position.index if stock not in effected_by_limit + ["CASH"]]
-        tobuy[others] += tobuy[others] * overflow_position / tobuy[others].sum()
+        # tobuy[others] += tobuy[others] * overflow_position / tobuy[others].sum()
+        tobuy[others] *= 1 + overflow_position / self.net_value
         new_position.update(tobuy[others] * self.net_value)
         return new_position
 
     def get_limits(self):
+        """
+        Returns
+        -------
+        two lists of stocks that reaches up-limit and down-limit at next-day open
+        """
         today = self.strategy.today
         today_open = self.market.open_prices.loc[today]
         try:
-            yesterday_close = self.market.close_prices.loc[today - TDay]    
+            yesterday_close = self.market.close_prices.loc[today - TDay]
         except (KeyError, IndexError):
             return [], []
         pct_change = today_open / yesterday_close - 1
