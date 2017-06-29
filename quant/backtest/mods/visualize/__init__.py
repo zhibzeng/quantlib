@@ -63,24 +63,25 @@ class WebVisualizer(AbstractMod):
         factor_name = factor.factor_name
         factor_value = factor.get_factor_value()
         exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
-        with BytesIO() as tmp:
-            ax = exposure.plot.bar()
-            xlabels = []
-            for date_idx in exposure.index:
-                if date_idx.month == 1:
-                    xlabels.append(date_idx.strftime("%b\n%Y"))
-                elif date_idx.month in (4, 7, 10):
-                    xlabels.append(date_idx.strftime("%b"))
-                else:
-                    xlabels.append("")
-            ax.set_xticklabels(xlabels)
-            plt.title(factor_name)
-            plt.savefig(tmp, format="png")
-            plt.cla()
-            tmp.seek(0)
-            raw_img = tmp.read()
-            img = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
-        return img
+        # with BytesIO() as tmp:
+        #     ax = exposure.plot.bar()
+        #     xlabels = []
+        #     for date_idx in exposure.index:
+        #         if date_idx.month == 1:
+        #             xlabels.append(date_idx.strftime("%b\n%Y"))
+        #         elif date_idx.month in (4, 7, 10):
+        #             xlabels.append(date_idx.strftime("%b"))
+        #         else:
+        #             xlabels.append("")
+        #     ax.set_xticklabels(xlabels)
+        #     plt.title(factor_name)
+        #     plt.savefig(tmp, format="png")
+        #     plt.cla()
+        #     tmp.seek(0)
+        #     raw_img = tmp.read()
+        #     img = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
+        # return img
+        return self.series2json(exposure)
 
     def on_backtest_finish(self, fund):
         stocks = {}
@@ -99,7 +100,7 @@ class WebVisualizer(AbstractMod):
         info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
-        info["exposure"] = [(factor.factor_name, self.get_exposure(fund.position, factor)) for factor in self.risk_factors]
+        info["exposure"] = [(factor.factor_name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors]
         with open(TEMPLATE_FILE, encoding="utf8") as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)
