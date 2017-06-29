@@ -100,7 +100,7 @@ class WebVisualizer(AbstractMod):
         info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
-        info["exposure"] = [(factor.factor_name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors]
+        info["exposure"] = sorted([(factor.factor_name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors])
         with open(TEMPLATE_FILE, encoding="utf8") as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)

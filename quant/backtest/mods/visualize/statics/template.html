@@ -59,17 +59,22 @@
   </div>
   <div class="py-5">
     <div class="container">
-      <h1>因子暴露</h1>
-      {% for factor_name, expo in exposure %}
       <div class="row">
         <div class="col-md-12">
-            <div class="risk-exposure", id="{{factor_name}}">
-                <div class="highcharts" id="highcharts-{{factor_name}}" style="height: 400px; width: 100%; min-width: 310px"></div>
-                
-            </div>
+          <h1>因子暴露</h1>
+          <script>var exposures = {};</script>
+          <ul id="exposure-tab" class="nav nav-tabs bg-faded">
+            {% for factor_name, expo in exposure %}
+            <script>exposures["{{factor_name}}"] = {{expo}};</script>
+            <li>
+            
+                <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{factor_name}}">{{factor_name}}</a>
+            </li>
+            {% endfor %}
+          </ul>
+            <div class="highcharts" id="highcharts-risk-exposure" style="height: 400px; width: 100%; min-width: 310px"></div>
         </div>
       </div>
-      {% endfor %}
     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
@@ -126,7 +131,7 @@
         $("li.statistics#mean").text("年化收益率：" + xround(m, 2) + "%");
         $("li.statistics#std").text("年化波动率：" + xround(s, 2) + "%");
         $("li.statistics#sharpe").text("年化夏普率：" + xround(sharpe, 2));
-        $("li.statistics#fee").text("总费用：" + xround(fee, 2));
+        $("li.statistics#fee").text("总费用：" + xround(fee, 3));
       }
 
       function onSelection(event){
@@ -250,9 +255,12 @@
       });
       </script>
       <script>
-          {% for factor_name, expo in exposure %}
-          showBar("highcharts-{{factor_name}}", "{{factor_name}}", {{expo}})
-          {% endfor %}
+          $(document).ready(function(){showBar('highcharts-risk-exposure', '{{exposure[0][0]}}', exposures['{{exposure[0][0]}}'])});
+          $("#exposure-tab li a").click(function(){
+            showBar('highcharts-risk-exposure', this.id, exposures[this.id]);
+            $("#exposure-tab li a.active").removeClass("active");
+            $("#exposure-tab li a#"+this.id).addClass("active");
+          });
       </script>
 </body>
 
