@@ -209,10 +209,10 @@ class AbstractFactor:
         std = ic_score.std()
         t_score = mean / std * len(ic_score.dropna())**0.5
         table = pd.DataFrame({'IC': [
-                "%0.3f" % mean,
-                "%0.3f" % std,
-                "%0.3f" % t_score,
-            ]}, index=['Mean', 'Std', 'T-score'])
+            "%0.3f" % mean,
+            "%0.3f" % std,
+            "%0.3f" % t_score,
+        ]}, index=['Mean', 'Std', 'T-score'])
 
         h = cls.h
         with h.div(_class="py-5"):

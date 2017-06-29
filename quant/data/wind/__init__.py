@@ -43,13 +43,14 @@ def get_wind_rawdata(table, parse_dates=None) -> pd.DataFrame:
     table: str
         要读的SQL表, 参考`quant.data.wind.tables`
     parse_dates
-        参考`pd.read_sql`
+        参考`pd.read_sql`， 默认会把所有以`_dt`，`date`结尾的字段转换成datetime
     """
     if isinstance(table, str):
         table = getattr(tables, table)
     columns = table.__table__.columns
     wind_connection = get_sql_connection()
-    parse_dates = parse_dates or {col: "%Y%m%d" for col in columns if col.endswith("_dt")}
+    if parse_dates is None:
+        parse_dates = {col: "%Y%m%d" for col in columns if col.endswith("_dt") or col.endswith("date")}
     data = pd.read_sql(select(columns), wind_connection.engine, parse_dates=parse_dates)
     return data
 
