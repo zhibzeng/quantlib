@@ -24,7 +24,7 @@ wind.get_wind_rawdata("AShareST")                               # 获取ST信息
 
 ## Backtest
 
-![Backtest Web Visualizer](http://quantlib.readthedocs.io/_images/backtest_web.jpg)
+![Backtest Web Visualizer](http://quantlib.readthedocs.io/_static/backtest_web.jpg)
 
 参考相应[文档](http://quantlib.readthedocs.io/backtest.html)
 

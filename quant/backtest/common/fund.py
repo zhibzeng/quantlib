@@ -19,6 +19,7 @@ class Fund:
         self.position = pd.DataFrame(np.zeros(self.market.market_data.shape),
                                      index=self.trading_calendar,
                                      columns=list(self.universe)+["CASH"])
+        self.delayed = {}
         self.__tobuy = {}
         self.initialize()
 
@@ -38,6 +39,7 @@ class Fund:
         assert self.trading_calendar[self.today_idx] == today
         self.settle()
         self.do_transactions()
+        self.handle_delayed_stocks()
 
     def settle(self):
         assert self.strategy.today == self.market.today
@@ -57,8 +59,8 @@ class Fund:
         today = self.strategy.today
         old_position = self.position.iloc[self.today_idx, :-1]
         new_position = self.handle_position(old_position)
-        self.position.iloc[self.today_idx, :-1] = new_position
         fee = abs(new_position - old_position).sum() * CONFIG.FEE_RATE
+        self.position.iloc[self.today_idx, :-1] = new_position
         self.__tobuy = None
         self.sheet.loc[today, "net_value"] -= fee
         self.sheet.loc[today, "fee"] = fee
@@ -83,22 +85,40 @@ class Fund:
                 overflow_position += wanted_position[stock] - old_position[stock]
                 effected_by_limit.append(stock)
                 if stock in halt:
-                    Logger.debug("Selling halt stock: {date} - {stock}".format(date=today, stock=stock))
+                    Logger.debug("Trying to buy halt stock: {date} - {stock}".format(date=today, stock=stock))
                 else:
-                    Logger.debug("Buying up-limit stock: {date} - {stock}".format(date=today, stock=stock))
+                    Logger.debug("Trying to buy up-limit stock: {date} - {stock}".format(date=today, stock=stock))
         for stock in downlimit:
             if wanted_position[stock] < old_position[stock]:
                 overflow_position += wanted_position[stock] - old_position[stock]
                 effected_by_limit.append(stock)
+                self.delayed[stock] = wanted_position
                 if stock in halt:
-                    Logger.debug("Selling halt stock: {date} - {stock}".format(date=today, stock=stock))
+                    Logger.debug("Trying to sell halt stock: {date} - {stock}".format(date=today, stock=stock))
                 else:
-                    Logger.debug("Selling down-limit stock: {date} - {stock}".format(date=today, stock=stock))
+                    Logger.debug("Trying to sell down-limit stock: {date} - {stock}".format(date=today, stock=stock))
         others = [stock for stock in old_position.index if stock not in effected_by_limit + ["CASH"]]
         # tobuy[others] += tobuy[others] * overflow_position / tobuy[others].sum()
         tobuy[others] *= 1 + overflow_position / self.net_value
         new_position.update(tobuy[others] * self.net_value)
         return new_position
+
+    def handle_delayed_stocks(self):
+        today = self.strategy.today
+        _, downlimit = self.get_limits()
+        halt = list(self.market.today_market[self.market.today_market.isnull()].index)
+        limited = downlimit + halt
+        for stock, wanted_position in self.delayed.items():
+            real_position = self.position.loc[today, stock]
+            if  real_position < wanted_position:
+                Logger.warn("%s with position %0.3f is larger than target %0.3f,"
+                            "which is not supposed to happen." % (stock, real_position, wanted_position))
+            if stock not in limited:
+                fee = abs(real_position - wanted_position) * CONFIG.FEE_RATE
+                self.sheet.loc[today, "net_value"] -= fee
+                self.position.loc[today, "CASH"] += real_position - wanted_position - fee
+                self.position.loc[today, stock] = wanted_position
+                self.sheet.loc[today, "fee"] += fee
 
     def get_limits(self):
         """

@@ -22,7 +22,7 @@ Get Started
 运行``SimpleStrategy().run()``运行回测，几秒钟后，会输出简单的年化收益率、年化波动率和夏普率信息。
 同时，还会生成一个以策略名和运行时间命名的网页，记录着回测的详细信息。如果是在视窗环境下的话，浏览器会自动打开该网页。如图所示。
 
-..  image:: _static/backtest_web.jpg
+..  image:: ../_static/backtest_web.jpg
 
 Data
 ====
