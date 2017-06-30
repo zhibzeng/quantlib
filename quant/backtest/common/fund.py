@@ -119,6 +119,7 @@ class Fund:
                 self.position.loc[today, "CASH"] += real_position - wanted_position - fee
                 self.position.loc[today, stock] = wanted_position
                 self.sheet.loc[today, "fee"] += fee
+                del self.delayed[stock]
 
     def get_limits(self):
         """
