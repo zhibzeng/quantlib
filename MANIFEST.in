@@ -1,1 +1,2 @@
 include quant/backtest/mods/visualize/statics/template.html
+include quant/VERSION

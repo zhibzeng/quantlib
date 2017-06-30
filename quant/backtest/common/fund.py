@@ -42,6 +42,11 @@ class Fund:
         self.handle_delayed_stocks()
 
     def settle(self):
+        """
+        Only settle the net value and the
+        positions based on market price change.
+        This doesn't trade stocks.
+        """
         assert self.strategy.today == self.market.today
         today = self.strategy.today
         if self.today_idx != 0:
@@ -54,6 +59,9 @@ class Fund:
 
 
     def do_transactions(self):
+        """
+        Trade the stocks
+        """
         if not self.__tobuy:
             return
         today = self.strategy.today
@@ -69,6 +77,11 @@ class Fund:
 
 
     def handle_position(self, old_position):
+        """
+        Calculate the new position based on the
+        target, old position and market status (
+        halt, up/down-limit, etc.)
+        """
         today = self.strategy.today.strftime("%Y%m%d")
         new_position = old_position.copy()
         tobuy = pd.Series(np.zeros_like(old_position), index=old_position.index)
@@ -92,7 +105,7 @@ class Fund:
             if wanted_position[stock] < old_position[stock]:
                 overflow_position += wanted_position[stock] - old_position[stock]
                 effected_by_limit.append(stock)
-                self.delayed[stock] = wanted_position
+                self.delayed[stock] = wanted_position[stock]
                 if stock in halt:
                     Logger.debug("Trying to sell halt stock: {date} - {stock}".format(date=today, stock=stock))
                 else:
@@ -104,11 +117,16 @@ class Fund:
         return new_position
 
     def handle_delayed_stocks(self):
+        """
+        When trying to sell a stock at halt or down-limit, it's
+        put in a delayed list. Then the trading system will try
+        to sell it when possible.
+        """
         today = self.strategy.today
         _, downlimit = self.get_limits()
         halt = list(self.market.today_market[self.market.today_market.isnull()].index)
         limited = downlimit + halt
-        for stock, wanted_position in self.delayed.items():
+        for stock, wanted_position in self.delayed.copy().items():
             real_position = self.position.loc[today, stock]
             if  real_position < wanted_position:
                 Logger.warn("%s with position %0.3f is larger than target %0.3f,"
@@ -120,6 +138,7 @@ class Fund:
                 self.position.loc[today, stock] = wanted_position
                 self.sheet.loc[today, "fee"] += fee
                 del self.delayed[stock]
+                Logger.debug("Sold delayed stock %s @ %s" % (stock, today.strftime("%Y-%m-%d")))
 
     def get_limits(self):
         """
