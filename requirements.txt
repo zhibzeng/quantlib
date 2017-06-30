@@ -8,6 +8,7 @@ matplotlib
 fire
 jinja2
 lazy-property
+sklearn
 
 # optional
 # pymysql

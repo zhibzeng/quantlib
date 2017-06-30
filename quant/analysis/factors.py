@@ -138,57 +138,6 @@ class AbstractFactor:
                     with h.div(_class="col-md-9"):
                         h.inline('img', src='data:image/png;base64,{0}'.format(img_netvalue))
 
-    # @classmethod
-    # def _generate_ic(cls, data):
-    #     data = data.truncate("2005-01-01")
-    #     if cls.factor_freq:
-    #         data = data.resample(cls.factor_freq * TDay).last()
-    #     real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
-    #     # real_price = real_price.resample("1d").ffill()
-    #     real_price = real_price.loc[data.index]
-    #     real_rtn = real_price.pct_change()
-    #     ic_score = get_ic(data, real_rtn.shift(-1))
-    #     ic_score_monthly = ic_score.resample("1m").mean()
-    #     with BytesIO() as tmp:
-    #         plt.figure(figsize=(10, 5))
-    #         ax = ic_score_monthly.plot(kind='bar', color='red')
-    #         xticks = ax.get_xticks()
-    #         ax.plot(xticks, ic_score_monthly.rolling(6).mean())
-    #         num_labels = 10
-    #         xlabels = [ic_score.index[i].strftime("%b %Y")
-    #                    if i % (len(xticks) // num_labels) == 0 else ""
-    #                    for i in range(len(xticks))]
-    #         ax.set_xticks(xticks)
-    #         ax.set_xticklabels(xlabels)
-    #         plt.xticks(rotation=10)
-    #         plt.savefig(tmp, format="png")
-    #         plt.cla()
-    #         tmp.seek(0)
-    #         raw_img = tmp.read()
-    #         img_ic = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
-    #     h = cls.h
-    #     with h.div(_class="py-5"):
-    #         with h.div(_class="container"):
-    #             with h.div(_class="row"):
-    #                 h.inline("h1", _text="IC")
-    #                 h.inline("hr")
-    #             with h.div(_class="row"):
-    #                 with h.div(_class="col-md-3"):
-    #                     with h.table(_class="table"):
-    #                         with h.tbody():
-    #                             with h.tr():
-    #                                 h.inline("td", _text="mean")
-    #                                 h.inline("td", _text="%0.3f" % ic_score.mean())
-    #                             with h.tr():
-    #                                 h.inline("td", _text="std")
-    #                                 h.inline("td", _text="%0.3f" % ic_score.std())
-    #                             with h.tr():
-    #                                 h.inline("td", _text="t-score")
-    #                                 t_score = ic_score.mean()/ic_score.std()*len(ic_score.dropna())**0.5
-    #                                 h.inline("td", _text="%0.3f" % t_score)
-    #                 with h.div(_class="col-md-9"):
-    #                     h.inline('img', src='data:image/png;base64,{0}'.format(img_ic))
-
 
     @classmethod
     def _generate_ic(cls, data):
@@ -200,8 +149,6 @@ class AbstractFactor:
         real_price = real_price.loc[data.index]
         real_rtn = real_price.pct_change().shift(-1)
         ic_score = get_ic(data, real_rtn)
-        import ipdb
-        ipdb.set_trace()
         ic_score_monthly = ic_score.resample("1m").mean()
         ic_score_monthly.name = "IC Score"
 
