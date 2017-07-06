@@ -4,7 +4,7 @@ from ..common.mods import AbstractMod
 from ..common.events import EventType
 from ...common.logging import Logger
 from ...common.settings import CONFIG
-from ...data.wind import get_wind_data
+from ...data import wind
 
 
 @AbstractMod.register
@@ -20,7 +20,7 @@ class ShowBasicResults(AbstractMod):
     def on_backtest_finish(self, fund):
         net_value = fund.sheet["net_value"].copy()
         if CONFIG.BENCHMARK:
-            benchmark = get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK] \
+            benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK] \
                 .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
             benchmark /= benchmark.iloc[0]
             net_value /= benchmark

@@ -1,166 +1,42 @@
-"""用来本地化数据的模块"""
 import os
-import pickle
-import functools
-from inspect import signature, isclass, isfunction
+from inspect import signature
+from functools import wraps
 import pandas as pd
-from .settings import DATA_PATH, MAIN_PATH
+from ..common.settings import DATA_PATH
 
 
-class Register:
-    """
-    用来记录有哪些数据被本地化以及本地化时调用的函数、使用的参数，以便于日后的跟踪维护
-    """
-    def __init__(self, path="register.pkl"):
-        self.log_path = os.path.join(MAIN_PATH, path)
-        try:
-            with open(self.log_path, "rb") as file_handler:
-                self.data = pickle.load(file_handler)
-        except (FileNotFoundError, EOFError):
-            self.data = dict()
-
-    def keys(self):
-        """List the keys of the register"""
-        return self.data.keys()
-
-    def __getitem__(self, item):
-        return self.data[item]
-
-    def register_fixed(self, func, path, key, update=None):
-        meta_key = path
-        if meta_key not in self.data:
-            self.data[meta_key] = {
-                # "func": func,
-                "key": key,
-                "params": None,
-                "path": path,
-                "update": update,
-                "exclude": None
-            }
-            self.save()
-
-    def register(self, func, path, args, kwargs, update=None, exclude=None):
-        """
-        记录本地化数据的来源（函数、参数）以及目标（文件名、键名），便于日后更新
-
-        Parameters
-        ----------
-        func
-            注册的函数
-        path: str
-        本地化的文件路径
-        args: tuple
-            调用函数的无关键字参数
-        kwargs: dict
-            调用函数的关键字参数
-        update: {'overwrite', 'append'}, optional
-            更新数据时是覆盖还是只添加新数据
-        exclude: list, optional
-            指定哪些参数名不会被加入到本地化键名中
-        """
-        exclude = exclude or []
-        sig = signature(func)
-        bounded = sig.bind(*args, **kwargs)
-        bounded.apply_defaults()
-        keys = [""]
-        for pname, value in bounded.arguments.items():
-            if pname in exclude:
-                pass
-            elif isinstance(value, str):
-                keys.append(value)
-            elif isclass(value) or isfunction(value):
-                keys.append(value.__name__)
-        key = "_".join(keys)               # 将函数的所有字符串参数连接起来作为hdf的key
-        key = key or "default"             # 防止有些函数没有参数导致key为空
-        module = func.__module__
-        func_name = func.__name__
-        meta_key = "%s/%s/%s" % (module, func_name, key)
-        if meta_key not in self.data:
-            self.data[meta_key] = {
-                "module": module,
-                "name": func_name,
-                "key": key,
-                "params": bounded,
-                "path": path,
-                "update": update,
-                "exclude": exclude,
-            }
-            self.save()
-        return key
-
-    def save(self):
-        """Save the register data to pickle file"""
-        with open(self.log_path, "wb") as file_handler:
-            pickle.dump(self.data, file_handler)
-
-
-class LocalizeWrapper:
-    """
-    这是一个装饰器，使用@localizer.wrap(filename)来装饰一个函数，该函数应该返回pandas对象。
-    则每次调用函数时会优先调用pd.read_hdf(filename, key)，key是函数的字符串参数的拼接，从本地读取缓存，
-    如果读取失败才调用原函数，并将返回值储存在对应的文件内。
-    """
-
+class Localizer:
     def __init__(self, path):
         self.path = path
 
-    def wrap(self, filename=None, key=None, update="overwrite", exclude=None):
-        """
-        装饰器，被装饰过的函数都会自动本地化
-
-        Parameters
-        ----------
-        filename: str, optional
-            数据要保存的h5文件名
-        key: str, optional
-            要保存的键名
-        module: type, optional
-            如果被装饰函数是一个staticmethod，则此字段必须传入函数所在的类
-        update: {'overwrite', 'append'}, optional
-            更新数据时是覆盖还是只添加新数据
-        exclude: list, optional
-                哪些参数不需要记录到键名中
-
-        Examples
-        --------
-        ..  code-block:: python
-
-            @LOCALIZER.wrap("data")
-            def get_data(code):
-                ...
-
-        会自动把函数的返回值以`code`为键本地化到`data.h5`中
-        """
+    def wrap(self, filename, keys=None, const_key=None):
+        if keys is None and const_key is None:
+            raise ValueError("Either `keys` or `const_key` must not be None")
+        filename = os.path.join(self.path, filename)
+        if not filename.endswith(".h5"):
+            filename += ".h5"
+        if keys is None:
+            keys = []
+        if isinstance(keys, str):
+            keys = [keys]
         def true_wrapper(wrapped):
-            nonlocal filename
-            if key:
-                REGISTER.register_fixed(wrapped, filename, key)
-            if isinstance(wrapped, staticmethod):
-                wrapped = wrapped.__get__(0)
-            filename = filename or wrapped.__name__
-            if not filename.endswith("h5"):
-                filename = filename + ".h5"
-            path = os.path.join(self.path, filename)  # 将指定的文件名或函数名作为文件名
-
-            @functools.wraps(wrapped)
+            @wraps(wrapped)
             def func(*args, **kwargs):
-                """装饰后的函数"""
-                nonlocal key
-                _key = key or REGISTER.register(wrapped, filename, args, kwargs,
-                                                update=update, exclude=exclude)
-                # 从注册器注册该函数及参数，并获得对应的键名
+                sig = signature(wrapped)
+                bounded = sig.bind(*args, **kwargs)
+                bounded.apply_defaults()
+                path = "/".join(bounded.arguments[key] for key in keys) if keys is not None else ""
+                if const_key:
+                    path = os.path.join(path, const_key)
+                if not path:
+                    path = "data"
                 try:
-                    data = pd.read_hdf(path, _key)
-                except (FileNotFoundError, KeyError, OSError):
+                    data = pd.read_hdf(filename, path)
+                except (KeyError, FileNotFoundError):
                     data = wrapped(*args, **kwargs)
-                    data.to_hdf(path, _key)
+                    data.to_hdf(filename, path)
                 return data
-
             return func
-
         return true_wrapper
 
-
-
-LOCALIZER = LocalizeWrapper(DATA_PATH)
-REGISTER = Register()
+LOCALIZER = Localizer(DATA_PATH)

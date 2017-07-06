@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from ..data.wind import get_wind_rawdata
+from ..data import wind
 from ..common.localize import LOCALIZER
 
 
@@ -25,9 +25,9 @@ def get_rtn(x: pd.Series, rtn_len: int, shift: bool= False):
     return data
 
 
-@LOCALIZER.wrap("filter_st", update="append")
+@LOCALIZER.wrap("filter_st", const_key="filter_st")
 def get_st_filter():
-    st = get_wind_rawdata("AShareST")
+    st = wind.get_wind_table("AShareST")
     st.loc[:, "entry_dt"] = pd.to_datetime(st.entry_dt)
     st.loc[:, "remove_dt"] = pd.to_datetime(st.remove_dt)
     return st

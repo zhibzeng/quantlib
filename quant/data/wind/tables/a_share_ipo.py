@@ -1,6 +1,6 @@
 """A股IPO信息"""
 from sqlalchemy import Column
-from sqlalchemy.types import VARCHAR
+from sqlalchemy.types import VARCHAR, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -24,3 +24,4 @@ class AShareIPO(BaseModel):
     object_id = Column(VARCHAR(100), primary_key=True)
     s_info_windcode = Column(VARCHAR(40))
     s_ipo_listdate = Column(VARCHAR(8))
+    opdate = Column(DateTime)

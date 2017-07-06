@@ -6,12 +6,12 @@ import jinja2
 import pandas as pd
 import matplotlib.pyplot as plt
 from docutils.core import publish_parts
-from ...analysis import get_ic, get_factor_exposure
-from ...backtest import SimpleStrategy
-from ...common.settings import CONFIG
-from ...common.html import HTML
-from ...data.wind import get_wind_data
-from ...utils.calendar import TDay
+from ..analysis import get_ic, get_factor_exposure
+from ..backtest import SimpleStrategy
+from ..common.settings import CONFIG
+from ..common.html import HTML
+from ..data import wind
+from ..utils.calendar import TDay
 
 
 class AbstractFactor:
@@ -109,7 +109,7 @@ class AbstractFactor:
         """Not implemented"""
         fund = strategy.fund
         net_value = fund.sheet.net_value.copy()
-        benchmark = get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK].dropna()
+        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.BENCHMARK].dropna()
         benchmark /= benchmark.iloc[0]
         net_value = (net_value / benchmark).dropna()
         rtns = net_value.pct_change()

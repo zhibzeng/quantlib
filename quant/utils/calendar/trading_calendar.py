@@ -1,7 +1,7 @@
 import pandas as pd
 from pandas.tseries.offsets import CustomBusinessDay
 from ...common.localize import LOCALIZER
-from ...data.wind import get_wind_data
+from ...data import wind
 
 __all__ = ["TradingCalendar"]
 
@@ -23,12 +23,12 @@ class TradingCalendar:
     #     return pd.Series(holidays)
 
     @staticmethod
-    @LOCALIZER.wrap("holiday")
+    @LOCALIZER.wrap("holiday.h5", const_key="holiday")
     def get_holidays():
-        index_data = get_wind_data("AIndexEODPrices", "s_dq_close")["000905.SH"].dropna()
-        index_trading_days = list(index_data.index)
-        all_days = pd.date_range(start=index_trading_days[0], end=index_trading_days[-1])
-        holidays = sorted(filter(lambda day: day.weekday() < 5, set(all_days) - set(index_trading_days)))
+        calendar = wind.get_wind_table("AShareCalendar")
+        trading_days = list(pd.to_datetime(calendar.trade_days).drop_duplicates().sort_values())
+        all_days = pd.date_range(start=trading_days[0], end=trading_days[-1])
+        holidays = sorted(filter(lambda day: day.weekday() < 5, set(all_days) - set(trading_days)))
         return pd.Series(holidays)
 
     @property

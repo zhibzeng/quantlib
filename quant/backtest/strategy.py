@@ -10,7 +10,7 @@ from .common.fund import Fund
 from .common.market import AShareMarket
 from ..common.settings import CONFIG
 from ..common.logging import Logger
-from ..data.wind import get_index_weight
+from ..data import wind
 from ..utils.calendar import TradingCalendar, TDay
 # from ..utils.optimize import Variable, Constant, reduce_sum
 # from ..utils.optimize.tensor import Unit
@@ -148,7 +148,7 @@ class NeutralStrategy(SimpleStrategy):
         self.neutral_factors = neutral_factors
         self.factor_data = {factor.factor_name: factor.get_factor_value()
                             for factor in neutral_factors.keys()}
-        self.index_weights = get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
+        self.index_weights = wind.get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
                             .resample("1d").ffill() / 100
         super(NeutralStrategy, self).__init__(*args, **kwargs)
 

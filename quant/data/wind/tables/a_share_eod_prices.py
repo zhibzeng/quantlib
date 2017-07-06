@@ -51,7 +51,7 @@ class AShareEODPrices(BaseModel):
 
     sec_id
 
-    opdata
+    opdate
 
     opmode
 

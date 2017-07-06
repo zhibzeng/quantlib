@@ -35,7 +35,7 @@ class AIndexEODPrices(BaseModel):
         成交额
     sec_id
 
-    opdata
+    opdate
 
     opmode
     """

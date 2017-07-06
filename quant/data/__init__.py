@@ -1,2 +1,7 @@
+from .wind import WindDB
 
-from . import wind
+
+try:
+    wind = WindDB()
+except:
+    wind = None

@@ -1,10 +1,12 @@
 import os
+import sys
 import importlib.util
 import glob
 import fire
 import pandas as pd
+from .data import wind
 from .backtest import SimpleStrategy
-from .common.settings import CONFIG
+from .common.settings import CONFIG, DATA_PATH
 
 
 def load_class_from_file(path):
@@ -45,17 +47,58 @@ class QuantMain:
         create_default_config()
 
     @staticmethod
-    def clear_cache(all=False):
+    def data(command, *args):
+        """Manage cache data"""
+        command = command.lower()
+        assert command in ("ls", "rm"), "Command must be one of {`ls`, `rm`}"
+        if command == "ls":
+            for filename in glob.glob(os.path.join(DATA_PATH, "*.h5")):
+                print(filename.replace("\\", "/").split("/")[-1][:-3])
+        elif command == "rm":
+            try:
+                f = args[0]
+            except IndexError:
+                raise ValueError("must specify the filename to remove.")
+            if not f.endswith(".h5"):
+                f += ".h5"
+            filename = os.path.join(DATA_PATH, f)
+            os.remove(filename)
+
+    @staticmethod
+    def table(command, *args):
+        """Manage cache data"""
+        command = command.lower()
+        assert command in ("ls", "rm", "update"), "Command must be one of {`ls`, `rm`, `update`}"
+        if command == "ls":
+            with pd.HDFStore(os.path.join(DATA_PATH, "wind.h5")) as h5:
+                for key in h5.keys():
+                    print(key)
+        elif command == "rm":
+            try:
+                key = args[0]
+            except IndexError:
+                raise ValueError("must specify the key to remove.")
+            with pd.HDFStore(os.path.join(DATA_PATH, "wind.h5")) as h5:
+                try:
+                    del h5[key]
+                except:
+                    print("There's no key named `{key}`".format(key=key))
+        elif command == "update":
+            QuantMain.update_wind_tables(*args)
+
+    @staticmethod
+    def update_wind_tables(table=None):
         """Delete all cache data"""
-        from .common.settings import DATA_PATH
-        y_for_all = all
-        for filename in glob.glob(os.path.join(DATA_PATH, "*.h5")):
-            confirm = (y_for_all
-                       or input("Confirm deleting %s? [y/N/a]" % os.path.split(filename)[-1]))
-            if confirm == "a":
-                y_for_all = True
-            if confirm in ("a", "y", True):
-                os.remove(filename)
+        filename = os.path.join(DATA_PATH, "wind.h5")
+        if table is None:
+            with pd.HDFStore(filename, "r") as h5:
+                tables = [key[1:] for key in h5.keys()]
+        else:
+            tables = [table]
+        for table in tables:
+            sys.stdout.write("Updating table [{table}]..........".format(table=table))
+            wind._update_wind_table(table)
+            sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r".format(table=table))
 
     @staticmethod
     def backtest(strategy_filename, key=None):

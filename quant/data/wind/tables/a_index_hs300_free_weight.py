@@ -18,7 +18,7 @@ class AIndexHS300FreeWeight(BaseModel):
 	i_weight
 		权重
 		
-    opdata
+    opdate
 
     opmode
     """
