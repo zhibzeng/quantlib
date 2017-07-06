@@ -19,7 +19,7 @@ class NoSTUniverse(AbstractMod):
 
     @staticmethod
     def get_st_list():
-        st = wind.get_wind_table("AShareST")
+        st = wind.get_wind_table("AShareST", ["entry_dt", "ann_dt", "remove_dt", "s_info_windcode"])
         st["entry_dt"] = pd.to_datetime(st["entry_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
@@ -41,7 +41,7 @@ class NoSTUniverse(AbstractMod):
 class NoIPOUniverse(AbstractMod):
     def __init__(self, days=30):
         self.strategy = None
-        self.ipo = wind.get_wind_table("AShareIPO")
+        self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"])
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
 
     def __plug_in__(self, caller):

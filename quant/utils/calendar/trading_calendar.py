@@ -25,7 +25,7 @@ class TradingCalendar:
     @staticmethod
     @LOCALIZER.wrap("holiday.h5", const_key="holiday")
     def get_holidays():
-        calendar = wind.get_wind_table("AShareCalendar")
+        calendar = wind.get_wind_table("AShareCalendar", ["trade_days"])
         trading_days = list(pd.to_datetime(calendar.trade_days).drop_duplicates().sort_values())
         all_days = pd.date_range(start=trading_days[0], end=trading_days[-1])
         holidays = sorted(filter(lambda day: day.weekday() < 5, set(all_days) - set(trading_days)))

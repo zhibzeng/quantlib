@@ -1,12 +1,13 @@
 import os
-import sys
 import importlib.util
 import glob
+from collections import defaultdict
 import fire
 import pandas as pd
 from .data import wind
 from .backtest import SimpleStrategy
 from .common.settings import CONFIG, DATA_PATH
+from .common.logging import Logger
 
 
 def load_class_from_file(path):
@@ -69,10 +70,18 @@ class QuantMain:
         """Manage cache data"""
         command = command.lower()
         assert command in ("ls", "rm", "update"), "Command must be one of {`ls`, `rm`, `update`}"
+        tree = defaultdict(list)
         if command == "ls":
             with pd.HDFStore(os.path.join(DATA_PATH, "wind.h5")) as h5:
                 for key in h5.keys():
-                    print(key)
+                    table, field = key[1:].split("/")
+                    tree[table].append(field)
+            for key, value in tree.items():
+                print(key)
+                for field in value:
+                    print("\t", field)
+            print("\n\rTotal %d tables, %d fields" % (len(tree), sum(map(len, tree.values()))))
+
         elif command == "rm":
             try:
                 key = args[0]
@@ -82,12 +91,13 @@ class QuantMain:
                 try:
                     del h5[key]
                 except:
-                    print("There's no key named `{key}`".format(key=key))
+                    Logger.warn("There's no key named `{key}`".format(key=key))
+
         elif command == "update":
-            QuantMain.update_wind_tables(*args)
+            QuantMain.__update_wind_tables(*args)
 
     @staticmethod
-    def update_wind_tables(table=None):
+    def __update_wind_tables(table=None):
         """Delete all cache data"""
         filename = os.path.join(DATA_PATH, "wind.h5")
         if table is None:
@@ -96,9 +106,7 @@ class QuantMain:
         else:
             tables = [table]
         for table in tables:
-            sys.stdout.write("Updating table [{table}]..........".format(table=table))
             wind._update_wind_table(table)
-            sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r".format(table=table))
 
     @staticmethod
     def backtest(strategy_filename, key=None):

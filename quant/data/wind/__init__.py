@@ -12,6 +12,7 @@ from . import tables
 from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG, DATA_PATH
 from ...common.db.sql import SQLClient
+from ...common.logging import Logger
 
 __all__ = ['WindDB', 'tables']
 
@@ -75,6 +76,7 @@ class WindDB:
         return columns
 
     def _add_wind_columns(self, table_name, columns):
+        Logger.debug("Updating table [{table}] with columns {columns}".format(table=table_name, columns=columns))
         last_update = self._get_last_update(table_name)
         table = self._get_table(table_name)
         columns = set(columns)
@@ -91,6 +93,7 @@ class WindDB:
             df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
 
     def _update_wind_table(self, table_name):
+        sys.stdout.write("Updating table [{table}]..........".format(table=table_name))
         last_update = self._get_last_update(table_name) or parse("2000-01-01")
         table = self._get_table(table_name)
         columns = self._get_dataset_columns(table_name)
@@ -104,6 +107,7 @@ class WindDB:
         for col in df.columns:
             df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
         self._set_last_update(table_name, datetime.now())
+        sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r".format(table=table_name))
 
     def get_wind_table(self, table_name, columns=None):
         non_existing_columns = self._check_columns(table_name, columns)
