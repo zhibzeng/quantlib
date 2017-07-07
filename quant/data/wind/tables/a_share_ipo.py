@@ -25,3 +25,4 @@ class AShareIPO(BaseModel):
     s_info_windcode = Column(VARCHAR(40))
     s_ipo_listdate = Column(VARCHAR(8))
     opdate = Column(DateTime)
+    opmode = Column(VARCHAR(1))

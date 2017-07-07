@@ -9,6 +9,8 @@ Tables:
 
     AShareEODPrices: A股股票每日收盘行情
 
+    AShareIndustriesClass: A股Wind行业分类
+
     AShareIPO: A股股票IPO信息
 
     AShareST: A股股票ST信息
@@ -24,6 +26,7 @@ from .a_share_st import AShareST
 from .a_share_ttm_his import AShareTTMHis
 from .a_index_hs300_free_weight import AIndexHS300FreeWeight
 from .a_share_calendar import AShareCalendar
+from .a_share_industries_class import AShareIndustriesClass
 
 
 DEFAULT_FIELDS = {
