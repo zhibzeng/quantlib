@@ -27,6 +27,9 @@ class AShareIndustriesClass(BaseModel):
         剔除日期
     cur_sign
         最新标志 1：是 0：否
+    opdate
+
+    opmode
     """
     __tablename__ = "AShareIndustriesClass"
     object_id = Column(VARCHAR(100), primary_key=True)

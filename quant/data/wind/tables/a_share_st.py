@@ -19,6 +19,9 @@ class AShareST(BaseModel):
         退出ST日期 YYYYMMDD
     ann_dt
         公告日期 YYYYMMDD
+    opdate
+
+    opmode
     """
     __tablename__ = "AShareST".upper()
     object_id = Column(VARCHAR(100), primary_key=True)

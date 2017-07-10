@@ -19,6 +19,9 @@ class AShareIPO(BaseModel):
         万得代码， eg. 600030.SH
     s_ipo_listdate
         上市日期, YYYYMMDD
+    opdate
+
+    opmode
     """
     __tablename__ = "AShareIPO"
     object_id = Column(VARCHAR(100), primary_key=True)
