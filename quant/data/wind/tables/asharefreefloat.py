@@ -1,0 +1,30 @@
+from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+
+
+class AShareFreeFloat(BaseModel):
+    """
+    中国A股自由流通股本
+
+    Attributes
+    ----------
+    object_id: VARCHAR2(100)
+        对象ID   
+    s_info_windcode: VARCHAR2(40)
+        Wind代码   
+    change_dt: VARCHAR2(8)
+        变动日期(除权日)   
+    s_share_freeshares: NUMBER(20,4)
+        自由流通股本(万股)   
+    change_dt1: VARCHAR2(8)
+        变动日期(上市日)   
+    ann_dt: VARCHAR2(8)
+        公告日期   
+
+    """
+    object_id = Column(VARCHAR2(100))
+    s_info_windcode = Column(VARCHAR2(40))
+    change_dt = Column(VARCHAR2(8))
+    s_share_freeshares = Column(NUMBER(20,4))
+    change_dt1 = Column(VARCHAR2(8))
+    ann_dt = Column(VARCHAR2(8))
+    

@@ -1,36 +1,220 @@
-"""Wind数据库数据表
-
-Tables:
-    AIndexEODPrices: A股指数每日收盘行情
-
-    AShareCalender: A股交易日历
-
-    AShareEODDerivativeIndicator: A股股票每日收盘指标
-
-    AShareEODPrices: A股股票每日收盘行情
-
-    AShareIndustriesClass: A股Wind行业分类
-
-    AShareIPO: A股股票IPO信息
-
-    AShareST: A股股票ST信息
-
-    AShareTTMHist:
-"""
-
-from .a_index_eod_prices import AIndexEODPrices
-from .a_share_eod_derivative_indicator import AShareEODDerivativeIndicator
-from .a_share_eod_prices import AShareEODPrices
-from .a_share_ipo import AShareIPO
-from .a_share_st import AShareST
-from .a_share_ttm_his import AShareTTMHis
-from .a_index_hs300_free_weight import AIndexHS300FreeWeight
-from .a_share_calendar import AShareCalendar
-from .a_share_industries_class import AShareIndustriesClass
-
-
-DEFAULT_FIELDS = {
-    AIndexEODPrices: {'index': 'trade_dt', 'columns': 's_info_windcode'},
-    AShareEODDerivativeIndicator: {'index': 'trade_dt', 'columns': 's_info_windcode'},
-    AShareEODPrices: {'index': 'trade_dt', 'columns': 's_info_windcode'},
-}
+from .ashareisparticipant import AShareISParticipant
+from .asharemonthlyyield import AShareMonthlyYield
+from .cbondcashflow import CBondCashFlow
+from .asharestockswap import AShareStockSwap
+from .asharecashflow import AShareCashFlow
+from .ashareibrokerindicator import AShareIBrokerIndicator
+from .ccbondissuance import CCBondIssuance
+from .ashareearningest import AShareEarningEst
+from .cbondcall import CBondCall
+from .asharebalancesheet import AShareBalanceSheet
+from .ashareinsuranceindicator import AShareInsuranceIndicator
+from .ashareweeklyyield import AShareWeeklyYield
+from .asharepreviousname import ASharePreviousName
+from .cbondthirdpartyrating import CBondThirdPartyRating
+from .ashareincquantityprice import AShareIncQuantityPrice
+from .csindexdivisor import CSIndexDivisor
+from .asharemoneyflow import AShareMoneyflow
+from .ashareinstholderderdata import AShareinstHolderDerData
+from .cbondibrmbmondmarquotation import CBondIBRMBMonDMarQuotation
+from .cbondtender import CBondTender
+from .aindexhs300freeweight import AIndexHS300FreeWeight
+from .sindexperformance import SIndexPerformance
+from .unlistedbrokerincome import UnlistedBrokerIncome
+from .unlistedbrokerbalancesheet import UnlistedBrokerBalanceSheet
+from .fxrmbmidrate import FXRMBMidRate
+from .hs300ieodprices import HS300IEODPrices
+from .asharemargintradesum import AShareMarginTradeSum
+from .ashareauditopinion import AShareAuditOpinion
+from .asharest import AShareST
+from .cbondissuer import CBondIssuer
+from .aindexindustrieseodcitics import AIndexIndustriesEODCITICS
+from .cbindexdescription import CBIndexDescription
+from .cbondbillrate import CBondBillRate
+from .amsciindexeod import AMSCIIndexEOD
+from .swindexmembers import SWIndexMembers
+from .ashareleadunderwriter import AShareLeadUnderwriter
+from .asharemergersacquisitions import AShareMergersAcquisitions
+from .ccbondconversion import CCBondConversion
+from .unlistedibrokerindicator import UnlistedIBrokerIndicator
+from .asharecompanyfilings import AShareCompanyfilings
+from .cindexfuturespositions import CIndexFuturesPositions
+from .unlistedbankindicator import UnlistedBankIndicator
+from .cfuturescontpro import CFuturescontpro
+from .ashareblocktrade import AShareBlockTrade
+from .asharel2indicators import AShareL2Indicators
+from .asharecompanyholdshares import AShareCompanyHoldShares
+from .unlistedbankbalancesheet import UnlistedBankBalanceSheet
+from .ashareplacementdetails import ASharePlacementDetails
+from .cbondrating import CBondRating
+from .cfuturesdescription import CFuturesDescription
+from .unlistedbrokercashflow import UnlistedBrokerCashFlow
+from .ashareinsideholder import AShareInsideHolder
+from .csindexmemberscorpactions import CSIndexMembersCorpActions
+from .cbondindexeodcnbd import CBondIndexEODCNBD
+from .liborprices import LiborPrices
+from .ashareequitytransfer import AShareEquityTransfer
+from .cbondprepodescription import CBondPRepoDescription
+from .asharefreefloatcalendar import AShareFreeFloatCalendar
+from .asharetradingsuspension import AShareTradingSuspension
+from .chinaoptioncalendar import ChinaOptionCalendar
+from .cgbbenchmark import CGBbenchmark
+from .ashareholdersmeeting import AShareholdersmeeting
+from .ashareagency import AShareAgency
+from .asharesecindustriesclass import AShareSECIndustriesClass
+from .asharemanagementholdreward import AShareManagementHoldReward
+from .asharerestructuringevents import AShareRestructuringEvents
+from .cbondratingwatchlist import CBondRatingWatchlist
+from .cbondconversionratio import CBondConversionRatio
+from .cbondinsideholder import CBondInsideHolder
+from .asharecomprestricted import AShareCompRestricted
+from .ashareconseption import AShareConseption
+from .cbondrepo import CBondRepo
+from .cbondreserverate import CBondReserveRate
+from .asharettmandmrq import AShareTTMAndMRQ
+from .aindexhs300weight import AIndexHS300Weight
+from .asharestockratingconsus import AShareStockRatingConsus
+from .cbindexweightcnbd import CBIndexWeightCNBD
+from .ashareralatedtrade import AShareRalatedTrade
+from .cbondguaranteedetail import CBondGuaranteeDetail
+from .cbondindustriescode import CBondIndustriesCode
+from .asharemargintrade import AShareMarginTrade
+from .cbindexmembers import CBIndexMembers
+from .commitprofit import CommitProfit
+from .aindexhs300closeweight import AIndexHS300CloseWeight
+from .cbondtenderresult import CBondTenderresult
+from .cbondplatewind import CBondPlateWind
+from .asharedescription import AShareDescription
+from .cbondincome import CBondIncome
+from .ashareipo import AShareIPO
+from .indexcontrastsector import IndexContrastSector
+from .cbondeodprices import CBondEODPrices
+from .ashareinsidertrade import AShareInsiderTrade
+from .cbondprerelease import CBondPreRelease
+from .cbondibrmbmondmaroview import CBondIBRMBMonDMarOview
+from .cbondfutureseodprices import CBondFuturesEODPrices
+from .ashareincdescription import AShareIncDescription
+from .shiborprices import ShiborPrices
+from .asharerightissue import AShareRightIssue
+from .asharedividend import AShareDividend
+from .ashareisqa import AshareISQA
+from .ashareeodderivativeindicator import AShareEODDerivativeIndicator
+from .unlistedinsuranceincome import UnlistedInsuranceIncome
+from .aswsindexeod import ASWSIndexEOD
+from .ashareincome import AShareIncome
+from .ashareincexecqtypri import AShareIncExecQtyPri
+from .csindusanalysis import CSIndusAnalysis
+from .cbondput import CBondPut
+from .aindexwindindustrieseod import AIndexWindIndustriesEOD
+from .cbondissuerratingwatchlist import CBondIssuerRatingWatchlist
+from .cbondfloatingrate import CBondfloatingrate
+from .cwarrantholder import CWarrantHolder
+from .cbondguaranteetotal import CBondGuaranteeTotal
+from .aindexeodprices import AIndexEODPrices
+from .asharemjrholdertrade import AShareMjrHolderTrade
+from .asharecalendar import AShareCalendar
+from .ashareindustriesclass import AShareIndustriesClass
+from .ashareincquantitydetails import AShareIncQuantityDetails
+from .ashareholdernumber import AShareHolderNumber
+from .unlistedinsuranceindicator import UnlistedinsuranceIndicator
+from .unlistedinsurancecashflow import UnlistedInsuranceCashFlow
+from .cbondbenchmark import CBondBenchmark
+from .ashareissuecommaudit import AShareIssueCommAudit
+from .cbondcurveshc import CBondCurveSHC
+from .cbondvaluation import CBondValuation
+from .asharegicsindustriesclass import AShareGICSIndustriesClass
+from .asharesecnindustriesclass import AShareSECNIndustriesClass
+from .asharefloatholder import AShareFloatHolder
+from .cbondanalysiscnbd import CBondAnalysisCNBD
+from .aindexmembers import AIndexMembers
+from .cbondconvprice import CBondConvprice
+from .cbondpayment import CBondPayment
+from .filesynctimeschedule import FileSyncTimeSchedule
+from .ashareindustriescode import AShareIndustriesCode
+from .mergerparticipant import MergerParticipant
+from .cwarrantdescription import CwarrantDescription
+from .unlistedinsurancebalancesheet import UnlistedInsuranceBalanceSheet
+from .chinaoptioncontpro import ChinaOptionContpro
+from .cbondfctd import CBondFCTD
+from .ashareintroduction import AShareIntroduction
+from .cbondcurvecnbd import CBondCurveCNBD
+from .aindexmemberswind import AIndexMembersWIND
+from .asharestrangetrade import AShareStrangeTrade
+from .cbindexeodprices import CBIndexEODPrices
+from .cgoldspoteodprices import CGoldSpotEODPrices
+from .ashareprofitnotice import AShareProfitNotice
+from .asharefinancialindicator import AShareFinancialIndicator
+from .ashareconsensusdata import AShareConsensusData
+from .ccbondvaluation import CCBondValuation
+from .brokerauditopinion import BrokerAuditOpinion
+from .cfuturesmarginratio import CFuturesmarginratio
+from .cbondindustrywind import CBondIndustryWind
+from .asharestockrating import AShareStockRating
+from .cbindexweight import CBIndexWeight
+from .asharebankindicator import AShareBankIndicator
+from .cbondcalendar import CBondCalendar
+from .cbonderepayprincipal import CbondERepayPrincipal
+from .cbondfsubjectcvf import CBondFSubjectcvf
+from .ashareexrightdividendrecord import AShareEXRightDividendRecord
+from .mergerintelligence import MergerIntelligence
+from .asharecapitaloperation import AShareCapitalOperation
+from .ashareindustriesclasscitics import AShareIndustriesClassCITICS
+from .chinaeftpch&redmlist import ChinaEFTPch&RedmList
+from .cbondissuerrating import CBondIssuerRating
+from .asharemonthlyreportsofbrokers import AShareMonthlyReportsofBrokers
+from .asharecapitalization import AShareCapitalization
+from .asharemajorholderplanhold import AShareMajorHolderPlanHold
+from .chinaoptionvaluation import ChinaOptionValuation
+from .asharecsindustriesclass import AShareCSIndustriesClass
+from .compintroduction import CompIntroduction
+from .aindexdescription import AIndexDescription
+from .asharetypecode import AShareTypeCode
+from .cfuturescontractmapping import CfuturesContractMapping
+from .ashareownership import AShareOwnership
+from .ashareequityrelationships import AShareEquityRelationships
+from .unlistedbankcashflow import UnlistedBankCashFlow
+from .asharemarginsubject import AShareMarginSubject
+from .cbondanalysisshc import CBondAnalysisSHC
+from .ashareseo import AShareSEO
+from .ashareisactivity import AshareISActivity
+from .changewindcode import ChangeWindcode
+from .cbondholder import CBondHolder
+from .aspciticindexeod import ASPCITICIndexEOD
+from .ccommodityfutureseodprices import CCommodityFuturesEODPrices
+from .cbondamount import CBondAmount
+from .cfuturescalendar import CFuturesCalendar
+from .ashareprofitexpress import AShareProfitExpress
+from .cbondspecialconditions import CBondSpecialConditions
+from .cindexfutureseodprices import CIndexFuturesEODPrices
+from .mergerevent import MergerEvent
+from .cbonddescription import CBondDescription
+from .ashareequitypledgeinfo import AShareEquityPledgeInfo
+from .chinaoptiondescription import ChinaOptionDescription
+from .cbondcf import CBondCF
+from .cbondfvaluation import CBondFValuation
+from .ashareincexercisepct import AShareIncExercisePct
+from .cbondindustrycnbd import CBondIndustrycnbd
+from .commitprofitsummary import CommitProfitSummary
+from .aindexmemberscitics import AIndexMembersCITICS
+from .cbondaccruedinterest import CBondAccruedInterest
+from .unlistedbankincome import UnlistedBankIncome
+from .asharefinancialexpense import AShareFinancialExpense
+from .cbondanalysiscsi import CBondAnalysisCSI
+from .cgoldspotdescription import CGoldSpotDescription
+from .brokersalessegment import BrokerSalesSegment
+from .ashareissuingdatepredict import AShareIssuingDatePredict
+from .hiborprices import HiborPrices
+from .chinaeftpch&redmmembers import ChinaEFTPch&RedmMembers
+from .asharemajorevent import AShareMajorEvent
+from .chinaetfweekpchredm import ChinaETFWeekPchRedm
+from .ashareswindustriesclass import AShareSWIndustriesClass
+from .cbondcurvecsi import CBondCurveCSI
+from .asharefreefloat import AShareFreeFloat
+from .asharemanagement import AShareManagement
+from .ralatedsecuritiescode import RalatedSecuritiesCode
+from .cbondbalancesheet import CBondBalanceSheet
+from .windcustomcode import WindCustomCode
+from .asharesalessegment import AShareSalesSegment
+from .chinaoptioneodprices import ChinaOptionEODPrices
+from .cbondagency import CBondAgency
+from .ashareeodprices import AShareEODPrices
