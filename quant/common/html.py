@@ -136,8 +136,12 @@ class HTMLBase:
         node = Tag(tag_name, **kwargs, _inline=True, _content=content)
         self.main.append(node)
 
-    def render(self):
-        return "\n".join(self.root.render())
+    def render(self, file_path=None):
+        html = "\n".join(self.root.render())
+        if file_path:
+            with open(file_path, "w") as f:
+                f.write(html)
+        return html
 
     @contextmanager
     def use(self, node):
