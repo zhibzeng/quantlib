@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.stats
 import pandas as pd
+from numba import jit
 
 
 def find_extreme_values(data, distribution="norm", alpha=0.975):
@@ -32,19 +33,20 @@ def find_extreme_values(data, distribution="norm", alpha=0.975):
     return extreme
 
 
-def __compute_zscore(x: np.ndarray, axis: int = -1, clip: float = 3.0):
-    dims = x.ndim
-    x[x == np.inf] = np.nan
-    x[x == -np.inf] = np.nan
+@jit
+def __compute_zscore(data: np.ndarray, axis: int = -1, clip: float = 3.0):
+    dims = data.ndim
+    data[data == np.inf] = np.nan
+    data[data == -np.inf] = np.nan
     if axis is None:
         length = 1
     else:
         if axis < 0:
             axis += dims
-        length = x.shape[axis]
+        length = data.shape[axis]
     for i in range(length):
         _slice = [i if j == axis else slice(None) for j in range(dims)]
-        sliced = x.__getitem__(_slice)
+        sliced = data.__getitem__(_slice)
         extremes = find_extreme_values(sliced)
         score = (sliced - np.nanmedian(sliced[~extremes])) / np.nanstd(sliced[~extremes])
         score[score > clip] = clip
@@ -61,8 +63,8 @@ def __compute_zscore(x: np.ndarray, axis: int = -1, clip: float = 3.0):
             err = np.nanstd(z)
             total_err = abs(avg) + abs(err - 1)
             z = (z - avg) / err
-        x.__setitem__(_slice, z)
-    return x
+        data.__setitem__(_slice, z)
+    return data
 
 
 def compute_zscore(data, axis=-1, clip=3.0, inplace=False):
