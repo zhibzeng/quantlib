@@ -9,13 +9,13 @@ Configure
 
 配置文件``~/.quantlib/config.cfg``:
 
-|wind_db_driver = 'pymysql'
-|wind_db_type = 'mysql'
-|wind_host = 'localhost'
-|wind_port = 3306
-|wind_username = 'wind'
-|wind_password = 'password'
-|wind_db_name = 'quant'
+| wind_db_driver = 'pymysql'
+| wind_db_type = 'mysql'
+| wind_host = 'localhost'
+| wind_port = 3306
+| wind_username = 'wind'
+| wind_password = 'password'
+| wind_db_name = 'quant'
 
 量价数据
 #######
@@ -23,7 +23,7 @@ Configure
 ..  code-block::
     python
 
-    import quant.data.wind as wind
+    from wind.data import wind
     wind.get_wind_data("AShareEODPrices", "s_dq_pctchange")
 
 

@@ -15,7 +15,7 @@ quant.utils
 ..  autoclass:: quant.utils.ConfigManager
     :members:
 
-..  autoclass:: quant.utils.SimpleOptimizer
+..  autoclass:: HTML
     :members:
 
 

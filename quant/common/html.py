@@ -6,6 +6,7 @@ import pandas as pd
 
 
 class Tag:
+    """HTML tag"""
     def __init__(self, _name, parent=None, _content=None, _inline=False, **kwargs):
         self.name = _name
         self.parent = parent
@@ -17,12 +18,20 @@ class Tag:
         self.content = _content or []
 
     def prepend(self, item):
+        """prepend an element"""
         self.content.insert(0, item)
 
     def append(self, item):
+        """Append an element"""
         self.content.append(item)
 
     def render(self):
+        """Show HTML code
+        Returns
+        -------
+        List[str]
+            each element is a line
+        """
         # attrs = ' '.join(starmap(lambda key, value: '%s="%s"' % (key, value), self.attrs.items()))
         attrs = []
         for key, value in self.attrs.items():
@@ -52,6 +61,7 @@ class Tag:
 
 
 class Text(Tag):
+    """An element that contains only pure text"""
     def __init__(self, text, parent=None):
         self.text = escape(text)
         self.parent = parent
@@ -61,6 +71,7 @@ class Text(Tag):
 
 
 class RawHtml(Tag):
+    """An element that contains raw html"""
     def __init__(self, html, parent=None):
         self.text = html
         self.parent = parent
@@ -95,16 +106,18 @@ class HTMLBase:
         self.__main = [self.root]
 
     def append(self, node):
+        """Append an element"""
         self.__main.append(node)
 
     @property
     def main(self):
+        """The current main element"""
         return self.__main[-1]
 
     def __getattr__(self, tag_name):
         @contextmanager
         def wrapped(**kwargs):
-            node = Tag(tag_name, parent=self.__main, **kwargs)
+            node = Tag(tag_name, parent=self.main, **kwargs)
             self.main.append(node)
             self.__main.append(node)
             yield node
@@ -226,10 +239,10 @@ class HTML(HTMLBase):
         else:
             highcharts_data['xAxis'] = {'type': 'linear'}
 
-        template = jinja2.Template("Highcharts.chart('highcharts-{name}', {data});".format(name=name, data=json.dumps(highcharts_data)))
+        js_code = "Highcharts.chart('highcharts-{name}', {data});".format(name=name, data=json.dumps(highcharts_data, indent=2, sort_keys=True))
 
         with self.script():
-            self.html(template.render(name=name, data=embedded_data, plot_type=plot_type))
+            self.html(js_code)
 
     @staticmethod
     def series2json(series):
@@ -265,8 +278,14 @@ class HTML(HTMLBase):
             table-bordered class
         striped:
             table-striped class
+        format:
+            the format to show the values
         kwargs
             other attributes to be added to table
+
+        See Also
+        --------
+        pd.DataFrame.style: Another way to generate beautiful html table from pd.DataFrame
         """
         if "_class" in kwargs:
             kwargs["_class"].append("table")

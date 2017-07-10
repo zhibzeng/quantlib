@@ -24,20 +24,50 @@ Tables
 
 ..  currentmodule:: quant.data.wind.tables
 
-AShareEODPrices
+AIndexEODPrices
 ^^^^^^^^^^^^^^^
-    
-..  autoclass:: AShareEODPrices
+
+..  autoclass:: AIndexEODPrices
+
+AIndexHS300FreeWeight
+^^^^^^^^^^^^^^^^^^^^^
+
+..  autoclass:: AIndexHS300FreeWeight
+
+AShareCalendar
+^^^^^^^^^^^^^^
+
+..  autoclass:: AShareCalendar
 
 AShareEODDerivativeIndicator
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ..  autoclass:: AShareEODDerivativeIndicator
 
+AShareEODPrices
+^^^^^^^^^^^^^^^
+    
+..  autoclass:: AShareEODPrices
+
+AShareIndustriesClass
+^^^^^^^^^^^^^^^^^^^^^
+
+..  autoclass:: AShareIndustriesClass
+
 AShareIPO
 ^^^^^^^^^
 
 ..  autoclass:: AShareIPO
+
+AShareSECIndustriesClass
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+..  autoclass:: AShareSECIndustriesClass
+
+AShareSECNIndustriesClass
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+..  autoclass:: AShareSECNIndustriesClass
 
 AShareST
 ^^^^^^^^
@@ -49,11 +79,3 @@ AShareTTMHis
 
 ..  autoclass:: AShareTTMHis
 
-AIndexEODPrices
-^^^^^^^^^^^^^^^
-
-..  autoclass:: AIndexEODPrices
-
-AIndexHS300FreeWeight
-
-..  autoclass:: AIndexHS300FreeWeight
