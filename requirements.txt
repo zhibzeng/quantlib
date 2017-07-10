@@ -9,6 +9,7 @@ fire
 jinja2
 lazy-property
 sklearn
+numba
 
 # optional
 # pymysql
