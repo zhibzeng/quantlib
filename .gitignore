@@ -64,3 +64,4 @@ target/
 
 # Private
 private/
+*.h5
