@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareISParticipant(BaseModel):
@@ -19,7 +20,8 @@ class AShareISParticipant(BaseModel):
         机构投资者类型   257001001证券公司资管
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareISParticipant"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     event_id = Column(VARCHAR2(40))
     s_institutionname = Column(VARCHAR2(100))
     s_institutioncode = Column(VARCHAR2(10))

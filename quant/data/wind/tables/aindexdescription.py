@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AIndexDescription(BaseModel):
@@ -29,7 +30,8 @@ class AIndexDescription(BaseModel):
         加权方式   1：自由流通股本2：总股本3：分级靠档14：分级靠档25：新华富时6：MSCI7：沪深300反算权数8：分级靠档3
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AIndexDescription"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_code = Column(VARCHAR2(40))
     s_info_name = Column(VARCHAR2(50))

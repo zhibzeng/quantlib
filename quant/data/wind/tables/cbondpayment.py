@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondPayment(BaseModel):
@@ -29,7 +30,8 @@ class CBondPayment(BaseModel):
         货币代码   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondPayment"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_info_announcementdate = Column(VARCHAR2(8))
     s_div_recorddate = Column(VARCHAR2(8))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondIssuer(BaseModel):
@@ -33,7 +34,8 @@ class CBondIssuer(BaseModel):
         债券主体公司所属Wind四级行   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondIssuer"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_compname = Column(VARCHAR2(100))
     s_info_compcode = Column(VARCHAR2(10))

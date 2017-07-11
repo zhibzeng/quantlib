@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CCBondConversion(BaseModel):
@@ -39,7 +40,8 @@ class CCBondConversion(BaseModel):
         强制转换原因   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CCBondConversion"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     conv_code = Column(VARCHAR2(10))

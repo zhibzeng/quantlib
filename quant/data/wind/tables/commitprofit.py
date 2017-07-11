@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CommitProfit(BaseModel):
@@ -25,7 +26,8 @@ class CommitProfit(BaseModel):
         承诺净利润(元)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CommitProfit"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     event_id = Column(VARCHAR2(40))
     targetcomp_code = Column(VARCHAR2(40))
     targetcompname = Column(VARCHAR2(100))

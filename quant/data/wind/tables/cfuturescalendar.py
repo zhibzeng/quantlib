@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CFuturesCalendar(BaseModel):
@@ -15,7 +16,8 @@ class CFuturesCalendar(BaseModel):
         交易所英文简称   
 
     """
-    object_id = Column(VARCHAR2(38))
+    __tablename__ = "CFuturesCalendar"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_days = Column(VARCHAR2(8))
     s_info_exchmarket = Column(VARCHAR2(40))
     

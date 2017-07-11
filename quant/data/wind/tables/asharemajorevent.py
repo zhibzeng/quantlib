@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareMajorEvent(BaseModel):
@@ -19,12 +20,19 @@ class AShareMajorEvent(BaseModel):
         发生日期   
     s_event_expdate: VARCHAR2(8)
         失效日期   
+    s_event_content: VARCHAR2(4000)
+        事件说明   
+    s_event_templateid: NUMBER(12,0)
+        模板ID   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareMajorEvent"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_event_categorycode = Column(NUMBER(9,0))
     s_event_anncedate = Column(VARCHAR2(8))
     s_event_hapdate = Column(VARCHAR2(8))
     s_event_expdate = Column(VARCHAR2(8))
+    s_event_content = Column(VARCHAR2(4000))
+    s_event_templateid = Column(NUMBER(12,0))
     

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareHolderNumber(BaseModel):
@@ -21,7 +22,8 @@ class AShareHolderNumber(BaseModel):
         股东总户数   若纯A股为A股户数；若含B股则为AB股总户数；若含H股则为AH股总户数；若含境外股，则为A和境外股总户数
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareHolderNumber"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     s_holder_enddate = Column(VARCHAR2(8))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondIBRMBMonDMarOview(BaseModel):
@@ -23,9 +24,16 @@ class CBondIBRMBMonDMarOview(BaseModel):
         成交额(亿元)   
     b_dq_vchange: NUMBER(20,8)
         成交额增减(亿元)   
+    b_dq_wavrate: NUMBER(20,8)
+        加权平均利率   
+    b_dq_bpchange: NUMBER(20,8)
+        升降基点   
+    b_dq_nomembersinvo: NUMBER(20,8)
+        参与成员家数   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondIBRMBMonDMarOview"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     s_info_typecode = Column(VARCHAR2(40))
     b_dq_type = Column(VARCHAR2(80))
@@ -33,4 +41,7 @@ class CBondIBRMBMonDMarOview(BaseModel):
     b_dq_nochange = Column(NUMBER(20,8))
     b_dq_tradingvalue = Column(NUMBER(20,8))
     b_dq_vchange = Column(NUMBER(20,8))
+    b_dq_wavrate = Column(NUMBER(20,8))
+    b_dq_bpchange = Column(NUMBER(20,8))
+    b_dq_nomembersinvo = Column(NUMBER(20,8))
     

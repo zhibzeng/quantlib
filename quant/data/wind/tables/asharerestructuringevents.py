@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareRestructuringEvents(BaseModel):
@@ -19,7 +20,8 @@ class AShareRestructuringEvents(BaseModel):
         重组形式代码   328001000协议收购328002000要约收购328003000管理层收购328004000回购328005000股权划拨328006000二级市场收购(含产权交易所)328007000吸收合并328012000发行股
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareRestructuringEvents"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     progress = Column(NUMBER(9,0))
     event = Column(VARCHAR2(200))

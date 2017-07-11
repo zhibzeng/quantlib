@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondFuturesEODPrices(BaseModel):
@@ -35,7 +36,8 @@ class CBondFuturesEODPrices(BaseModel):
         涨跌(元)   =收盘价-前结算价
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondFuturesEODPrices"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     s_dq_presettle = Column(NUMBER(20,4))

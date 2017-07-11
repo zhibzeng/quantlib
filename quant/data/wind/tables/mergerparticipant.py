@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class MergerParticipant(BaseModel):
@@ -39,7 +40,8 @@ class MergerParticipant(BaseModel):
         标的方增值率   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "MergerParticipant"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     event_id = Column(VARCHAR2(20))
     party_name = Column(VARCHAR2(200))
     country_code = Column(VARCHAR2(10))

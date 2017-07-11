@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondTenderresult(BaseModel):
@@ -73,7 +74,8 @@ class CBondTenderresult(BaseModel):
         超额认购倍数   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondTenderresult"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_tender_object = Column(NUMBER(9,0))
     b_tendrst_documtnumber = Column(VARCHAR2(80))

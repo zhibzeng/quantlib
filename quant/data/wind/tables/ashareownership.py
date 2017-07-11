@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareOwnership(BaseModel):
@@ -23,7 +24,8 @@ class AShareOwnership(BaseModel):
         最新标志   1:是；0：否
 
     """
-    object_id = Column(VARCHAR2(38))
+    __tablename__ = "AShareOwnership"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_compcode = Column(VARCHAR2(40))
     s_info_compname = Column(VARCHAR2(200))
     wind_sec_code = Column(VARCHAR2(10))

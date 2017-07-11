@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class FileSyncTimeSchedule(BaseModel):
@@ -19,7 +20,8 @@ class FileSyncTimeSchedule(BaseModel):
         周(参数)   0-6:周日-周一
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "FileSyncTimeSchedule"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     product_name = Column(VARCHAR2(100))
     frequency = Column(VARCHAR2(10))
     runtime = Column(VARCHAR2(100))

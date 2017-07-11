@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondHolder(BaseModel):
@@ -25,7 +26,8 @@ class CBondHolder(BaseModel):
         持有人类型   1个人；2公司
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondHolder"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     s_info_enddate = Column(VARCHAR2(8))

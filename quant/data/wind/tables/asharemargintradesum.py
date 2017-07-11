@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareMarginTradeSum(BaseModel):
@@ -27,7 +28,8 @@ class AShareMarginTradeSum(BaseModel):
         融资融券余额(股,份,手)   上海：本日融资融券交易总量;深圳：融资融券余额;融资余额＋融券余额
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareMarginTradeSum"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     s_marsum_exchmarket = Column(VARCHAR2(40))
     s_marsum_tradingbalance = Column(NUMBER(20,4))

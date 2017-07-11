@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareStockRating(BaseModel):
@@ -37,7 +38,8 @@ class AShareStockRating(BaseModel):
         前次评级   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareStockRating"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_est_institute = Column(VARCHAR2(100))
     s_est_ratinganalyst = Column(VARCHAR2(100))

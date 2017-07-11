@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareProfitExpress(BaseModel):
@@ -27,9 +28,18 @@ class AShareProfitExpress(BaseModel):
         总资产(元)   
     tot_shrhldr_eqy_excl_min_int: NUMBER(20,4)
         股东权益合计(不含少数股东权益)(元)   
+    eps_diluted: NUMBER(20,4)
+        每股收益(摊薄)(元)   
+    roe_diluted: NUMBER(20,4)
+        净资产收益率(摊薄)(%)   
+    s_isaudit: NUMBER(5,0)
+        是否审计   1:是0:否
+    yoynet_profit_excl_min_int_inc: NUMBER(20,4)
+        去年同期修正后净利润   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareProfitExpress"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     report_period = Column(VARCHAR2(8))
@@ -39,4 +49,8 @@ class AShareProfitExpress(BaseModel):
     net_profit_excl_min_int_inc = Column(NUMBER(20,4))
     tot_assets = Column(NUMBER(20,4))
     tot_shrhldr_eqy_excl_min_int = Column(NUMBER(20,4))
+    eps_diluted = Column(NUMBER(20,4))
+    roe_diluted = Column(NUMBER(20,4))
+    s_isaudit = Column(NUMBER(5,0))
+    yoynet_profit_excl_min_int_inc = Column(NUMBER(20,4))
     

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class ChinaOptionContpro(BaseModel):
@@ -57,9 +58,20 @@ class ChinaOptionContpro(BaseModel):
         期权金   
     s_info_exercisingend: VARCHAR2(40)
         期权行权日   
+    s_info_strikeprice: VARCHAR2(800)
+        期权行权价   
+    s_info_simulation: VARCHAR2(1)
+        是否仿真交易   0:否1:是
+    s_info_quoteunit: VARCHAR2(40)
+        报价单位   
+    s_info_counit: NUMBER(20)
+        合约单位   
+    s_info_counitdimension: VARCHAR2(40)
+        合约单位量纲   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "ChinaOptionContpro"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_code = Column(VARCHAR2(20))
     s_info_name = Column(VARCHAR2(40))
@@ -84,4 +96,9 @@ class ChinaOptionContpro(BaseModel):
     s_info_minposlimit = Column(VARCHAR2(800))
     s_info_optionprice = Column(VARCHAR2(20))
     s_info_exercisingend = Column(VARCHAR2(40))
+    s_info_strikeprice = Column(VARCHAR2(800))
+    s_info_simulation = Column(VARCHAR2(1))
+    s_info_quoteunit = Column(VARCHAR2(40))
+    s_info_counit = Column(NUMBER(20))
+    s_info_counitdimension = Column(VARCHAR2(40))
     

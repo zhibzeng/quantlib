@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondPut(BaseModel):
@@ -29,7 +30,8 @@ class CBondPut(BaseModel):
         回售行使截止日   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondPut"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_info_repurchasedate = Column(VARCHAR2(8))
     b_info_repurchaseprice = Column(NUMBER(20,4))

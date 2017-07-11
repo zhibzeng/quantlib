@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CSIndexMembersCorpActions(BaseModel):
@@ -29,7 +30,8 @@ class CSIndexMembersCorpActions(BaseModel):
         计算用股本英文：Sharesinindex   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CSIndexMembersCorpActions"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_con_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))

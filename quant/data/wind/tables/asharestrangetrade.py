@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareStrangeTrade(BaseModel):
@@ -31,7 +32,8 @@ class AShareStrangeTrade(BaseModel):
         卖出金额(元)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareStrangeTrade"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_strange_bgdate = Column(VARCHAR2(8))
     s_strange_enddate = Column(VARCHAR2(8))

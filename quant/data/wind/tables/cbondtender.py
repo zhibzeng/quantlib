@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondTender(BaseModel):
@@ -53,9 +54,12 @@ class CBondTender(BaseModel):
         承揽费率(%)   
     b_tender_spread: VARCHAR2(20)
         标位步长   
+    b_tender_concatenationornot: NUMBER(1,0)
+        是否要求标位连续   1是；0否
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondTender"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     b_tender_tenderdate = Column(VARCHAR2(8))
@@ -78,4 +82,5 @@ class CBondTender(BaseModel):
     b_tender_distribend = Column(VARCHAR2(8))
     b_tender_underwritingcost = Column(NUMBER(20,4))
     b_tender_spread = Column(VARCHAR2(20))
+    b_tender_concatenationornot = Column(NUMBER(1,0))
     

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareTypeCode(BaseModel):
@@ -19,7 +20,8 @@ class AShareTypeCode(BaseModel):
         分类   对应不规则代码1.万得代码后缀2.评级分类代码3.信用评级机构
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareTypeCode"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_typname = Column(VARCHAR2(300))
     s_typcode = Column(VARCHAR2(40))
     s_origin_typcode = Column(VARCHAR2(40))

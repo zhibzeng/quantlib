@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondCurveSHC(BaseModel):
@@ -23,7 +24,8 @@ class CBondCurveSHC(BaseModel):
         收益率(%)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondCurveSHC"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     b_anal_curvenumber = Column(NUMBER(10,0))
     b_anal_curvename = Column(VARCHAR2(200))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondReserveRate(BaseModel):
@@ -17,7 +18,8 @@ class CBondReserveRate(BaseModel):
         准备金率(%)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondReserveRate"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     s_info_reserveratetype = Column(VARCHAR2(80))
     b_info_rate = Column(NUMBER(20,4))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondPreRelease(BaseModel):
@@ -29,7 +30,8 @@ class CBondPreRelease(BaseModel):
         价格类型代码   利率：530001000价格：530003000
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondPreRelease"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_date = Column(VARCHAR2(8))
     pre_release_code = Column(VARCHAR2(10))

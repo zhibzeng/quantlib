@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CFuturesDescription(BaseModel):
@@ -37,7 +38,8 @@ class CFuturesDescription(BaseModel):
         最后交割日   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CFuturesDescription"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_code = Column(VARCHAR2(40))
     s_info_name = Column(VARCHAR2(50))

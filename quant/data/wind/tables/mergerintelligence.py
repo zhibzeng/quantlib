@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class MergerIntelligence(BaseModel):
@@ -43,7 +44,8 @@ class MergerIntelligence(BaseModel):
         生效日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "MergerIntelligence"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     intelligence_id = Column(VARCHAR2(20))
     title = Column(VARCHAR2(400))
     ann_date = Column(VARCHAR2(8))

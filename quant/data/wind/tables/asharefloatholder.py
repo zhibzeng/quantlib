@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareFloatHolder(BaseModel):
@@ -7,6 +8,28 @@ class AShareFloatHolder(BaseModel):
 
     Attributes
     ----------
+    object_id: VARCHAR2(100)
+        对象ID   
+    s_info_windcode: VARCHAR2(40)
+        Wind代码   
+    ann_dt: VARCHAR2(8)
+        公告日期   
+    s_holder_enddate: VARCHAR2(8)
+        截止日期   
+    s_holder_holdercategory: VARCHAR2(1)
+        股东类型   1：个人；2：公司
+    s_holder_name: VARCHAR2(100)
+        持有人   
+    s_holder_quantity: NUMBER(20,4)
+        数量(股)   
 
     """
+    __tablename__ = "AShareFloatHolder"
+    object_id = Column(VARCHAR2(100), primary_key=True)
+    s_info_windcode = Column(VARCHAR2(40))
+    ann_dt = Column(VARCHAR2(8))
+    s_holder_enddate = Column(VARCHAR2(8))
+    s_holder_holdercategory = Column(VARCHAR2(1))
+    s_holder_name = Column(VARCHAR2(100))
+    s_holder_quantity = Column(NUMBER(20,4))
     

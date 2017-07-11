@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CSIndexDivisor(BaseModel):
@@ -19,7 +20,8 @@ class CSIndexDivisor(BaseModel):
         调整后除数英文：NewDivisor   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CSIndexDivisor"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     i_cur_divisor = Column(NUMBER(20,4))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondPRepoDescription(BaseModel):
@@ -27,7 +28,8 @@ class CBondPRepoDescription(BaseModel):
         交易所   SSE:上交所
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondPRepoDescription"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_subjectwindcode = Column(VARCHAR2(40))
     b_info_repo_type = Column(VARCHAR2(40))

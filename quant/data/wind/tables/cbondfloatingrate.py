@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondfloatingrate(BaseModel):
@@ -25,7 +26,8 @@ class CBondfloatingrate(BaseModel):
         基准利率精度   0、基准利率未明确要求保留多少位小数2、基准利率要求保留两位小数
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondfloatingrate"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_info_benchmarkcode = Column(NUMBER(9,0))
     b_info_marketrateornot = Column(NUMBER(5,0))

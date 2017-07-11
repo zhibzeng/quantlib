@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondIndustryWind(BaseModel):
@@ -21,7 +22,8 @@ class CBondIndustryWind(BaseModel):
         二级板块名称   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondIndustryWind"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_industrycode = Column(VARCHAR2(20))
     s_info_industryname = Column(VARCHAR2(100))

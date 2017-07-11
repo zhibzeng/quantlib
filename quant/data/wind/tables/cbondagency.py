@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondAgency(BaseModel):
@@ -13,9 +14,19 @@ class CBondAgency(BaseModel):
         Wind代码   
     b_info_redemptionprice: NUMBER(20,4)
         赎回价   
+    b_info_bgndt: VARCHAR2(8)
+        起始日期   
+    b_info_enddt: VARCHAR2(8)
+        截止日期   
+    b_info_trnsrt: NUMBER(20,4)
+        触发比例(%)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondAgency"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     b_info_windcode = Column(VARCHAR2(40))
     b_info_redemptionprice = Column(NUMBER(20,4))
+    b_info_bgndt = Column(VARCHAR2(8))
+    b_info_enddt = Column(VARCHAR2(8))
+    b_info_trnsrt = Column(NUMBER(20,4))
     

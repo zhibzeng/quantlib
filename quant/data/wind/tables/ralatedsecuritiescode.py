@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class RalatedSecuritiesCode(BaseModel):
@@ -21,7 +22,8 @@ class RalatedSecuritiesCode(BaseModel):
         失效日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "RalatedSecuritiesCode"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_ralatedcode = Column(VARCHAR2(40))
     s_relation_typcode = Column(VARCHAR2(10))

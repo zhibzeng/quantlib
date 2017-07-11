@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareBalanceSheet(BaseModel):
@@ -21,7 +22,8 @@ class AShareBalanceSheet(BaseModel):
         报表类型   报表类型:408001000:合并报表408004000:合并报表(调整)
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareBalanceSheet"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     wind_code = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))

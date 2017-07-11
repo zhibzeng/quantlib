@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareEquityTransfer(BaseModel):
@@ -59,7 +60,8 @@ class AShareEquityTransfer(BaseModel):
         公告日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareEquityTransfer"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     transferor = Column(VARCHAR2(100))
     transferor_disclosure = Column(VARCHAR2(40))

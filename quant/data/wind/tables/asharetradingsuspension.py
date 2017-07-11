@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareTradingSuspension(BaseModel):
@@ -21,7 +22,8 @@ class AShareTradingSuspension(BaseModel):
         停牌原因   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareTradingSuspension"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_dq_suspenddate = Column(VARCHAR2(8))
     s_dq_suspendtype = Column(NUMBER(9,0))

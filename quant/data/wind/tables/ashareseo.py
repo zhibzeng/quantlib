@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareSEO(BaseModel):
@@ -55,9 +56,56 @@ class AShareSEO(BaseModel):
         证监会核准公告日   证监会核准发行的公告日
     s_fellow_anncedate: VARCHAR2(8)
         上网发行公告日   
+    s_fellow_ratioanncedate: VARCHAR2(8)
+        网上中签率公告日   
+    s_fellow_offeringdate: VARCHAR2(8)
+        增发公告日   
+    s_fellow_listanndate: VARCHAR2(8)
+        上市公告日   
+    s_fellow_offeringobject: VARCHAR2(200)
+        发行对象   
+    s_fellow_priceuplimit: NUMBER(20,4)
+        增发预案价上限   
+    s_fellow_pricedownlimit: NUMBER(20,4)
+        增发预案价下限   
+    s_seo_code: VARCHAR2(10)
+        增发代码   
+    s_seo_name: VARCHAR2(20)
+        增发简称   
+    s_seo_pe: NUMBER(20,4)
+        发行市盈率(摊薄)   
+    s_seo_amtbyplacing: NUMBER(20,4)
+        上网发行数量(万股)   
+    s_seo_amttojur: NUMBER(20,4)
+        网下发行数量(万股)   
+    s_seo_holdersubsmode: VARCHAR2(30
+        大股东认购方式   
+    s_seo_holdersubsrate: NUMBER(20,4)
+        大股东认购比例(%)   
+    ann_dt: VARCHAR2(8)
+        最新公告日期   
+    pricingmode: NUMBER(9,0)
+        定向增发定价方式代码   竞价:275001000定价:275002000
+    s_fellow_orgpricemin: NUMBER(20,4)
+        原始预案价下限   
+    s_fellow_discntratio: NUMBER(20,4)
+        折扣率   
+    s_fellow_date: VARCHAR2(8)
+        定增发行日期   
+    s_fellow_subinvitationdt: VARCHAR2(8)
+        认购邀请书日   
+    s_fellow_year: VARCHAR2(8)
+        增发年度   
+    s_fellow_objective_code: NUMBER(9,0)
+        定向增发目的代码   关联AShareTypeCode.s_typcode获取类型名称
+    pricingdate: VARCHAR2(8)
+        定价基准日   
+    is_no_public: NUMBER(5,0)
+        是否属于非公开发行   0：否1:是
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareSEO"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_fellow_progress = Column(VARCHAR2(10))
     s_fellow_issuetype = Column(VARCHAR2(10))
@@ -81,4 +129,27 @@ class AShareSEO(BaseModel):
     s_fellow_passdate = Column(VARCHAR2(8))
     s_fellow_approveddate = Column(VARCHAR2(8))
     s_fellow_anncedate = Column(VARCHAR2(8))
+    s_fellow_ratioanncedate = Column(VARCHAR2(8))
+    s_fellow_offeringdate = Column(VARCHAR2(8))
+    s_fellow_listanndate = Column(VARCHAR2(8))
+    s_fellow_offeringobject = Column(VARCHAR2(200))
+    s_fellow_priceuplimit = Column(NUMBER(20,4))
+    s_fellow_pricedownlimit = Column(NUMBER(20,4))
+    s_seo_code = Column(VARCHAR2(10))
+    s_seo_name = Column(VARCHAR2(20))
+    s_seo_pe = Column(NUMBER(20,4))
+    s_seo_amtbyplacing = Column(NUMBER(20,4))
+    s_seo_amttojur = Column(NUMBER(20,4))
+    s_seo_holdersubsmode = Column(VARCHAR2(30)
+    s_seo_holdersubsrate = Column(NUMBER(20,4))
+    ann_dt = Column(VARCHAR2(8))
+    pricingmode = Column(NUMBER(9,0))
+    s_fellow_orgpricemin = Column(NUMBER(20,4))
+    s_fellow_discntratio = Column(NUMBER(20,4))
+    s_fellow_date = Column(VARCHAR2(8))
+    s_fellow_subinvitationdt = Column(VARCHAR2(8))
+    s_fellow_year = Column(VARCHAR2(8))
+    s_fellow_objective_code = Column(NUMBER(9,0))
+    pricingdate = Column(VARCHAR2(8))
+    is_no_public = Column(NUMBER(5,0))
     

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareLeadUnderwriter(BaseModel):
@@ -19,7 +20,8 @@ class AShareLeadUnderwriter(BaseModel):
         发行类型   1.首发
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareLeadUnderwriter"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_lu_annissuedate = Column(VARCHAR2(8))
     s_lu_issuedate = Column(VARCHAR2(8))

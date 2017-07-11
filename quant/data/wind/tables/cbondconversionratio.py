@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondConversionRatio(BaseModel):
@@ -21,7 +22,8 @@ class CBondConversionRatio(BaseModel):
         折合标准券   每张债券折合标准券金额
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondConversionRatio"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_cvn_startdate = Column(VARCHAR2(8))
     b_cvn_enddate = Column(VARCHAR2(8))

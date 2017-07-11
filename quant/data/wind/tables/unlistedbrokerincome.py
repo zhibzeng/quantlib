@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class UnlistedBrokerIncome(BaseModel):
@@ -35,9 +36,80 @@ class UnlistedBrokerIncome(BaseModel):
         实际公告日期   
     oper_rev: NUMBER(20,4)
         营业收入   
+    handling_chrg_comm_inc: NUMBER(20,4)
+        手续费及佣金收入   
+    net_inc_sec_trading_brok_bus: NUMBER(20,4)
+        代理买卖证券业务净收入   
+    net_inc_sec_uw_bus: NUMBER(20,4)
+        证券承销业务净收入   
+    net_inc_ec_asset_mgmt_bus: NUMBER(20,4)
+        受托客户资产管理业务净收入   
+    net_int_inc: NUMBER(20,4)
+        利息净收入   
+    plus_net_invest_inc: NUMBER(20,4)
+        加:投资净收益   
+    incl_inc_invest_assoc_jv_entp: NUMBER(20,4)
+        其中:对联营企业和合营企业的投资收益   
+    plus_net_gain_chg_fv: NUMBER(20,4)
+        加:公允价值变动净收益   
+    plus_net_gain_fx_trans: NUMBER(20,4)
+        加:汇兑净收益   
+    other_bus_inc: NUMBER(20,4)
+        其他业务收入   
+    oper_exp: NUMBER(20,4)
+        营业支出   
+    less_taxes_surcharges_ops: NUMBER(20,4)
+        减:营业税金及附加   
+    less_gerl_admin_exp: NUMBER(20,4)
+        减:管理费用   
+    less_impair_loss_assets: NUMBER(20,4)
+        减:资产减值损失   
+    other_bus_cost: NUMBER(20,4)
+        其他业务成本   
+    spe_bal_oper_profit: NUMBER(20,4)
+        营业利润差额(特殊报表科目)   
+    tot_bal_oper_profit: NUMBER(20,4)
+        营业利润差额(合计平衡项目)   
+    oper_profit: NUMBER(20,4)
+        营业利润   
+    plus_non_oper_rev: NUMBER(20,4)
+        加:营业外收入   
+    less_non_oper_exp: NUMBER(20,4)
+        减:营业外支出   
+    il_net_loss_disp_noncur_asset: NUMBER(20,4)
+        其中:减:非流动资产处置净损失   
+    spe_bal_tot_profit: NUMBER(20,4)
+        利润总额差额(特殊报表科目)   
+    tot_bal_tot_profit: NUMBER(20,4)
+        利润总额差额(合计平衡项目)   
+    tot_profit: NUMBER(20,4)
+        利润总额   
+    inc_tax: NUMBER(20,4)
+        所得税   
+    unconfirmed_invest_loss: NUMBER(20,4)
+        未确认投资损失   
+    spe_bal_net_profit: NUMBER(20,4)
+        净利润总额差额(特殊报表科目)   
+    tot_bal_net_profit: NUMBER(20,4)
+        净利润总额差额(合计平衡项目)   
+    net_profit_incl_min_int_inc: NUMBER(20,4)
+        净利润(含少数股东损益)   
+    net_profit_excl_min_int_inc: NUMBER(20,4)
+        净利润(不含少数股东损益)   
+    minority_int_inc: NUMBER(20,4)
+        少数股东损益   
+    other_compreh_inc: NUMBER(20,4)
+        其他综合收益   
+    tot_compreh_inc: NUMBER(20,4)
+        综合收益总额   
+    tot_compreh_inc_min_shrhldr: NUMBER(20,4)
+        综合收益总额(少数股东)   
+    tot_compreh_inc_parent_comp: NUMBER(20,4)
+        综合收益总额(母公司)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "UnlistedBrokerIncome"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_compcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     report_period = Column(VARCHAR2(8))
@@ -51,4 +123,39 @@ class UnlistedBrokerIncome(BaseModel):
     s_fa_eps_diluted = Column(NUMBER(20,4))
     actual_ann_dt = Column(VARCHAR2(8))
     oper_rev = Column(NUMBER(20,4))
+    handling_chrg_comm_inc = Column(NUMBER(20,4))
+    net_inc_sec_trading_brok_bus = Column(NUMBER(20,4))
+    net_inc_sec_uw_bus = Column(NUMBER(20,4))
+    net_inc_ec_asset_mgmt_bus = Column(NUMBER(20,4))
+    net_int_inc = Column(NUMBER(20,4))
+    plus_net_invest_inc = Column(NUMBER(20,4))
+    incl_inc_invest_assoc_jv_entp = Column(NUMBER(20,4))
+    plus_net_gain_chg_fv = Column(NUMBER(20,4))
+    plus_net_gain_fx_trans = Column(NUMBER(20,4))
+    other_bus_inc = Column(NUMBER(20,4))
+    oper_exp = Column(NUMBER(20,4))
+    less_taxes_surcharges_ops = Column(NUMBER(20,4))
+    less_gerl_admin_exp = Column(NUMBER(20,4))
+    less_impair_loss_assets = Column(NUMBER(20,4))
+    other_bus_cost = Column(NUMBER(20,4))
+    spe_bal_oper_profit = Column(NUMBER(20,4))
+    tot_bal_oper_profit = Column(NUMBER(20,4))
+    oper_profit = Column(NUMBER(20,4))
+    plus_non_oper_rev = Column(NUMBER(20,4))
+    less_non_oper_exp = Column(NUMBER(20,4))
+    il_net_loss_disp_noncur_asset = Column(NUMBER(20,4))
+    spe_bal_tot_profit = Column(NUMBER(20,4))
+    tot_bal_tot_profit = Column(NUMBER(20,4))
+    tot_profit = Column(NUMBER(20,4))
+    inc_tax = Column(NUMBER(20,4))
+    unconfirmed_invest_loss = Column(NUMBER(20,4))
+    spe_bal_net_profit = Column(NUMBER(20,4))
+    tot_bal_net_profit = Column(NUMBER(20,4))
+    net_profit_incl_min_int_inc = Column(NUMBER(20,4))
+    net_profit_excl_min_int_inc = Column(NUMBER(20,4))
+    minority_int_inc = Column(NUMBER(20,4))
+    other_compreh_inc = Column(NUMBER(20,4))
+    tot_compreh_inc = Column(NUMBER(20,4))
+    tot_compreh_inc_min_shrhldr = Column(NUMBER(20,4))
+    tot_compreh_inc_parent_comp = Column(NUMBER(20,4))
     

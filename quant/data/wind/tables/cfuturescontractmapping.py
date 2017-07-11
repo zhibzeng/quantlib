@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CfuturesContractMapping(BaseModel):
@@ -21,7 +22,8 @@ class CfuturesContractMapping(BaseModel):
         合约ID   
 
     """
-    object_id = Column(VARCHAR2(38))
+    __tablename__ = "CfuturesContractMapping"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     fs_mapping_windcode = Column(VARCHAR2(40))
     startdate = Column(VARCHAR2(8))

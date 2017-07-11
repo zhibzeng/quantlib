@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareInsuranceIndicator(BaseModel):
@@ -19,7 +20,8 @@ class AShareInsuranceIndicator(BaseModel):
         报表类型   报表类型:408001000:合并报表408002000:合并报告(单季度)408003000:合并报告(单季度调整)408004000:合并报表(调整)408005000:合并报表(更正前)
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareInsuranceIndicator"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     report_period = Column(VARCHAR2(8))

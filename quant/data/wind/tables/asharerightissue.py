@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareRightIssue(BaseModel):
@@ -53,9 +54,16 @@ class AShareRightIssue(BaseModel):
         基准股本(万股)   
     s_rightsissue_code: VARCHAR2(10)
         配售代码   
+    ann_dt: VARCHAR2(8)
+        最新公告日期   
+    s_rightsissue_year: VARCHAR2(8)
+        配股年度   
+    s_rightsissue_content: VARCHAR2(150)
+        配股说明   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareRightIssue"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_rightsissue_progress = Column(VARCHAR2(10))
     s_rightsissue_price = Column(NUMBER(20,4))
@@ -78,4 +86,7 @@ class AShareRightIssue(BaseModel):
     s_rightsissue_guarantor = Column(VARCHAR2(8))
     s_rightsissue_guartype = Column(NUMBER(20,4))
     s_rightsissue_code = Column(VARCHAR2(10))
+    ann_dt = Column(VARCHAR2(8))
+    s_rightsissue_year = Column(VARCHAR2(8))
+    s_rightsissue_content = Column(VARCHAR2(150))
     

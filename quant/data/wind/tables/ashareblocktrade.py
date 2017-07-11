@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareBlockTrade(BaseModel):
@@ -29,7 +30,8 @@ class AShareBlockTrade(BaseModel):
         笔数   (同一代码+同一日期+同一机构+同一成交价+同一成交量)累计的笔数
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareBlockTrade"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     s_block_price = Column(NUMBER(20,4))

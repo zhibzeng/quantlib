@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareMarginSubject(BaseModel):
@@ -19,12 +20,19 @@ class AShareMarginSubject(BaseModel):
         剔除日   
     s_margin_marginrate: NUMBER(20,4)
         保证金比例   
+    s_margin_conversionrate: NUMBER(20,4)
+        折算率   
+    s_margin_rateeffectdate: VARCHAR2(8)
+        保证金比例或折算率生效日   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareMarginSubject"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_margin_sharetype = Column(NUMBER(9,0))
     s_margin_effectdate = Column(VARCHAR2(8))
     s_margin_elimindate = Column(VARCHAR2(8))
     s_margin_marginrate = Column(NUMBER(20,4))
+    s_margin_conversionrate = Column(NUMBER(20,4))
+    s_margin_rateeffectdate = Column(VARCHAR2(8))
     

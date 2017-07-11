@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CSIndusAnalysis(BaseModel):
@@ -25,7 +26,8 @@ class CSIndusAnalysis(BaseModel):
         样本券个数   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CSIndusAnalysis"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     industriescode = Column(VARCHAR2(10))
     marketcode = Column(NUMBER(9))

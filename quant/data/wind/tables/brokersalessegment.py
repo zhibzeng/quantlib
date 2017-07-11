@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class BrokerSalesSegment(BaseModel):
@@ -21,7 +22,8 @@ class BrokerSalesSegment(BaseModel):
         项目类别   455001000:产品
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "BrokerSalesSegment"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_compcode = Column(VARCHAR2(40))
     s_info_compname = Column(VARCHAR2(200))
     report_period = Column(VARCHAR2(8))

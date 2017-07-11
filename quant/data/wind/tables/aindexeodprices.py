@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AIndexEODPrices(BaseModel):
@@ -25,9 +26,18 @@ class AIndexEODPrices(BaseModel):
         最低价(点)   
     s_dq_close: NUMBER(20,4)
         收盘价(点)   
+    s_dq_change: NUMBER(20,4)
+        涨跌(点)   
+    s_dq_pctchange: NUMBER(20,4)
+        涨跌幅(%)   
+    s_dq_volume: NUMBER(20,4)
+        成交量(手)   
+    s_dq_amount: NUMBER(20,4)
+        成交金额(千元)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AIndexEODPrices"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     crncy_code = Column(VARCHAR2(10))
@@ -36,4 +46,8 @@ class AIndexEODPrices(BaseModel):
     s_dq_high = Column(NUMBER(20,4))
     s_dq_low = Column(NUMBER(20,4))
     s_dq_close = Column(NUMBER(20,4))
+    s_dq_change = Column(NUMBER(20,4))
+    s_dq_pctchange = Column(NUMBER(20,4))
+    s_dq_volume = Column(NUMBER(20,4))
+    s_dq_amount = Column(NUMBER(20,4))
     

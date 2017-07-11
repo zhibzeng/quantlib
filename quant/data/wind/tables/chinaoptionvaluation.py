@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class ChinaOptionValuation(BaseModel):
@@ -27,7 +28,8 @@ class ChinaOptionValuation(BaseModel):
         Rho   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "ChinaOptionValuation"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     w_anal_underlyingimpliedvol = Column(NUMBER(24,8))

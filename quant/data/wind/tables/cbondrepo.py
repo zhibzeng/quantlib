@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondRepo(BaseModel):
@@ -23,7 +24,8 @@ class CBondRepo(BaseModel):
         回购类型   517001000：正回购517002000：逆回购
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondRepo"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     trade_dt = Column(VARCHAR2(8))
     b_info_term = Column(NUMBER(20,4))
     b_tender_interestrate = Column(NUMBER(20,4))

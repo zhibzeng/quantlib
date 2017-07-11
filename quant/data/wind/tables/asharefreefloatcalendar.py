@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareFreeFloatCalendar(BaseModel):
@@ -27,7 +28,8 @@ class AShareFreeFloatCalendar(BaseModel):
         上市数量是否公布值   0：否，为预测值1:是,为实际公布值
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareFreeFloatCalendar"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_listdate = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))

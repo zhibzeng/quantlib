@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondSpecialConditions(BaseModel):
@@ -31,7 +32,8 @@ class CBondSpecialConditions(BaseModel):
         条款内容   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondSpecialConditions"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_info_provisiontype = Column(VARCHAR2(100)
     b_info_callbkorputbkprice = Column(NUMBER(20,4))

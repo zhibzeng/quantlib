@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class WindCustomCode(BaseModel):
@@ -47,7 +48,8 @@ class WindCustomCode(BaseModel):
         分类代码   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "WindCustomCode"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_asharecode = Column(VARCHAR2(10)
     s_info_compcode = Column(VARCHAR2(100))

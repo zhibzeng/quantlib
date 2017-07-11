@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareStockSwap(BaseModel):
@@ -53,9 +54,32 @@ class AShareStockSwap(BaseModel):
         证监会发审委公告日   
     anncedate: VARCHAR2(8)
         实施公告日   
+    anncelstdate: VARCHAR2(8)
+        上市公告日   
+    ann_dt: VARCHAR2(8)
+        最新公告日   
+    traderesumptiondate: VARCHAR2(8)
+        预案公布后复牌日   
+    lasttradedate: VARCHAR2(8)
+        实施前最后交易日   
+    equityregistrationdate: VARCHAR2(8)
+        换股股权登记日   
+    listdate: VARCHAR2(8)
+        上市日   
+    consolidationbasedate: VARCHAR2(8)
+        合并基准日   
+    financialadvisor: VARCHAR2(80)
+        财务顾问   
+    plandescription: VARCHAR2(300)
+        方案说明   
+    casharrivaldate: VARCHAR2(8)
+        现金选择权现金到账日   
+    effectivereportedshares: NUMBER(20,4)
+        现金选择权有效申报股数   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareStockSwap"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     transferer_windcode = Column(VARCHAR2(40))
     transferer_name = Column(VARCHAR2(40))
     progress = Column(VARCHAR2(10))
@@ -78,4 +102,15 @@ class AShareStockSwap(BaseModel):
     smtganncedate = Column(VARCHAR2(8))
     iecannouncementdate = Column(VARCHAR2(8))
     anncedate = Column(VARCHAR2(8))
+    anncelstdate = Column(VARCHAR2(8))
+    ann_dt = Column(VARCHAR2(8))
+    traderesumptiondate = Column(VARCHAR2(8))
+    lasttradedate = Column(VARCHAR2(8))
+    equityregistrationdate = Column(VARCHAR2(8))
+    listdate = Column(VARCHAR2(8))
+    consolidationbasedate = Column(VARCHAR2(8))
+    financialadvisor = Column(VARCHAR2(80))
+    plandescription = Column(VARCHAR2(300))
+    casharrivaldate = Column(VARCHAR2(8))
+    effectivereportedshares = Column(NUMBER(20,4))
     

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareIssuingDatePredict(BaseModel):
@@ -23,7 +24,8 @@ class AShareIssuingDatePredict(BaseModel):
         更正公告披露日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareIssuingDatePredict"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     report_period = Column(VARCHAR2(8))
     s_stm_predict_issuingdate = Column(VARCHAR2(8))

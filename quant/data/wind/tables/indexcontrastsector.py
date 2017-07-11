@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class IndexContrastSector(BaseModel):
@@ -19,7 +20,8 @@ class IndexContrastSector(BaseModel):
         板块名称   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "IndexContrastSector"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_indexcode = Column(VARCHAR2(10))
     s_info_name = Column(VARCHAR2(50))
     s_info_industrycode = Column(VARCHAR2(40))

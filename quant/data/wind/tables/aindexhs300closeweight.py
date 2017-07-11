@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AIndexHS300CloseWeight(BaseModel):
@@ -35,7 +36,8 @@ class AIndexHS300CloseWeight(BaseModel):
         计算用市值   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AIndexHS300CloseWeight"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_con_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))

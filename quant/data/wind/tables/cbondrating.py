@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondRating(BaseModel):
@@ -21,7 +22,8 @@ class CBondRating(BaseModel):
         评级机构代码   1标准普尔评级服务公司10云南省资信评估事务所11北京穆迪投资者服务有限
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondRating"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(VARCHAR2(8))
     b_rate_style = Column(VARCHAR2(100))

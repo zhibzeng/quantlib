@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareIssueCommAudit(BaseModel):
@@ -35,7 +36,8 @@ class AShareIssueCommAudit(BaseModel):
         预计募集资金(万元)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareIssueCommAudit"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_companyname = Column(VARCHAR2(100))
     s_ic_year = Column(VARCHAR2(4))

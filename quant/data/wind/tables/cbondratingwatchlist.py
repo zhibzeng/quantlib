@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondRatingWatchlist(BaseModel):
@@ -25,7 +26,8 @@ class CBondRatingWatchlist(BaseModel):
         公告摘要   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondRatingWatchlist"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ann_dt = Column(NUMBER(9,0))
     b_event_hapdate = Column(NUMBER(9,0))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondInsideHolder(BaseModel):
@@ -31,7 +32,8 @@ class CBondInsideHolder(BaseModel):
         股东名称   公布的名称
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondInsideHolder"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_compcode = Column(VARCHAR2(40))
     s_info_compname = Column(VARCHAR2(200))
     ann_dt = Column(VARCHAR2(8))

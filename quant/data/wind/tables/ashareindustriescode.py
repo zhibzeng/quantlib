@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareIndustriesCode(BaseModel):
@@ -23,7 +24,8 @@ class AShareIndustriesCode(BaseModel):
         展示序号   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareIndustriesCode"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     industriescode = Column(VARCHAR2(38))
     industriesname = Column(VARCHAR2(50))
     levelnum = Column(NUMBER(1,0))

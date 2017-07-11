@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareIncExercisePct(BaseModel):
@@ -21,7 +22,8 @@ class AShareIncExercisePct(BaseModel):
         首个授权日至行权期间隔时间(月)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareIncExercisePct"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_inc_sequence = Column(VARCHAR2(6))
     s_inc_execbatch = Column(VARCHAR2(6))

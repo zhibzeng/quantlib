@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareCompRestricted(BaseModel):
@@ -27,7 +28,8 @@ class AShareCompRestricted(BaseModel):
         配售截止日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareCompRestricted"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_listdate = Column(VARCHAR2(8))
     s_holder_name = Column(VARCHAR2(200))

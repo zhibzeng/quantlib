@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CompIntroduction(BaseModel):
@@ -71,7 +72,8 @@ class CompIntroduction(BaseModel):
         主要产品及业务   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CompIntroduction"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     comp_id = Column(VARCHAR2(40))
     comp_name = Column(VARCHAR2(100))
     comp_sname = Column(VARCHAR2(40))

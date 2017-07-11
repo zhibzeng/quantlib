@@ -7,7 +7,8 @@ from pyquery import PyQuery
 FILEPATH = "WindQuantDBV4.43.html"
 COLUMNS = ["字段", "字段类型", "字段名称", "备注"]
 PATTERN = re.compile(r"\d{1,2}\.\d{1,2}")
-TEMPLATE = """from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+TEMPLATE = """from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class {{tablename}}(BaseModel):
@@ -20,7 +21,8 @@ class {{tablename}}(BaseModel):
         {{row.cname}}   {{row.comment}}
 {% endfor %}
     \"""
-    {% for _, row in table.iterrows() %}{{row['name'].lower()}} = Column({{row.type}})
+    __tablename__ = "{{tablename}}"
+    {% for _, row in table.iterrows() %}{{row['name'].lower()}} = {%if row['name'].lower() == 'object_id' %}Column(VARCHAR2(100), primary_key=True){%else%}Column({{row.type}}){%endif%}
     {% endfor %}
 
 """
@@ -40,19 +42,20 @@ def handle_table(pq, divs, start):
     i = 4
     while 1:
         cell = divs[start+i]
+        assert "t" not in cell.classes or "fs0" in cell.classes
         if head_classes[i % 4] in cell.classes:
             table[i % 4].append(pq(cell).text().replace(" ", "").replace("（", "(").replace("）", ")"))
         else:
             break
         i += 1
-    if i % 4 != 0:
+    if i % 4 != 0 or i == 4:
         warnings.warn(UserWarning("Unexpected End of Table"))
     table = pd.DataFrame(table, index=["name", "type", "cname", "comment"]).T
     return start + i, table
 
 def resolve_tables():
     pq = read_html(FILEPATH)
-    divs = pq("div.pf>div.pc>div")
+    divs = pq("div.pf>div.pc>div.c,div.pf>div.pc>div.t.fs0").not_(".hd")
     tables = {}
     i = 0
     while i < len(divs) - 4:

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class SIndexPerformance(BaseModel):
@@ -61,7 +62,8 @@ class SIndexPerformance(BaseModel):
         3年夏普比率   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "SIndexPerformance"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     pct_chg_recent1m = Column(NUMBER(20,6))

@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondAnalysisCNBD(BaseModel):
@@ -47,9 +48,30 @@ class CBondAnalysisCNBD(BaseModel):
         市场凸性   
     b_anal_bpvalue: NUMBER(20,4)
         市场基点价值   
+    b_anal_sduration: NUMBER(20,4)
+        市场利差久期   
+    b_anal_scnvxty: NUMBER(20,4)
+        市场利差凸性   
+    b_anal_interestduration_cnbd: NUMBER(20,4)
+        估价利率久期   
+    b_anal_interestcnvxty_cnbd: NUMBER(20,4)
+        估价利率凸性   
+    b_anal_interestduration: NUMBER(20,4)
+        市场利率久期   
+    b_anal_interestcnvxty: NUMBER(20,4)
+        市场利率凸性   
+    b_anal_price_cnbd: NUMBER(20,4)
+        日终估价全价   
+    b_anal_bpyield: NUMBER(20,4)
+        点差收益率(%)   
+    b_anal_exchange: NUMBER(20,4)
+        流通场所   
+    b_anal_credibility: NUMBER(20,4)
+        可信度   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondAnalysisCNBD"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     b_anal_matu_cnbd = Column(NUMBER(20,4))
@@ -69,4 +91,14 @@ class CBondAnalysisCNBD(BaseModel):
     b_anal_modifiedduration = Column(NUMBER(20,4))
     b_anal_convexity = Column(NUMBER(20,4))
     b_anal_bpvalue = Column(NUMBER(20,4))
+    b_anal_sduration = Column(NUMBER(20,4))
+    b_anal_scnvxty = Column(NUMBER(20,4))
+    b_anal_interestduration_cnbd = Column(NUMBER(20,4))
+    b_anal_interestcnvxty_cnbd = Column(NUMBER(20,4))
+    b_anal_interestduration = Column(NUMBER(20,4))
+    b_anal_interestcnvxty = Column(NUMBER(20,4))
+    b_anal_price_cnbd = Column(NUMBER(20,4))
+    b_anal_bpyield = Column(NUMBER(20,4))
+    b_anal_exchange = Column(NUMBER(20,4))
+    b_anal_credibility = Column(NUMBER(20,4))
     

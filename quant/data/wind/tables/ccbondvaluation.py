@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CCBondValuation(BaseModel):
@@ -41,7 +42,8 @@ class CCBondValuation(BaseModel):
         转股溢价率   [指定日转债收盘价－转换价值]/转换价值
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CCBondValuation"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     cb_anal_accrueddays = Column(NUMBER(20,4))

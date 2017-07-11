@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondConvprice(BaseModel):
@@ -21,7 +22,8 @@ class CBondConvprice(BaseModel):
         变动原因   1发行2换股吸收合并3派息4配股5上市6送股7送转股8送转股,派息9修正10增发11转增,派息
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondConvprice"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_info_enddate = Column(VARCHAR2(8))
     b_info_announcementdate = Column(VARCHAR2(8))

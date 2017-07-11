@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareEXRightDividendRecord(BaseModel):
@@ -35,7 +36,8 @@ class AShareEXRightDividendRecord(BaseModel):
         缩减比例   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareEXRightDividendRecord"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     ex_date = Column(VARCHAR2(8))
     ex_type = Column(VARCHAR2(40))

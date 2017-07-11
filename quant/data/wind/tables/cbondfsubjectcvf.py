@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondFSubjectcvf(BaseModel):
@@ -17,7 +18,8 @@ class CBondFSubjectcvf(BaseModel):
         转换因子   交易所公布
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondFSubjectcvf"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     dls_windcode = Column(VARCHAR2(40))
     b_tbf_cvf = Column(NUMBER(20,8))

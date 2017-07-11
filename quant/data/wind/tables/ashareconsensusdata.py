@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareConsensusData(BaseModel):
@@ -43,7 +44,8 @@ class AShareConsensusData(BaseModel):
         综合值周期类型   综合值周期类型:263001000:30天263002000:90天
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareConsensusData"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     wind_code = Column(VARCHAR2(40))
     est_dt = Column(VARCHAR2(8))

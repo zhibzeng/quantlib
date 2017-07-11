@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondCall(BaseModel):
@@ -13,9 +14,25 @@ class CBondCall(BaseModel):
         Wind代码   
     b_info_redemptiondate: VARCHAR2(8)
         赎回日   
+    b_info_redemptionprice: NUMBER(20,4)
+        每百元面值赎回价格(元)   
+    b_info_callannouncementdate: VARCHAR2(8)
+        赎回公告日   
+    b_info_callexdate: VARCHAR2(8)
+        赎回履行结果公告日   
+    b_info_callamount: NUMBER(20,4)
+        赎回总面额(亿元)   
+    b_info_calloutstanding: NUMBER(20,4)
+        继续托管总面额(亿元)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondCall"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     b_info_redemptiondate = Column(VARCHAR2(8))
+    b_info_redemptionprice = Column(NUMBER(20,4))
+    b_info_callannouncementdate = Column(VARCHAR2(8))
+    b_info_callexdate = Column(VARCHAR2(8))
+    b_info_callamount = Column(NUMBER(20,4))
+    b_info_calloutstanding = Column(NUMBER(20,4))
     

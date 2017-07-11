@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class CBondValuation(BaseModel):
@@ -39,7 +40,8 @@ class CBondValuation(BaseModel):
         加权剩余期限(年)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "CBondValuation"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     b_anal_duration = Column(NUMBER(24,8))

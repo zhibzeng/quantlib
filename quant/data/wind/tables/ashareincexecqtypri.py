@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareIncExecQtyPri(BaseModel):
@@ -23,7 +24,8 @@ class AShareIncExecQtyPri(BaseModel):
         行权日期   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareIncExecQtyPri"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_inc_sequence = Column(VARCHAR2(6))
     s_inc_name = Column(VARCHAR2(80))

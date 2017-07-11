@@ -1,4 +1,5 @@
-from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+VARCHAR2 = VARCHAR
 
 
 class AShareMonthlyYield(BaseModel):
@@ -27,9 +28,22 @@ class AShareMonthlyYield(BaseModel):
         BETA(24月)   
     s_risk_betar60: NUMBER(20,4)
         BETA(60月)   
+    s_mq_varpctchange24: NUMBER(20,4)
+        月收益率方差(24月)   
+    s_mq_devpctchange24: NUMBER(20,4)
+        月收益率标准差(24月)   
+    s_mq_avgpctchange24: NUMBER(20,4)
+        月收益率平均值(24月)   
+    s_mq_varpctchange60: NUMBER(20,4)
+        月收益率方差(60月)   
+    s_mq_devpctchange60: NUMBER(20,4)
+        月收益率标准差(60月)   
+    s_mq_avgpctchange60: NUMBER(20,4)
+        月收益率平均值(60月)   
 
     """
-    object_id = Column(VARCHAR2(100))
+    __tablename__ = "AShareMonthlyYield"
+    object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     crncy_code = Column(VARCHAR2(10))
@@ -39,4 +53,10 @@ class AShareMonthlyYield(BaseModel):
     s_mq_amount = Column(NUMBER(20,4))
     s_risk_betar24 = Column(NUMBER(20,4))
     s_risk_betar60 = Column(NUMBER(20,4))
+    s_mq_varpctchange24 = Column(NUMBER(20,4))
+    s_mq_devpctchange24 = Column(NUMBER(20,4))
+    s_mq_avgpctchange24 = Column(NUMBER(20,4))
+    s_mq_varpctchange60 = Column(NUMBER(20,4))
+    s_mq_devpctchange60 = Column(NUMBER(20,4))
+    s_mq_avgpctchange60 = Column(NUMBER(20,4))
     
