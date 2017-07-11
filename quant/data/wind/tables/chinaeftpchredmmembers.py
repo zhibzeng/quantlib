@@ -1,7 +1,7 @@
 from ....common.db.sql import VARCHAR as VARCHAR2, Numeric as NUMBER, DateTime, Column, BaseModel
 
 
-class ChinaEFTPch&RedmMembers(BaseModel):
+class ChinaEFTPchRedmMembers(BaseModel):
     """
     中国ETF申购赎回成份
 

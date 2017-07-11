@@ -27,7 +27,7 @@ class {{tablename}}(BaseModel):
 
 
 def read_html(filepath):
-    with open(filepath) as f:
+    with open(filepath, encoding="utf-8") as f:
         html = f.read()
     return PyQuery(html)
 
@@ -63,6 +63,7 @@ def resolve_tables():
                     break
             try:
                 table_ch_name, table_name = "".join(title.split(" ")[1:]).split("-")
+                table_name = table_name.replace("&", "")
             except:
                 print(title)
             i, table = handle_table(pq, divs, i)
@@ -85,7 +86,7 @@ def generate_pyfiles():
 def generate_file(tablename, chname, table):
     template = jinja2.Template(TEMPLATE)
     py = template.render(tablename=tablename, chname=chname, table=table)
-    with open("{fname}.py".format(fname=tablename.lower()), "w") as f:
+    with open("{fname}.py".format(fname=tablename.lower()), "w", encoding="utf-8") as f:
         f.write(py)
 
 
