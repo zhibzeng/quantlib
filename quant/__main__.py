@@ -86,13 +86,19 @@ class QuantMain:
         elif command == "rm":
             try:
                 key = args[0]
+                if not key.startswith("/"):
+                    key = "/" + key
             except IndexError:
                 raise ValueError("must specify the key to remove.")
+            deleted = False
             with pd.HDFStore(os.path.join(DATA_PATH, "wind.h5")) as h5:
-                try:
-                    del h5[key]
-                except:
-                    Logger.warn("There's no key named `{key}`".format(key=key))
+                for k in h5.keys():
+                    if k.startswith(key):
+                        del h5[k]
+                        Logger.info("Deleted %s" % k)
+                        deleted = True
+            if not deleted:
+                Logger.warn("There's no key named `{key}`".format(key=key))
 
         elif command == "update":
             QuantMain.__update_wind_tables(*args)

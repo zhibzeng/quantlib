@@ -62,6 +62,8 @@ class WindDB:
         if not columns:
             table = self._get_table(table_name)
             columns = set(col.name for col in table.columns)
+        elif isinstance(columns, str):
+            columns = [columns]
         columns = set(map(str.lower, columns))
         existing_columns = self._get_dataset_columns(table_name)
         if not existing_columns:
@@ -137,7 +139,7 @@ class WindDB:
                 index = "trade_dt"
             else:
                 raise RuntimeError("No index specified for DataFrame.pivot")
-        data = self.get_wind_table(table, columns=[field, index, columns])
+        data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates()
         return data.pivot(index=index, columns=columns, values=field)
 
     @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])

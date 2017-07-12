@@ -19,21 +19,21 @@ class Logger:
 
     @classmethod
     def debug(cls, msg):
-        return cls.log(msg, LoggingLevel.DEBUG)
+        return cls.log(msg, level=LoggingLevel.DEBUG)
 
     @classmethod
     def info(cls, msg):
-        return cls.log(msg, LoggingLevel.INFO)
+        return cls.log(msg, level=LoggingLevel.INFO)
 
     @classmethod
     def warn(cls, msg):
-        return cls.log(msg, LoggingLevel.WARNING)
+        return cls.log(msg, level=LoggingLevel.WARNING)
 
     @classmethod
     def error(cls, msg):
-        return cls.log(msg, LoggingLevel.ERROR)
+        return cls.log(msg, level=LoggingLevel.ERROR)
 
     @classmethod
     def fatal(cls, msg):
-        return cls.log(msg, LoggingLevel.FATAL)
+        return cls.log(msg, level=LoggingLevel.FATAL)
     

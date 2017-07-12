@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'quant/VERSION')) as f:
 def resolve_requirements():
     requirements = []
     with open('requirements.txt') as f:
-        line = f.readline().srtip()
+        line = f.readline().strip()
         if not line.startswith("#"):
             requirements.append(line.strip("\n"))
 
@@ -15,7 +15,7 @@ setup_args = dict(
     name='quantlib',
     version=version,
     packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script", "private"]),
-    install_requires=resolve_requirements()
+    install_requires=resolve_requirements(),
     include_package_data=True,
     # scripts=["scripts/quantlib"],
     url='http://quantlib.readthedocs.io/',
