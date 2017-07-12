@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -19,7 +19,7 @@ class AShareHolderNumber(BaseModel):
     s_holder_num: NUMBER(20,4)
         A股股东户数   
     s_holder_total_num: NUMBER(20,4)
-        股东总户数   若纯A股为A股户数；若含B股则为AB股总户数；若含H股则为AH股总户数；若含境外股，则为A和境外股总户数
+        股东总户数   若纯A股为A股户数；若含B股则为AB股总户数；若含H股则为AH股总户数；若含境外股, 则为A和境外股总户数
 
     """
     __tablename__ = "AShareHolderNumber"

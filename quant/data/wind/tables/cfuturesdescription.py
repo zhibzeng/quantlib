@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -45,12 +45,12 @@ class CFuturesDescription(BaseModel):
     s_info_name = Column(VARCHAR2(50))
     s_info_ename = Column(VARCHAR2(50))
     fs_info_sccode = Column(VARCHAR2(50))
-    fs_info_type = Column(Number(1,0))
-    fs_info_cctype = Column(Number(9,0))
+    fs_info_type = Column(NUMBER(1,0))
+    fs_info_cctype = Column(NUMBER(9,0))
     s_info_exchmarket = Column(VARCHAR2(10))
     s_info_listdate = Column(VARCHAR2(8))
     s_info_delistdate = Column(VARCHAR2(8))
     fs_info_dlmonth = Column(VARCHAR2(8))
-    fs_info_lprice = Column(Number(20,4))
+    fs_info_lprice = Column(NUMBER(20,4))
     fs_info_ltdldate = Column(VARCHAR2(8))
     

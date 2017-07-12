@@ -7,7 +7,7 @@ from pyquery import PyQuery
 FILEPATH = "WindQuantDBV4.43.html"
 COLUMNS = ["字段", "字段类型", "字段名称", "备注"]
 PATTERN = re.compile(r"\d{1,2}\.\d{1,2}")
-TEMPLATE = """from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+TEMPLATE = """from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -22,7 +22,7 @@ class {{tablename}}(BaseModel):
 {% endfor %}
     \"""
     __tablename__ = "{{tablename}}"
-    {% for _, row in table.iterrows() %}{{row['name'].lower()}} = {%if row['name'].lower() == 'object_id' %}Column(VARCHAR2(100), primary_key=True){%else%}Column({{row.type}}){%endif%}
+    {% for _, row in table.iterrows() %}{{row['name'].lower()}} = {%if row['name'].lower() == 'object_id' %}Column(VARCHAR2(100), primary_key=True){%else%}Column({{row.type.upper()}}){%endif%}
     {% endfor %}
 
 """
@@ -44,7 +44,10 @@ def handle_table(pq, divs, start):
         cell = divs[start+i]
         assert "t" not in cell.classes or "fs0" in cell.classes
         if head_classes[i % 4] in cell.classes:
-            table[i % 4].append(pq(cell).text().replace(" ", "").replace("（", "(").replace("）", ")"))
+            value = pq(cell).text().replace(" ", "").replace("（", "(").replace("）", ")").replace("，", ", ")    # replace chinese symbols to english
+            if i % 4 == 1 and not value.endswith(")") and value not in ("CLOB", "DATE"):
+                value += ")"                                            # Sometimes the docs misses the `)`
+            table[i % 4].append(value)
         else:
             break
         i += 1
@@ -64,11 +67,8 @@ def resolve_tables():
                 if divs[i - j].text and PATTERN.match(divs[i - j].text):
                     title = pq(divs[i-j]).text()
                     break
-            try:
-                table_ch_name, table_name = "".join(title.split(" ")[1:]).split("-")
-                table_name = table_name.replace("&", "")
-            except:
-                print(title)
+            table_ch_name, table_name = "".join(title.split(" ")[1:]).split("-")
+            table_name = table_name.replace("&", "")
             i, table = handle_table(pq, divs, i)
             tables[table_name] = (table_ch_name, table)
             print(table_name, table_ch_name, i)

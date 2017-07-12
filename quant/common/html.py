@@ -139,7 +139,7 @@ class HTMLBase:
     def render(self, file_path=None):
         html = "\n".join(self.root.render())
         if file_path:
-            with open(file_path, "w") as f:
+            with open(file_path, "w", encoding="utf-8") as f:
                 f.write(html)
         return html
 
@@ -151,7 +151,7 @@ class HTMLBase:
 
 
 class HTML(HTMLBase):
-    def __init__(self, enable_highcharts=False, enable_bootstrap=True):
+    def __init__(self, enable_highcharts=False, enable_bootstrap=True, enable_mathjax=False):
         super(HTML, self).__init__()
         with self.use(self.head):
             if enable_bootstrap:
@@ -159,9 +159,15 @@ class HTML(HTMLBase):
                 self.inline("meta", name="viewport", content="width=device-width, initial-scale=1")
                 self.inline("link", rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", type="text/css")
                 self.inline("link", rel="stylesheet", href="https://pingendo.github.io/templates/blank/theme.css", type="text/css")
+            if enable_mathjax:
+                with self.script(type="text/x-mathjax-config"):
+                    self.html("MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});")
+                # self.inline("script", src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js", type="text/javascript")
+                self.inline("script", src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML", type="text/javascript")
         with self.use(self.body):
             if enable_highcharts:
                 self.inline("script", src="https://code.highcharts.com/highcharts.js")
+                # self.inline("script", src="https://code.highcharts.com/stock/highstock.js")
                 self.inline("script", src="https://code.highcharts.com/stock/modules/exporting.js")
             if enable_bootstrap:
                 self.inline("script", src="https://code.jquery.com/jquery-3.1.1.min.js")
@@ -188,7 +194,7 @@ class HTML(HTMLBase):
             row.append(node)
         return nodes
 
-    def highcharts(self, name, data, plot_type=None):
+    def highcharts(self, name, data, plot_type=None, options=None, **kwargs):
         """
         Insert highcharts.
 
@@ -200,6 +206,8 @@ class HTML(HTMLBase):
             data to be converted to chart
         plot_type: dict
             type to be plotted
+        options: dict
+            other options to pass to highcharts
         """
         plot_type = plot_type or {}
         if isinstance(plot_type, str):
@@ -207,8 +215,7 @@ class HTML(HTMLBase):
                 plot_type = {col_name: plot_type for col_name in data.columns}
             else:
                 plot_type = {data.name: plot_type}
-        self.inline('div',
-                    id="highcharts-%s" % name)
+        self.inline('div', id="highcharts-%s" % name, **kwargs)
         embedded_data = []
         if isinstance(data, pd.DataFrame):
             for col in data.columns:
@@ -235,6 +242,8 @@ class HTML(HTMLBase):
                 for s_name, s_value in embedded_data
             ]
         }
+        if options:
+            highcharts_data.update(options)
 
         if isinstance(data.index, pd.DatetimeIndex):
             highcharts_data['xAxis'] = {'type': 'datetime'}
@@ -251,10 +260,10 @@ class HTML(HTMLBase):
     @staticmethod
     def series2json(series):
         """把pd.Series时间序列转换为json格式"""
-        series = series.copy()
+        series = series.copy().dropna()
         if isinstance(series.index, pd.DatetimeIndex):
             series.index = series.index.astype(int) / 1e6
-            return sorted([[int(key), value] for key, value in series.to_dict().items()])
+            return sorted([[int(key), float(value)] for key, value in series.to_dict().items()])
         else:
             return sorted(series.to_dict().values())
 
@@ -316,28 +325,3 @@ class HTML(HTMLBase):
                             self.inline("td", _text=str(idx))
                         for val in data:
                             self.inline('td', _text=format.format(val))
-
-
-if __name__ == '__main__':
-    import pandas as pd
-    import numpy as np
-    import webbrowser
-    t = pd.DataFrame(
-        np.random.randn(4, 4),
-        columns=["c1", "c2", "c3", "c4"]
-    )
-    h = HTML(enable_highcharts=True)
-    with h.use(h.body):
-        h.inline("h1", _text="Title")
-        h.inline("hr")
-    container = h.container()
-    row = h.row(container)
-    c1, c2 = h.col(row, [6, 6])
-    with h.use(c1):
-        h.generate_table(t)
-    with h.use(c2):
-        h.highcharts("Chart", t)
-    print(h.render())
-    with open("output.html", "w") as f:
-        f.write(h.render())
-    webbrowser.open_new_tab("output.html")

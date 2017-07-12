@@ -77,7 +77,8 @@ class QuantMain:
                     table, field = key[1:].split("/")
                     tree[table].append(field)
             for key, value in tree.items():
-                print(key)
+                last_update = wind._get_last_update(key)
+                print(key, str(last_update))
                 for field in value:
                     print("\t", field)
             print("\n\rTotal %d tables, %d fields" % (len(tree), sum(map(len, tree.values()))))
@@ -102,7 +103,7 @@ class QuantMain:
         filename = os.path.join(DATA_PATH, "wind.h5")
         if table is None:
             with pd.HDFStore(filename, "r") as h5:
-                tables = [key[1:] for key in h5.keys()]
+                tables = set(key[1:].split("/")[0] for key in h5.keys())
         else:
             tables = [table]
         for table in tables:

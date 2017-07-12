@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -15,7 +15,7 @@ class AShareInsiderTrade(BaseModel):
     related_manager_name: VARCHAR2(100)
         相关管理层姓名   与交易者相关的管理层姓名
     reported_trader_name: VARCHAR2(100)
-        变动人姓名   进行交易的交易者姓名，不一定是管理人本人
+        变动人姓名   进行交易的交易者姓名, 不一定是管理人本人
     change_volume: NUMBER(20,4)
         变动数   
     trade_avg_price: NUMBER(20,4)

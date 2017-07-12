@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -107,7 +107,7 @@ class AShareIPO(BaseModel):
     s_ipo_pureffsubratio: NUMBER(20,4)
         网上投资者有效认购倍数   
     s_ipo_reporate: NUMBER(20,4)
-        回拨比例   网下往网上是正的，网上往网下是负的，占本次发行数量合计的比例
+        回拨比例   网下往网上是正的, 网上往网下是负的, 占本次发行数量合计的比例
     ann_dt: VARCHAR2(8)
         最新公告日期   
     is_failure: NUMBER(5,0)

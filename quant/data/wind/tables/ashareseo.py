@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -78,7 +78,7 @@ class AShareSEO(BaseModel):
         上网发行数量(万股)   
     s_seo_amttojur: NUMBER(20,4)
         网下发行数量(万股)   
-    s_seo_holdersubsmode: VARCHAR2(30
+    s_seo_holdersubsmode: VARCHAR2(30)
         大股东认购方式   
     s_seo_holdersubsrate: NUMBER(20,4)
         大股东认购比例(%)   
@@ -140,7 +140,7 @@ class AShareSEO(BaseModel):
     s_seo_pe = Column(NUMBER(20,4))
     s_seo_amtbyplacing = Column(NUMBER(20,4))
     s_seo_amttojur = Column(NUMBER(20,4))
-    s_seo_holdersubsmode = Column(VARCHAR2(30)
+    s_seo_holdersubsmode = Column(VARCHAR2(30))
     s_seo_holdersubsrate = Column(NUMBER(20,4))
     ann_dt = Column(VARCHAR2(8))
     pricingmode = Column(NUMBER(9,0))

@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -25,7 +25,7 @@ class AShareFreeFloatCalendar(BaseModel):
     s_share_lsttypecode: NUMBER(9,0)
         上市股份类型代码   对应:类型编码表中的原始类型代码
     s_share_lst_is_ann: VARCHAR2(1)
-        上市数量是否公布值   0：否，为预测值1:是,为实际公布值
+        上市数量是否公布值   0：否, 为预测值1:是,为实际公布值
 
     """
     __tablename__ = "AShareFreeFloatCalendar"

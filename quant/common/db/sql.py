@@ -2,7 +2,7 @@
 
 import sqlalchemy
 from sqlalchemy import Column
-from sqlalchemy.types import VARCHAR, Numeric, DateTime
+from sqlalchemy.types import VARCHAR, Numeric, DateTime, CLOB, DATE
 from sqlalchemy.ext.declarative import declarative_base
 
 

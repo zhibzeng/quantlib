@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -12,7 +12,7 @@ class WindCustomCode(BaseModel):
         对象ID   
     s_info_windcode: VARCHAR2(40)
         Wind代码   
-    s_info_asharecode: VARCHAR2(10
+    s_info_asharecode: VARCHAR2(10)
         证券ID   
     s_info_compcode: VARCHAR2(100)
         公司ID   
@@ -51,7 +51,7 @@ class WindCustomCode(BaseModel):
     __tablename__ = "WindCustomCode"
     object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
-    s_info_asharecode = Column(VARCHAR2(10)
+    s_info_asharecode = Column(VARCHAR2(10))
     s_info_compcode = Column(VARCHAR2(100))
     s_info_securitiestypes = Column(VARCHAR2(10))
     s_info_sectypename = Column(VARCHAR2(40))

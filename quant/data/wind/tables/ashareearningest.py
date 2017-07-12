@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -35,7 +35,7 @@ class AShareEarningEst(BaseModel):
     est_base_cap: NUMBER(20,4)
         预测基准股本(万股)   
     ann_dt: VARCHAR2(8)
-        公告日期(内部)   记录了盈利预测信息到达万得平台的时间，该字段精确到”日”，未保存具体的时点。
+        公告日期(内部)   记录了盈利预测信息到达万得平台的时间, 该字段精确到”日”, 未保存具体的时点。
     s_est_cps: NUMBER(20,4)
         预测每股现金流   
     s_est_dps: NUMBER(20,4)

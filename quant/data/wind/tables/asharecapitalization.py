@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -25,9 +25,9 @@ class AShareCapitalization(BaseModel):
     float_b_shr: NUMBER(20,4)
         流通B股(万股)   以外币计价交易的人民币特种股
     float_h_shr: NUMBER(20,4)
-        流通H股(万股)   大陆注册，香港上市的外资股
+        流通H股(万股)   大陆注册, 香港上市的外资股
     float_overseas_shr: NUMBER(20,4)
-        境外流通股(万股)   在境外上市流通的股份，如S股、N股等
+        境外流通股(万股)   在境外上市流通的股份, 如S股、N股等
     restricted_a_shr: NUMBER(20,4)
         限售A股(万股)   限售股份(国家持股)+限售股份(国有法人持股)+限售股份(其他内资持股)+限售股份(外资持股)
     s_share_rtd_state: NUMBER(20,4)

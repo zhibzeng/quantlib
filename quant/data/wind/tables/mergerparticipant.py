@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -20,23 +20,23 @@ class MergerParticipant(BaseModel):
         参与方ID   
     s_info_windcode: VARCHAR2(40)
         参与方关联证券Wind代码   
-    party_type_code: NUMBER(9，0)
+    party_type_code: NUMBER(9, 0)
         参与方类型代码   注1
-    relationship: NUMBER(9，0)
+    relationship: NUMBER(9, 0)
         参与方与关联证券代码关系   
-    party_role_code: NUMBER(9，0)
+    party_role_code: NUMBER(9, 0)
         参与方角色代码   注2
-    pre_proportion: NUMBER(20，4)
+    pre_proportion: NUMBER(20, 4)
         转让前持股比例   
-    after_proportion: NUMBER(20，4)
+    after_proportion: NUMBER(20, 4)
         转让后持股比例   
     agent_id: VARCHAR2(20)
         主要经办人ID   
-    stockright_proportion: NUMBER(20，4)
+    stockright_proportion: NUMBER(20, 4)
         标的方交易股权占比   
-    evalue_value: NUMBER(20，4)
+    evalue_value: NUMBER(20, 4)
         标的方评估价值   
-    appreciation_rate: NUMBER(20，4)
+    appreciation_rate: NUMBER(20, 4)
         标的方增值率   
 
     """
@@ -47,13 +47,13 @@ class MergerParticipant(BaseModel):
     country_code = Column(VARCHAR2(10))
     party_id = Column(VARCHAR2(10))
     s_info_windcode = Column(VARCHAR2(40))
-    party_type_code = Column(NUMBER(9，0))
-    relationship = Column(NUMBER(9，0))
-    party_role_code = Column(NUMBER(9，0))
-    pre_proportion = Column(NUMBER(20，4))
-    after_proportion = Column(NUMBER(20，4))
+    party_type_code = Column(NUMBER(9, 0))
+    relationship = Column(NUMBER(9, 0))
+    party_role_code = Column(NUMBER(9, 0))
+    pre_proportion = Column(NUMBER(20, 4))
+    after_proportion = Column(NUMBER(20, 4))
     agent_id = Column(VARCHAR2(20))
-    stockright_proportion = Column(NUMBER(20，4))
-    evalue_value = Column(NUMBER(20，4))
-    appreciation_rate = Column(NUMBER(20，4))
+    stockright_proportion = Column(NUMBER(20, 4))
+    evalue_value = Column(NUMBER(20, 4))
+    appreciation_rate = Column(NUMBER(20, 4))
     

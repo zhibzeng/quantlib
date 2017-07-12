@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -61,9 +61,9 @@ class AShareDividend(BaseModel):
     s_info_windcode = Column(VARCHAR2(40))
     wind_code = Column(VARCHAR2(40))
     s_div_progress = Column(VARCHAR2(10))
-    stk_dvd_per_sh = Column(Number(20,4))
-    cash_dvd_per_sh_pre_tax = Column(Number(20,6))
-    cash_dvd_per_sh_after_tax = Column(Number(20,6))
+    stk_dvd_per_sh = Column(NUMBER(20,4))
+    cash_dvd_per_sh_pre_tax = Column(NUMBER(20,6))
+    cash_dvd_per_sh_after_tax = Column(NUMBER(20,6))
     eqy_record_dt = Column(VARCHAR2(8))
     ex_dt = Column(VARCHAR2(8))
     dvd_payout_dt = Column(VARCHAR2(8))
@@ -72,12 +72,12 @@ class AShareDividend(BaseModel):
     s_div_smtgdate = Column(VARCHAR2(8))
     dvd_ann_dt = Column(VARCHAR2(8))
     s_div_basedate = Column(VARCHAR2(8))
-    s_div_baseshare = Column(Number(20,4))
+    s_div_baseshare = Column(NUMBER(20,4))
     crncy_code = Column(VARCHAR2(10))
     ann_dt = Column(VARCHAR2(8))
-    is_changed = Column(Number(5,0))
+    is_changed = Column(NUMBER(5,0))
     report_period = Column(VARCHAR2(8))
     s_div_change = Column(VARCHAR2(500))
-    s_div_bonusrate = Column(Number(20,8))
-    s_div_conversedrate = Column(Number(20,8))
+    s_div_bonusrate = Column(NUMBER(20,8))
+    s_div_conversedrate = Column(NUMBER(20,8))
     

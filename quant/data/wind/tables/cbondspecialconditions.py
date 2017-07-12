@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -12,7 +12,7 @@ class CBondSpecialConditions(BaseModel):
         对象ID   
     s_info_windcode: VARCHAR2(40)
         Wind代码   
-    b_info_provisiontype: VARCHAR2(100
+    b_info_provisiontype: VARCHAR2(100)
         条款类型   
     b_info_callbkorputbkprice: NUMBER(20,4)
         赎回价/回售价   元
@@ -35,7 +35,7 @@ class CBondSpecialConditions(BaseModel):
     __tablename__ = "CBondSpecialConditions"
     object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
-    b_info_provisiontype = Column(VARCHAR2(100)
+    b_info_provisiontype = Column(VARCHAR2(100))
     b_info_callbkorputbkprice = Column(NUMBER(20,4))
     b_info_callbkorputbkdate = Column(VARCHAR2(8))
     b_info_redemporrepurcdate = Column(VARCHAR2(8))

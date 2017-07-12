@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -31,7 +31,7 @@ class AShareStockRating(BaseModel):
     s_est_prehighprice_inst: NUMBER(20,4)
         前次最高目标价   
     ann_dt: VARCHAR2(8)
-        公告日期(内部)   记录了盈利预测信息到达万得平台的时间，该字段精确到”日”，未保存具体的时点。
+        公告日期(内部)   记录了盈利预测信息到达万得平台的时间, 该字段精确到”日”, 未保存具体的时点。
     s_est_rating_inst: VARCHAR(20)
         本次评级   
     s_est_prerating_inst: VARCHAR(20)

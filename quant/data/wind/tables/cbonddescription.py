@@ -1,4 +1,4 @@
-from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime, Column, BaseModel
+from ....common.db.sql import VARCHAR, Numeric as NUMBER, DateTime as DATETIME, Column, BaseModel, CLOB, DATE
 VARCHAR2 = VARCHAR
 
 
@@ -85,7 +85,7 @@ class CBondDescription(BaseModel):
     b_info_delistdate: VARCHAR2(8)
         退市日期   
     b_info_issuetype: NUMBER(9,0)
-        发行方式   439002000：包销团包销439004000：比例配售439006000：定向439010000：公开发行439012000：公募439019000：平价发行439022000：上网定价439025000：上网定价和网下配售439030000：私募439032000：贴现发行439033000：网上发行439037000：网下发行439045000：优先配售，定向配售和网上定价439047000：优先配售，网上定价和网下配售439048000：优先配售，网下配售439049000：优先配售和上网定价
+        发行方式   439002000：包销团包销439004000：比例配售439006000：定向439010000：公开发行439012000：公募439019000：平价发行439022000：上网定价439025000：上网定价和网下配售439030000：私募439032000：贴现发行439033000：网上发行439037000：网下发行439045000：优先配售, 定向配售和网上定价439047000：优先配售, 网上定价和网下配售439048000：优先配售, 网下配售439049000：优先配售和上网定价
     b_info_guarintroduction: VARCHAR2(100)
         担保简介   
     b_info_bgndbyplacing: VARCHAR2(8)
