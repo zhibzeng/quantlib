@@ -35,7 +35,7 @@ wind.get_wind_table("AShareST")                               # 获取ST信息
 
 ![Backtest Web Visualizer](http://quantlib.readthedocs.io/_static/backtest_web.jpg)
 
-参考相应[文档](http://quantlib.readthedocs.io/backtest.html)
+参考相应[文档](http://quantlib.readthedocs.io/tutorial/backtest.html)
 
 ## Documents
 

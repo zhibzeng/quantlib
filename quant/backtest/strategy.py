@@ -82,6 +82,7 @@ class AbstractStrategy:
             self.handle(day, universe)
             self.event_manager.trigger(EventType.BACKTEST_AFTER_HANDLE)
         self.event_manager.trigger(EventType.BACKTEST_FINISH, self.fund)
+        return self
 
     @property
     def net_value(self):
