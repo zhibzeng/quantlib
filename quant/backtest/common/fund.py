@@ -129,7 +129,7 @@ class Fund:
         for stock, wanted_position in self.delayed.copy().items():
             real_position = self.position.loc[today, stock]
             if  real_position < wanted_position:
-                Logger.warn("%s with position %0.3f is smaller than target %0.3f,"
+                Logger.warn("%s with position %0.3f is less than target %0.3f, "
                             "which is not supposed to happen." % (stock, real_position, wanted_position))
             if stock not in limited:
                 fee = abs(real_position - wanted_position) * CONFIG.FEE_RATE

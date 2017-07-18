@@ -192,7 +192,10 @@ class HTML(HTMLBase):
             node = Tag("div", _class="col-md-%d" % w)
             nodes.append(node)
             row.append(node)
-        return nodes
+        if len(nodes) > 1:
+            return nodes
+        else:
+            return node
 
     def highcharts(self, name, data, plot_type=None, options=None, **kwargs):
         """
@@ -215,7 +218,7 @@ class HTML(HTMLBase):
                 plot_type = {col_name: plot_type for col_name in data.columns}
             else:
                 plot_type = {data.name: plot_type}
-        self.inline('div', id="highcharts-%s" % name, **kwargs)
+        self.inline('div', id="highcharts-%s" % name.replace(" ", ""), **kwargs)
         embedded_data = []
         if isinstance(data, pd.DataFrame):
             for col in data.columns:
@@ -263,9 +266,7 @@ class HTML(HTMLBase):
         series = series.copy().dropna()
         if isinstance(series.index, pd.DatetimeIndex):
             series.index = series.index.astype(int) / 1e6
-            return sorted([[int(key), float(value)] for key, value in series.to_dict().items()])
-        else:
-            return sorted(series.to_dict().values())
+        return sorted([[int(key), float(value)] for key, value in series.to_dict().items()])
 
     def generate_table(self, data,
                        show_headers=True,
