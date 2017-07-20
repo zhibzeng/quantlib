@@ -189,8 +189,8 @@ class HTML(HTMLBase):
                 self.inline("meta", charset="utf-8")
                 self.inline("meta", name="viewport", content="width=device-width, initial-scale=1")
                 self.inline("link", rel="stylesheet", href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css", type="text/css")
-                self.inline("link", rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", type="text/css")
-                self.inline("link", rel="stylesheet", href="https://pingendo.github.io/templates/blank/theme.css", type="text/css")
+                # self.inline("link", rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", type="text/css")
+                # self.inline("link", rel="stylesheet", href="https://pingendo.github.io/templates/blank/theme.css", type="text/css")
             if enable_mathjax:
                 with self.script(type="text/x-mathjax-config"):
                     self.html("MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});")
@@ -203,7 +203,7 @@ class HTML(HTMLBase):
                 self.inline("script", src="https://code.highcharts.com/stock/modules/exporting.js")
             if enable_bootstrap:
                 self.inline("script", src="https://code.jquery.com/jquery-3.1.1.min.js")
-                self.inline("script", src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js")
+                # self.inline("script", src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js")
                 self.inline("script", src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
 
     def container(self):

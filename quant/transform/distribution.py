@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.stats
 import pandas as pd
-from numba import jit
 
 
 def find_extreme_values(data, distribution="norm", alpha=0.975):
@@ -33,7 +32,6 @@ def find_extreme_values(data, distribution="norm", alpha=0.975):
     return extreme
 
 
-@jit
 def __compute_zscore(data: np.ndarray, axis: int = -1, clip: float = 3.0):
     dims = data.ndim
     data[data == np.inf] = np.nan
