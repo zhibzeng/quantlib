@@ -70,6 +70,36 @@ class Text(Tag):
         return [self.text]
 
 
+class Tab(Tag):
+    def __init__(self, parent=None):
+        self.parent = parent
+        self.menu = Tag("ul", parent=self, _class=["nav", "nav-tabs"])
+        self.tabs = []
+        self.content = {}
+    
+    def add_tab(self, tab_name, _text, default=False):
+        if tab_name in self.tabs:
+            import warnings
+            warnings.warn("Tab `{name}` already exists".format(name=tab_name))
+        self.tabs.append(tab_name)
+        _class = ["tab-pane", "fade"]
+        if default:
+            _class.extend(["active", "in"])
+        self.content[tab_name] = Tag("div", parent=self, _class=_class, id=tab_name)
+        self.menu.append(Tag("li", _class="active" if default else "",
+                             _content=[Tag("a", href="#%s" % tab_name, _text=_text, **{'data-toogle': 'tab'})]))
+        return self.content[tab_name]
+
+    def __getitem__(self, key):
+        return self.content[key]
+
+    def render(self):
+        menu_render = self.menu.render()
+        div = Tag("div", _class="tab-content", _content=[self.content[key] for key in self.tabs])
+        content_render = div.render()
+        return menu_render + content_render
+
+
 class RawHtml(Tag):
     """An element that contains raw html"""
     def __init__(self, html, parent=None):
@@ -269,11 +299,13 @@ class HTML(HTMLBase):
         return sorted([[int(key), float(value)] for key, value in series.to_dict().items()])
 
     def generate_table(self, data,
+                       caption=None,
                        show_headers=True,
                        show_index=True,
                        hover=True,
                        bordered=True,
                        striped=False,
+                       condensed=False,
                        format="{:.2f}",
                        **kwargs):
         """Generate a table
@@ -282,17 +314,21 @@ class HTML(HTMLBase):
         ----------
         data: pd.DataFrame
             data to be converted to a table
-        show_headers: bool
+        caption: str
+            caption to show, optional
+        show_headers: bool, optional
             whether to show the column names as first row
-        show_index: bool
+        show_index: bool, optional
             whether to show the index as first column
-        hover: bool
+        hover: bool, optional
             table-hover class
-        bordered: bool
+        bordered: bool, optional
             table-bordered class
-        striped:
+        striped: bool, optional
             table-striped class
-        format:
+        condensed: bool, optional
+            table-condensed class
+        format: str, optional
             the format to show the values
         kwargs
             other attributes to be added to table
@@ -311,7 +347,11 @@ class HTML(HTMLBase):
             kwargs["_class"].append("table-bordered")
         if striped:
             kwargs["_class"].append("table-striped")
+        if condensed:
+            kwargs["_class"].append("table-condensed")
         with self.table(**kwargs):
+            if caption:
+                self.inline("caption", _text=caption)
             if show_headers:
                 with self.thead():
                     with self.tr():
@@ -326,3 +366,8 @@ class HTML(HTMLBase):
                             self.inline("td", _text=str(idx))
                         for val in data:
                             self.inline('td', _text=format.format(val))
+
+    def tab(self):
+        tag = Tab(parent=self.main)
+        self.main.append(tag)
+        return tag
