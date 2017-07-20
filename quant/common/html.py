@@ -77,17 +77,18 @@ class Tab(Tag):
         self.tabs = []
         self.content = {}
     
-    def add_tab(self, tab_name, text, default=False):
+    def add_tab(self, tab_name, text):
         if tab_name in self.tabs:
             import warnings
             warnings.warn("Tab `{name}` already exists".format(name=tab_name))
         self.tabs.append(tab_name)
         _class = ["tab-pane", "fade"]
+        default = len(self.tabs) == 1
         if default:
             _class.extend(["active", "in"])
         self.content[tab_name] = Tag("div", parent=self, _class=_class, id=tab_name)
         self.menu.append(Tag("li", _class="active" if default else "",
-                             _content=[Tag("a", href="#%s" % tab_name, _text=text, **{'data-toogle': 'tab'})]))
+                             _content=[Tag("a", href="#%s" % tab_name, _content=[Text(text)], **{'data-toggle': 'tab'})]))
         return self.content[tab_name]
 
     def __getitem__(self, key):
@@ -187,6 +188,7 @@ class HTML(HTMLBase):
             if enable_bootstrap:
                 self.inline("meta", charset="utf-8")
                 self.inline("meta", name="viewport", content="width=device-width, initial-scale=1")
+                self.inline("link", rel="stylesheet", href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css", type="text/css")
                 self.inline("link", rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", type="text/css")
                 self.inline("link", rel="stylesheet", href="https://pingendo.github.io/templates/blank/theme.css", type="text/css")
             if enable_mathjax:
@@ -202,7 +204,7 @@ class HTML(HTMLBase):
             if enable_bootstrap:
                 self.inline("script", src="https://code.jquery.com/jquery-3.1.1.min.js")
                 self.inline("script", src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js")
-                self.inline("script", src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js")
+                self.inline("script", src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
 
     def container(self):
         node = Tag("div", _class="container", parent=self.body)
