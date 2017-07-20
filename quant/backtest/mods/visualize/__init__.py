@@ -8,7 +8,7 @@ from io import BytesIO
 from datetime import datetime
 import jinja2
 import matplotlib.pyplot as plt
-from IPython.display import display, HTML
+from IPython.display import display, IFrame
 from ...common.events import EventType
 from ...common.mods import AbstractMod
 from ....analysis import get_factor_exposure
@@ -104,14 +104,13 @@ class WebVisualizer(AbstractMod):
         with open(TEMPLATE_FILE, encoding="utf8") as template_file:
             template = jinja2.Template(template_file.read())
         html = template.render(**info)
+        filename = "%s.html" % info["strategy_name"]
+        filename = os.path.realpath(filename)
+        with open(filename, "w", encoding="utf8") as output_file:
+            output_file.write(html)
+        Logger.info("HTML results output to: %s" % filename)
         if in_ipynb():
-            display(HTML(html))
-        else:
-            filename = "%s.html" % info["strategy_name"]
-            filename = os.path.realpath(filename)
-            with open(filename, "w", encoding="utf8") as output_file:
-                output_file.write(html)
-            Logger.info("HTML results output to: %s" % filename)
-            if CONFIG.OPEN_BROWSER:
-                webbrowser.open_new_tab(filename)
+            return IFrame(src=filename, width="100%", height="800")
+        elif CONFIG.OPEN_BROWSER:
+            webbrowser.open_new_tab(filename)
 
