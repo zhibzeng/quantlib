@@ -77,7 +77,7 @@ class Tab(Tag):
         self.tabs = []
         self.content = {}
     
-    def add_tab(self, tab_name, _text, default=False):
+    def add_tab(self, tab_name, text, default=False):
         if tab_name in self.tabs:
             import warnings
             warnings.warn("Tab `{name}` already exists".format(name=tab_name))
@@ -87,7 +87,7 @@ class Tab(Tag):
             _class.extend(["active", "in"])
         self.content[tab_name] = Tag("div", parent=self, _class=_class, id=tab_name)
         self.menu.append(Tag("li", _class="active" if default else "",
-                             _content=[Tag("a", href="#%s" % tab_name, _text=_text, **{'data-toogle': 'tab'})]))
+                             _content=[Tag("a", href="#%s" % tab_name, _text=text, **{'data-toogle': 'tab'})]))
         return self.content[tab_name]
 
     def __getitem__(self, key):

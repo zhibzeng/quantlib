@@ -6,7 +6,7 @@ from ..data import wind
 
 
 def cal_mdd(netvalue, compound=True):
-    """
+    r"""
     计算最大回撤
 
     Parameters
@@ -14,8 +14,8 @@ def cal_mdd(netvalue, compound=True):
     netvalue: pd.Series
         净值序列
     compound: bool, optional
-        是否为复利制，如果为真，回撤计算方法为$\frac{N_j}{N_i} - 1$ (j > i)；
-                     如果为假，回撤计算方法为$N_j - N_i$ (j > i)
+        是否为复利制，如果为真，回撤计算方法为 :math:`\frac{N_j}{N_i}-1` (j > i);
+        如果为假，回撤计算方法为 :math:`N_j-N_i` (j > i)
 
     Returns
     -------
