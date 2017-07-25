@@ -21,8 +21,12 @@ TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "stat
 
 def in_ipynb():
     """判断当前是否为jupyter notebook环境"""
-    # return 'ipykernel' in sys.modules
-    return False
+    try:
+        from IPython import get_ipython, terminal
+        this = get_ipython()
+        return not isinstance(this, terminal.interactiveshell.TerminalInteractiveShell)
+    except:
+        return False
 
 
 @AbstractMod.register
@@ -63,24 +67,6 @@ class WebVisualizer(AbstractMod):
         factor_name = factor.factor_name
         factor_value = factor.get_factor_value()
         exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
-        # with BytesIO() as tmp:
-        #     ax = exposure.plot.bar()
-        #     xlabels = []
-        #     for date_idx in exposure.index:
-        #         if date_idx.month == 1:
-        #             xlabels.append(date_idx.strftime("%b\n%Y"))
-        #         elif date_idx.month in (4, 7, 10):
-        #             xlabels.append(date_idx.strftime("%b"))
-        #         else:
-        #             xlabels.append("")
-        #     ax.set_xticklabels(xlabels)
-        #     plt.title(factor_name)
-        #     plt.savefig(tmp, format="png")
-        #     plt.cla()
-        #     tmp.seek(0)
-        #     raw_img = tmp.read()
-        #     img = base64.b64encode(raw_img).decode('utf8').replace('\n', '')
-        # return img
         return self.series2json(exposure)
 
     def on_backtest_finish(self, fund):
