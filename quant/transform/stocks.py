@@ -28,8 +28,8 @@ def get_rtn(x: pd.Series, rtn_len: int, shift: bool= False):
 @LOCALIZER.wrap("filter_st", const_key="filter_st")
 def get_st_filter():
     st = wind.get_wind_table("AShareST")
-    st.loc[:, "entry_dt"] = pd.to_datetime(st.entry_dt)
-    st.loc[:, "remove_dt"] = pd.to_datetime(st.remove_dt)
+    st["entry_dt"] = pd.to_datetime(st.entry_dt)
+    st["remove_dt"] = pd.to_datetime(st.remove_dt)
     return st
 
 
@@ -43,5 +43,6 @@ def remove_st(data):
     -------
     pandas结构，和输入的data同一形状、类型，将ST股票的记录置为NaN
     """
+    # TODO
     pass
 
