@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCompanyHoldShares(BaseModel):
     """
-    中国A股控股参股
+    4.104 中国A股控股参股
 
     Attributes
     ----------
@@ -40,6 +40,10 @@ class AShareCompanyHoldShares(BaseModel):
         是否合并报表   
     notconsolidate_reason: VARCHAR2(500)
         未纳入合并报表原因   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCompanyHoldShares"
@@ -59,4 +63,6 @@ class AShareCompanyHoldShares(BaseModel):
     crncy_code = Column(VARCHAR2(10))
     is_consolidate = Column(NUMBER(5,4))
     notconsolidate_reason = Column(VARCHAR2(500))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

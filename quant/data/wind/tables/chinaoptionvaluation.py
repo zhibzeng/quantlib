@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaOptionValuation(BaseModel):
     """
-    中国期权衍生指标
+    4.196 中国期权衍生指标
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class ChinaOptionValuation(BaseModel):
         Vega   
     w_anal_rho: NUMBER(24,8)
         Rho   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaOptionValuation"
@@ -38,4 +42,6 @@ class ChinaOptionValuation(BaseModel):
     w_anal_gamma = Column(NUMBER(24,8))
     w_anal_vega = Column(NUMBER(24,8))
     w_anal_rho = Column(NUMBER(24,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaOptionEODPrices(BaseModel):
     """
-    中国期权日行情
+    4.195 中国期权日行情
 
     Attributes
     ----------
@@ -32,6 +32,10 @@ class ChinaOptionEODPrices(BaseModel):
         持仓量(手)   
     s_dq_oichange: NUMBER(20,4)
         持仓量变化(手)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaOptionEODPrices"
@@ -47,4 +51,6 @@ class ChinaOptionEODPrices(BaseModel):
     s_dq_amount = Column(NUMBER(20,4))
     s_dq_oi = Column(NUMBER(20,4))
     s_dq_oichange = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

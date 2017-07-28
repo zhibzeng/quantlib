@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondIndustriesCode(BaseModel):
     """
-    中国债券板块代码
+    4.122 中国债券板块代码
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class CBondIndustriesCode(BaseModel):
         板块类型   1:中国Wind债券分类2:中债债券分类3:中国Wind债券概念分类
     industriescode1: VARCHAR2(38)
         板块代码(父)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondIndustriesCode"
@@ -32,4 +36,6 @@ class CBondIndustriesCode(BaseModel):
     used = Column(NUMBER(1,0))
     industriestype = Column(VARCHAR2(50))
     industriescode1 = Column(VARCHAR2(38))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

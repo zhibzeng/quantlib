@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondIBRMBMonDMarQuotation(BaseModel):
     """
-    银行间本币货币市场日行情
+    4.157 银行间本币货币市场日行情
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class CBondIBRMBMonDMarQuotation(BaseModel):
         成交金额(亿元)   
     b_dq_amountchange: NUMBER(20,8)
         成交金额增减(亿元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondIBRMBMonDMarQuotation"
@@ -50,4 +54,6 @@ class CBondIBRMBMonDMarQuotation(BaseModel):
     b_dq_volume = Column(NUMBER(20,8))
     b_dq_amount = Column(NUMBER(20,8))
     b_dq_amountchange = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEXRightDividendRecord(BaseModel):
     """
-    中国A股除权除息记录
+    4.24 中国A股除权除息记录
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareEXRightDividendRecord(BaseModel):
         增发比例   
     consolidate_split_ratio: NUMBER(20,6)
         缩减比例   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEXRightDividendRecord"
@@ -50,4 +54,6 @@ class AShareEXRightDividendRecord(BaseModel):
     seo_price = Column(NUMBER(15,4))
     seo_ratio = Column(NUMBER(15,4))
     consolidate_split_ratio = Column(NUMBER(20,6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

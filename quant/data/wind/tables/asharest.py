@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareST(BaseModel):
     """
-    中国A股特别处理
+    4.92 中国A股特别处理
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class AShareST(BaseModel):
         实施日期   
     remove_dt: VARCHAR2(8)
         撤销日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareST"
@@ -26,4 +30,6 @@ class AShareST(BaseModel):
     s_type_st = Column(VARCHAR2(8))
     entry_dt = Column(VARCHAR2(8))
     remove_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

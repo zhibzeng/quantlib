@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondFCTD(BaseModel):
     """
-    中国国债期货最便宜可交割券
+    4.187 中国国债期货最便宜可交割券
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class CBondFCTD(BaseModel):
         深市CTD证券Wind代码   
     sz_ctd_irr: NUMBER(20,4)
         深市IRR   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondFCTD"
@@ -44,4 +48,6 @@ class CBondFCTD(BaseModel):
     sh_ctd_irr = Column(NUMBER(20,4))
     sz_ctd_windcode = Column(VARCHAR2(40))
     sz_ctd_irr = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

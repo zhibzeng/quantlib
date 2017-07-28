@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class MergerIntelligence(BaseModel):
     """
-    前瞻性情报
+    4.113 前瞻性情报
 
     Attributes
     ----------
@@ -42,6 +42,10 @@ class MergerIntelligence(BaseModel):
         是否重要   
     effective_date: VARCHAR2(8)
         生效日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "MergerIntelligence"
@@ -62,4 +66,6 @@ class MergerIntelligence(BaseModel):
     receipt_date = Column(DATE)
     is_important = Column(NUMBER(1, 0))
     effective_date = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

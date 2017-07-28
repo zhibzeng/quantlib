@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondGuaranteeDetail(BaseModel):
     """
-    债券发行人担保数据（明细）
+    4.133 债券发行人担保数据（明细）
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondGuaranteeDetail(BaseModel):
         担保公司类别   内部;外部:
     crncy_code: VARCHAR2(10)
         货币代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondGuaranteeDetail"
@@ -35,4 +39,6 @@ class CBondGuaranteeDetail(BaseModel):
     amountofguarantee = Column(NUMBER(20,0))
     guaranteecompanytype = Column(VARCHAR2(20))
     crncy_code = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

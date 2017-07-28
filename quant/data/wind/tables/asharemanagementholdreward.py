@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareManagementHoldReward(BaseModel):
     """
-    中国A股公司管理层持股及报酬
+    4.14 中国A股公司管理层持股及报酬
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareManagementHoldReward(BaseModel):
         报酬   
     s_manager_quantity: NUMBER(20,4)
         持股数量   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareManagementHoldReward"
@@ -38,4 +42,6 @@ class AShareManagementHoldReward(BaseModel):
     s_info_manager_post = Column(VARCHAR2(40))
     s_manager_return = Column(NUMBER(20,4))
     s_manager_quantity = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

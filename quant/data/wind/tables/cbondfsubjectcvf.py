@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondFSubjectcvf(BaseModel):
     """
-    中国国债期货标的券
+    4.186 中国国债期货标的券
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class CBondFSubjectcvf(BaseModel):
         标的券Wind代码   
     b_tbf_cvf: NUMBER(20,8)
         转换因子   交易所公布
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondFSubjectcvf"
@@ -23,4 +27,6 @@ class CBondFSubjectcvf(BaseModel):
     s_info_windcode = Column(VARCHAR2(40))
     dls_windcode = Column(VARCHAR2(40))
     b_tbf_cvf = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

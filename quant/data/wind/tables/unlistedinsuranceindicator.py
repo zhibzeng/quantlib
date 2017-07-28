@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedinsuranceIndicator(BaseModel):
     """
-    非上市保险专用指标
+    4.60 非上市保险专用指标
 
     Attributes
     ----------
@@ -68,6 +68,10 @@ class UnlistedinsuranceIndicator(BaseModel):
         货币代码   
     report_type: NUMBER(9,0)
         报告类型代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedinsuranceIndicator"
@@ -101,4 +105,6 @@ class UnlistedinsuranceIndicator(BaseModel):
     capital_adequacy_ratio_group = Column(NUMBER(20,4))
     crncy_code = Column(VARCHAR2(10))
     report_type = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

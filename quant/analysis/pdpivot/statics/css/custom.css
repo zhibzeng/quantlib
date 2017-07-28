@@ -1,0 +1,40 @@
+.fields {
+    background-color:darkgray;
+    min-height: 30px;
+    margin-top: 5px;
+    border-radius: 1%;
+}
+ul.fields.nav-stacked {
+    margin-top: 10px;
+}
+ul.fields.nav:not(.nav-stacked) > li{
+    padding: 10px;
+    margin: 5px;
+}
+
+.fields > li {
+    border-radius: 10%;
+}
+.fields>li.numeric {
+    background-color: lightblue;
+}
+.fields>li.category {
+    background-color: lightgreen;
+}
+ul.fields.nav.nav-stacked > li{
+    padding: 10px;
+    margin-top: 5px;
+}
+tbody td{
+    background-color: lightcyan;
+}
+tbody th{
+    background-color: lightgrey;
+}
+thead th{
+    background-color: lightskyblue;
+}
+
+table{
+    text-align: center;
+}

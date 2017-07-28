@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareHolderNumber(BaseModel):
     """
-    中国A股股东户数
+    4.37 中国A股股东户数
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AShareHolderNumber(BaseModel):
         A股股东户数   
     s_holder_total_num: NUMBER(20,4)
         股东总户数   若纯A股为A股户数；若含B股则为AB股总户数；若含H股则为AH股总户数；若含境外股, 则为A和境外股总户数
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareHolderNumber"
@@ -29,4 +33,6 @@ class AShareHolderNumber(BaseModel):
     s_holder_enddate = Column(VARCHAR2(8))
     s_holder_num = Column(NUMBER(20,4))
     s_holder_total_num = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

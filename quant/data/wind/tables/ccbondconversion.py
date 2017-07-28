@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CCBondConversion(BaseModel):
     """
-    中国可转债转股
+    4.139 中国可转债转股
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class CCBondConversion(BaseModel):
         是否强制转股   
     forced_conv_reason: VARCHAR2(500)
         强制转换原因   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CCBondConversion"
@@ -56,4 +60,6 @@ class CCBondConversion(BaseModel):
     rel_conv_month = Column(NUMBER(20,4))
     isforced = Column(NUMBER(5,0))
     forced_conv_reason = Column(VARCHAR2(500))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

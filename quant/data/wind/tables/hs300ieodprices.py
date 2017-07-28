@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class HS300IEODPrices(BaseModel):
     """
-    沪深300指数日行情
+    4.181 沪深300指数日行情
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class HS300IEODPrices(BaseModel):
         成交量(手)   
     amt: NUMBER(20,4)
         成交金额(千元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "HS300IEODPrices"
@@ -50,4 +54,6 @@ class HS300IEODPrices(BaseModel):
     pct_chg = Column(NUMBER(20,4))
     volume = Column(NUMBER(20,4))
     amt = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

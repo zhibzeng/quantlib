@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondRatingWatchlist(BaseModel):
     """
-    债券信用评级观察名单明细
+    4.148 债券信用评级观察名单明细
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondRatingWatchlist(BaseModel):
         事件标题   
     b_ann_abstract: VARCHAR2(3000)
         公告摘要   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondRatingWatchlist"
@@ -35,4 +39,6 @@ class CBondRatingWatchlist(BaseModel):
     b_event_category = Column(VARCHAR2(80))
     b_event_title = Column(VARCHAR2(200))
     b_ann_abstract = Column(VARCHAR2(3000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

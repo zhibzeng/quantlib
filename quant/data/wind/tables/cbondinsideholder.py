@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondInsideHolder(BaseModel):
     """
-    中国债券内部人持股变动
+    4.134 中国债券内部人持股变动
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class CBondInsideHolder(BaseModel):
         持股性质   
     b_holder_aname: VARCHAR2(100)
         股东名称   公布的名称
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondInsideHolder"
@@ -44,4 +48,6 @@ class CBondInsideHolder(BaseModel):
     b_holder_pct = Column(NUMBER(20,4))
     b_holder_sharecategory = Column(VARCHAR2(40))
     b_holder_aname = Column(VARCHAR2(100))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

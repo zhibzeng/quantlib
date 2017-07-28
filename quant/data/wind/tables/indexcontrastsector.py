@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class IndexContrastSector(BaseModel):
     """
-    指数板块对照
+    4.220 指数板块对照
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class IndexContrastSector(BaseModel):
         板块代码   
     s_info_industryname: VARCHAR2(100)
         板块名称   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "IndexContrastSector"
@@ -26,4 +30,6 @@ class IndexContrastSector(BaseModel):
     s_info_name = Column(VARCHAR2(50))
     s_info_industrycode = Column(VARCHAR2(40))
     s_info_industryname = Column(VARCHAR2(100))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareStockRating(BaseModel):
     """
-    中国A股投资评级明细
+    4.75 中国A股投资评级明细
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class AShareStockRating(BaseModel):
         本次评级   
     s_est_prerating_inst: VARCHAR(20)
         前次评级   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareStockRating"
@@ -53,4 +57,6 @@ class AShareStockRating(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     s_est_rating_inst = Column(VARCHAR(20))
     s_est_prerating_inst = Column(VARCHAR(20))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

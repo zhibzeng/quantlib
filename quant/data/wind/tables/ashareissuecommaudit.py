@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIssueCommAudit(BaseModel):
     """
-    中国A股发行审核一览
+    4.11 中国A股发行审核一览
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareIssueCommAudit(BaseModel):
         预计发行股数(万股)   
     s_info_expectedcollection: NUMBER(20,4)
         预计募集资金(万元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIssueCommAudit"
@@ -50,4 +54,6 @@ class AShareIssueCommAudit(BaseModel):
     s_ic_auditannocedate = Column(VARCHAR2(8))
     s_info_expectedissueshares = Column(NUMBER(20,4))
     s_info_expectedcollection = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

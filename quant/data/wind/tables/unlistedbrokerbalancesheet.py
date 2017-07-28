@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedBrokerBalanceSheet(BaseModel):
     """
-    非上市券商资产负债表
+    4.68 非上市券商资产负债表
 
     Attributes
     ----------
@@ -142,6 +142,10 @@ class UnlistedBrokerBalanceSheet(BaseModel):
         负债及股东权益差额(合计平衡项目)   
     tot_liab_shrhldr_eqy: NUMBER(20,4)
         负债及股东权益总计   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedBrokerBalanceSheet"
@@ -212,4 +216,6 @@ class UnlistedBrokerBalanceSheet(BaseModel):
     spe_bal_liab_eqy = Column(NUMBER(20,4))
     tot_bal_liab_eqy = Column(NUMBER(20,4))
     tot_liab_shrhldr_eqy = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

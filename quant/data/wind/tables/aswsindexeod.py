@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ASWSIndexEOD(BaseModel):
     """
-    申万指数行情
+    4.198 申万指数行情
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class ASWSIndexEOD(BaseModel):
         A股流通市值(万元)   
     s_val_mv: NUMBER(20,4)
         总市值(万元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ASWSIndexEOD"
@@ -53,4 +57,6 @@ class ASWSIndexEOD(BaseModel):
     s_val_pb = Column(NUMBER(20,4))
     s_dq_mv = Column(NUMBER(20,4))
     s_val_mv = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

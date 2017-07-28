@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareSEO(BaseModel):
     """
-    中国A股增发
+    4.20 中国A股增发
 
     Attributes
     ----------
@@ -102,6 +102,10 @@ class AShareSEO(BaseModel):
         定价基准日   
     is_no_public: NUMBER(5,0)
         是否属于非公开发行   0：否1:是
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareSEO"
@@ -152,4 +156,6 @@ class AShareSEO(BaseModel):
     s_fellow_objective_code = Column(NUMBER(9,0))
     pricingdate = Column(VARCHAR2(8))
     is_no_public = Column(NUMBER(5,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

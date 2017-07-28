@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMarginSubject(BaseModel):
     """
-    中国A股融资融券标的及担保物
+    4.33 中国A股融资融券标的及担保物
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class AShareMarginSubject(BaseModel):
         折算率   
     s_margin_rateeffectdate: VARCHAR2(8)
         保证金比例或折算率生效日   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMarginSubject"
@@ -35,4 +39,6 @@ class AShareMarginSubject(BaseModel):
     s_margin_marginrate = Column(NUMBER(20,4))
     s_margin_conversionrate = Column(NUMBER(20,4))
     s_margin_rateeffectdate = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CGoldSpotEODPrices(BaseModel):
     """
-    中国黄金现货日行情
+    4.184 中国黄金现货日行情
 
     Attributes
     ----------
@@ -32,6 +32,10 @@ class CGoldSpotEODPrices(BaseModel):
         持仓量(手)   
     del_amt: NUMBER(20,4)
         交收量(手)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CGoldSpotEODPrices"
@@ -47,4 +51,6 @@ class CGoldSpotEODPrices(BaseModel):
     s_dq_amount = Column(NUMBER(20,4))
     s_dq_oi = Column(NUMBER(20,4))
     del_amt = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

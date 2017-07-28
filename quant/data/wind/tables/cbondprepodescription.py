@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondPRepoDescription(BaseModel):
     """
-    中国债券回购基本资料
+    4.167 中国债券回购基本资料
 
     Attributes
     ----------
@@ -25,7 +25,11 @@ class CBondPRepoDescription(BaseModel):
     s_info_name: VARCHAR2(50)
         证券简称   
     s_info_exchmarket: VARCHAR2(10)
-        交易所   SSE:上交所
+        交易所   SSE:上交所SZSE:深交所NIB:银行间债券
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondPRepoDescription"
@@ -38,4 +42,6 @@ class CBondPRepoDescription(BaseModel):
     b_info_repo_pcntbond = Column(NUMBER(20,4))
     s_info_name = Column(VARCHAR2(50))
     s_info_exchmarket = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

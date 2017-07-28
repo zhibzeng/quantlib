@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondConvprice(BaseModel):
     """
-    中国债券转股价格变动
+    4.138 中国债券转股价格变动
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class CBondConvprice(BaseModel):
         转股价格   
     b_info_changereason: VARCHAR2(1000)
         变动原因   1发行2换股吸收合并3派息4配股5上市6送股7送转股8送转股,派息9修正10增发11转增,派息
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondConvprice"
@@ -29,4 +33,6 @@ class CBondConvprice(BaseModel):
     b_info_announcementdate = Column(VARCHAR2(8))
     cb_anal_convprice = Column(NUMBER(20,4))
     b_info_changereason = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

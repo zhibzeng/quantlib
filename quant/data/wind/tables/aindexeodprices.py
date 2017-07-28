@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AIndexEODPrices(BaseModel):
     """
-    中国A股指数日行情
+    4.84 中国A股指数日行情
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AIndexEODPrices(BaseModel):
         成交量(手)   
     s_dq_amount: NUMBER(20,4)
         成交金额(千元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AIndexEODPrices"
@@ -50,4 +54,6 @@ class AIndexEODPrices(BaseModel):
     s_dq_pctchange = Column(NUMBER(20,4))
     s_dq_volume = Column(NUMBER(20,4))
     s_dq_amount = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

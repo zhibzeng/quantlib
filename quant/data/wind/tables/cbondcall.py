@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondCall(BaseModel):
     """
-    中国债券赎回条款执行说明
+    4.124 中国债券赎回条款执行说明
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondCall(BaseModel):
         赎回总面额(亿元)   
     b_info_calloutstanding: NUMBER(20,4)
         继续托管总面额(亿元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondCall"
@@ -35,4 +39,6 @@ class CBondCall(BaseModel):
     b_info_callexdate = Column(VARCHAR2(8))
     b_info_callamount = Column(NUMBER(20,4))
     b_info_calloutstanding = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

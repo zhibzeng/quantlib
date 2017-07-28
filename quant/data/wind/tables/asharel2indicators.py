@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareL2Indicators(BaseModel):
     """
-    中国A股Level2指标
+    4.42 中国A股Level2指标
 
     Attributes
     ----------
@@ -46,6 +46,10 @@ class AShareL2Indicators(BaseModel):
         总委差额   总委买金额-总委卖金额
     s_li_entrustbuymoney: NUMBER(20,4)
         总委买额   从买一到跌停位置的总委买金额=总委买量*委买均价
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareL2Indicators"
@@ -68,4 +72,6 @@ class AShareL2Indicators(BaseModel):
     s_li_entrudifferamount = Column(NUMBER(20,4))
     s_li_entrudifferamoney = Column(NUMBER(20,4))
     s_li_entrustbuymoney = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

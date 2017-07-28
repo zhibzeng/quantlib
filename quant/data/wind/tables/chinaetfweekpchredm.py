@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaETFWeekPchRedm(BaseModel):
     """
-    中国ETF每周申购赎回
+    4.87 中国ETF每周申购赎回
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class ChinaETFWeekPchRedm(BaseModel):
         申购份额(亿份)   
     f_unit_redm: NUMBER(20,4)
         赎回份额(亿份)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaETFWeekPchRedm"
@@ -29,4 +33,6 @@ class ChinaETFWeekPchRedm(BaseModel):
     f_pchredm_enddate = Column(VARCHAR2(8))
     f_unit_pch = Column(NUMBER(20,4))
     f_unit_redm = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

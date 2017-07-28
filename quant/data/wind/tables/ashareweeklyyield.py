@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareWeeklyYield(BaseModel):
     """
-    中国A股周收益率
+    4.28 中国A股周收益率
 
     Attributes
     ----------
@@ -32,6 +32,10 @@ class AShareWeeklyYield(BaseModel):
         周收益率标准差(100周)   
     s_wq_avgpctchange100: NUMBER(20,4)
         周收益率平均值(100周)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareWeeklyYield"
@@ -47,4 +51,6 @@ class AShareWeeklyYield(BaseModel):
     s_wq_varpctchange100 = Column(NUMBER(20,4))
     s_wq_devpctchange100 = Column(NUMBER(20,4))
     s_wq_avgpctchange100 = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

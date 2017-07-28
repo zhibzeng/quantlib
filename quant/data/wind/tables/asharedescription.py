@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareDescription(BaseModel):
     """
-    中国A股基本资料
+    4.1 中国A股基本资料
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareDescription(BaseModel):
         简称拼音   
     s_info_listboardname: VARCHAR2(10)
         上市板   上市板包括：主板创业板中小企业板
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareDescription"
@@ -50,4 +54,6 @@ class AShareDescription(BaseModel):
     s_info_delistdate = Column(VARCHAR2(8))
     s_info_pinyin = Column(VARCHAR2(10))
     s_info_listboardname = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

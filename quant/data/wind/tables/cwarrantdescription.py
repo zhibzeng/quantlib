@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CwarrantDescription(BaseModel):
     """
-    中国权证基本资料
+    4.190 中国权证基本资料
 
     Attributes
     ----------
@@ -102,6 +102,10 @@ class CwarrantDescription(BaseModel):
         停止交易日   
     recorddate_putwarrant: VARCHAR2(8)
         认沽权利股权登记日   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CwarrantDescription"
@@ -152,4 +156,6 @@ class CwarrantDescription(BaseModel):
     lasttradedate = Column(VARCHAR2(8))
     expiredate = Column(VARCHAR2(8))
     recorddate_putwarrant = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

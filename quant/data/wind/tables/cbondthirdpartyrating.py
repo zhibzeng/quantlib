@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondThirdPartyRating(BaseModel):
     """
-    中国债券第三方信用评级
+    4.149 中国债券第三方信用评级
 
     Attributes
     ----------
@@ -32,6 +32,10 @@ class CBondThirdPartyRating(BaseModel):
         前次评级展望   
     b_est_rating_change: VARCHAR2(10)
         评级变动方向   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondThirdPartyRating"
@@ -47,4 +51,6 @@ class CBondThirdPartyRating(BaseModel):
     b_est_prerating_inst = Column(VARCHAR2(40))
     b_rate_preratingoutlook = Column(VARCHAR2(10))
     b_est_rating_change = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

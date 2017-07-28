@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareinstHolderDerData(BaseModel):
     """
-    中国A股机构持股衍生数据
+    4.44 中国A股机构持股衍生数据
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareinstHolderDerData(BaseModel):
         持股比例(计算)   占流通股比例
     ann_date: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareinstHolderDerData"
@@ -38,4 +42,6 @@ class AShareinstHolderDerData(BaseModel):
     s_holder_quantity = Column(NUMBER(20,4))
     s_holder_pct = Column(NUMBER(20,4))
     ann_date = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

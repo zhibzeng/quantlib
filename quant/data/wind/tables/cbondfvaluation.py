@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondFValuation(BaseModel):
     """
-    中国国债期货可交割券衍生指标
+    4.188 中国国债期货可交割券衍生指标
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CBondFValuation(BaseModel):
         IRR   
     rt_spread: NUMBER(20,4)
         基差   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondFValuation"
@@ -41,4 +45,6 @@ class CBondFValuation(BaseModel):
     fs_spread = Column(NUMBER(20,4))
     irr = Column(NUMBER(20,4))
     rt_spread = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

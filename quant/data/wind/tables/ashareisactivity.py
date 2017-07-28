@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AshareISActivity(BaseModel):
     """
-    中国A股机构调研活动
+    4.114 中国A股机构调研活动
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AshareISActivity(BaseModel):
         调研具体时间   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AshareISActivity"
@@ -32,4 +36,6 @@ class AshareISActivity(BaseModel):
     s_surveydate = Column(VARCHAR2(8))
     s_surveytime = Column(VARCHAR2(20))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

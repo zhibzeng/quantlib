@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CFuturescontpro(BaseModel):
     """
-    中国期货标准合约属性
+    4.178 中国期货标准合约属性
 
     Attributes
     ----------
@@ -62,6 +62,10 @@ class CFuturescontpro(BaseModel):
         品种细类代码   703001001:贵金属703001002:有色703001003:煤焦钢矿703001004:非金属建材703001005:能源703001006:化工703001007:谷物703001008:油脂油料703001009:软商品703001010:农副产品
     contract_id: VARCHAR2(10)
         合约ID   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CFuturescontpro"
@@ -92,4 +96,6 @@ class CFuturescontpro(BaseModel):
     s_info_rtd = Column(NUMBER(20,4))
     s_sub_typcode = Column(NUMBER(9,0))
     contract_id = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEODDerivativeIndicator(BaseModel):
     """
-    中国A股日行情估值指标
+    4.30 中国A股日行情估值指标
 
     Attributes
     ----------
@@ -58,6 +58,10 @@ class AShareEODDerivativeIndicator(BaseModel):
         52周最高价(复权)   
     s_pq_adjlow_52w: NUMBER(20,4)
         52周最低价(复权)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEODDerivativeIndicator"
@@ -86,4 +90,6 @@ class AShareEODDerivativeIndicator(BaseModel):
     s_price_div_dps = Column(NUMBER(20,4))
     s_pq_adjhigh_52w = Column(NUMBER(20,4))
     s_pq_adjlow_52w = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

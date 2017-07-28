@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIndustriesCode(BaseModel):
     """
-    行业代码
+    4.217 行业代码
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareIndustriesCode(BaseModel):
         板块别名   
     sequence: NUMBER(4,0)
         展示序号   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIndustriesCode"
@@ -32,4 +36,6 @@ class AShareIndustriesCode(BaseModel):
     used = Column(NUMBER(1,0))
     industriesalias = Column(VARCHAR2(12))
     sequence = Column(NUMBER(4,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedBrokerIncome(BaseModel):
     """
-    非上市券商利润表
+    4.69 非上市券商利润表
 
     Attributes
     ----------
@@ -106,6 +106,10 @@ class UnlistedBrokerIncome(BaseModel):
         综合收益总额(少数股东)   
     tot_compreh_inc_parent_comp: NUMBER(20,4)
         综合收益总额(母公司)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedBrokerIncome"
@@ -158,4 +162,6 @@ class UnlistedBrokerIncome(BaseModel):
     tot_compreh_inc = Column(NUMBER(20,4))
     tot_compreh_inc_min_shrhldr = Column(NUMBER(20,4))
     tot_compreh_inc_parent_comp = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

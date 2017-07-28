@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondConversionRatio(BaseModel):
     """
-    中国债券回购标准券折算率
+    4.168 中国债券回购标准券折算率
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class CBondConversionRatio(BaseModel):
         折算比例   
     b_cvn_cvntperhundred: NUMBER(20,4)
         折合标准券   每张债券折合标准券金额
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondConversionRatio"
@@ -29,4 +33,6 @@ class CBondConversionRatio(BaseModel):
     b_cvn_enddate = Column(VARCHAR2(8))
     b_cvn_rateofstdbnd = Column(NUMBER(20,4))
     b_cvn_cvntperhundred = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

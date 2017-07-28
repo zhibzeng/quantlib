@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIncExercisePct(BaseModel):
     """
-    中国A股股权激励行权比例
+    4.98 中国A股股权激励行权比例
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AShareIncExercisePct(BaseModel):
         行权比例(%)   
     s_inc_intervaltime: NUMBER(20,4)
         首个授权日至行权期间隔时间(月)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIncExercisePct"
@@ -29,4 +33,6 @@ class AShareIncExercisePct(BaseModel):
     s_inc_execbatch = Column(VARCHAR2(6))
     s_inc_execpct = Column(NUMBER(20,4))
     s_inc_intervaltime = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

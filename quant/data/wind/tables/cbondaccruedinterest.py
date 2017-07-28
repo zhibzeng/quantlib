@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondAccruedInterest(BaseModel):
     """
-    中国债券应计利息
+    4.142 中国债券应计利息
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class CBondAccruedInterest(BaseModel):
         已计息时间   
     b_anal_accruedinterest: NUMBER(20,8)
         应计利息   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondAccruedInterest"
@@ -26,4 +30,6 @@ class CBondAccruedInterest(BaseModel):
     trade_dt = Column(VARCHAR2(8))
     b_anal_accrueddays = Column(NUMBER(20,4))
     b_anal_accruedinterest = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

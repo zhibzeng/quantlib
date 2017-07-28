@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondPut(BaseModel):
     """
-    中国债券回售条款执行说明
+    4.125 中国债券回售条款执行说明
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CBondPut(BaseModel):
         回售行使开始日   
     b_info_repurchaseenddate: VARCHAR2(8)
         回售行使截止日   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondPut"
@@ -41,4 +45,6 @@ class CBondPut(BaseModel):
     b_info_putoutstanding = Column(NUMBER(20,4))
     b_info_repurchasestartdate = Column(VARCHAR2(8))
     b_info_repurchaseenddate = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

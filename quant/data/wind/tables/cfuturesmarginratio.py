@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CFuturesmarginratio(BaseModel):
     """
-    中国期货保证金比例
+    4.177 中国期货保证金比例
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class CFuturesmarginratio(BaseModel):
         保证金比例   
     trade_dt: VARCHAR2(8)
         变动日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CFuturesmarginratio"
@@ -23,4 +27,6 @@ class CFuturesmarginratio(BaseModel):
     s_info_windcode = Column(VARCHAR2(40))
     marginratio = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

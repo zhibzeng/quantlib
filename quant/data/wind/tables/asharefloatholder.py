@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareFloatHolder(BaseModel):
     """
-    中国A股流通股东
+    4.39 中国A股流通股东
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareFloatHolder(BaseModel):
         持有人   
     s_holder_quantity: NUMBER(20,4)
         数量(股)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareFloatHolder"
@@ -32,4 +36,6 @@ class AShareFloatHolder(BaseModel):
     s_holder_holdercategory = Column(VARCHAR2(1))
     s_holder_name = Column(VARCHAR2(100))
     s_holder_quantity = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

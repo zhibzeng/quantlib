@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareFreeFloatCalendar(BaseModel):
     """
-    中国A股限售股流通日历
+    4.21 中国A股限售股流通日历
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareFreeFloatCalendar(BaseModel):
         上市股份类型代码   对应:类型编码表中的原始类型代码
     s_share_lst_is_ann: VARCHAR2(1)
         上市数量是否公布值   0：否, 为预测值1:是,为实际公布值
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareFreeFloatCalendar"
@@ -38,4 +42,6 @@ class AShareFreeFloatCalendar(BaseModel):
     s_share_unrestricted = Column(NUMBER(20,4))
     s_share_lsttypecode = Column(NUMBER(9,0))
     s_share_lst_is_ann = Column(VARCHAR2(1))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

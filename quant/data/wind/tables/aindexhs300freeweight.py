@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AIndexHS300FreeWeight(BaseModel):
     """
-    沪深300免费指数权重
+    4.81 沪深300免费指数权重
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class AIndexHS300FreeWeight(BaseModel):
         交易日期   
     i_weight: NUMBER(20,4)
         权重   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AIndexHS300FreeWeight"
@@ -26,4 +30,6 @@ class AIndexHS300FreeWeight(BaseModel):
     s_con_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     i_weight = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

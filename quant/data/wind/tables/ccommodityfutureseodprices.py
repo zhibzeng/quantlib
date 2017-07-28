@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CCommodityFuturesEODPrices(BaseModel):
     """
-    中国商品期货日行情
+    4.182 中国商品期货日行情
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class CCommodityFuturesEODPrices(BaseModel):
         持仓量变化   
     fs_info_type: VARCHAR2(10)
         合约类型   1:主力合约2:真实合约3:连续合约
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CCommodityFuturesEODPrices"
@@ -56,4 +60,6 @@ class CCommodityFuturesEODPrices(BaseModel):
     s_dq_change = Column(NUMBER(20,4))
     s_dq_oichange = Column(NUMBER(20,4))
     fs_info_type = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

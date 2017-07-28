@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareInsiderTrade(BaseModel):
     """
-    中国A股内部人交易
+    4.35 中国A股内部人交易
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareInsiderTrade(BaseModel):
         变动人与管理层的关系   
     actual_ann_dt: VARCHAR2(8)
         实际公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareInsiderTrade"
@@ -50,4 +54,6 @@ class AShareInsiderTrade(BaseModel):
     related_manager_post = Column(VARCHAR2(80))
     trader_manager_relation = Column(VARCHAR2(20))
     actual_ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

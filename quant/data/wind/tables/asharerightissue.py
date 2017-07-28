@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareRightIssue(BaseModel):
     """
-    中国A股配股
+    4.19 中国A股配股
 
     Attributes
     ----------
@@ -60,6 +60,10 @@ class AShareRightIssue(BaseModel):
         配股年度   
     s_rightsissue_content: VARCHAR2(150)
         配股说明   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareRightIssue"
@@ -89,4 +93,6 @@ class AShareRightIssue(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     s_rightsissue_year = Column(VARCHAR2(8))
     s_rightsissue_content = Column(VARCHAR2(150))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

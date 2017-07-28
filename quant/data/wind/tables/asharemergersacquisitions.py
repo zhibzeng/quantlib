@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMergersAcquisitions(BaseModel):
     """
-    中国A股收购兼并
+    4.109 中国A股收购兼并
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class AShareMergersAcquisitions(BaseModel):
         首次公告日期   
     ann_dt: VARCHAR2(8)
         最新公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMergersAcquisitions"
@@ -53,4 +57,6 @@ class AShareMergersAcquisitions(BaseModel):
     is_reldpartransactions = Column(NUMBER(1,0))
     first_dt = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

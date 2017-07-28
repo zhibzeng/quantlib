@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIncDescription(BaseModel):
     """
-    中国A股股权激励基本资料
+    4.95 中国A股股权激励基本资料
 
     Attributes
     ----------
@@ -54,6 +54,10 @@ class AShareIncDescription(BaseModel):
         激励基金说明   
     interval_months: NUMBER(20,4)
         授权日与首次可行权日间隔时间(月)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIncDescription"
@@ -80,4 +84,6 @@ class AShareIncDescription(BaseModel):
     implement_date = Column(VARCHAR2(8))
     inc_fund_description = Column(VARCHAR2(1000))
     interval_months = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

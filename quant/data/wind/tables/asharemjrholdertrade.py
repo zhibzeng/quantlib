@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMjrHolderTrade(BaseModel):
     """
-    中国A股重要股东增减持
+    4.36 中国A股重要股东增减持
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class AShareMjrHolderTrade(BaseModel):
         平均价格   
     whether_agreed_repur_trans: NUMBER(1)
         是否约定购回式交易   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMjrHolderTrade"
@@ -53,4 +57,6 @@ class AShareMjrHolderTrade(BaseModel):
     holder_quantity_new_ratio = Column(NUMBER(20,4))
     avg_price = Column(NUMBER(20,4))
     whether_agreed_repur_trans = Column(NUMBER(1))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

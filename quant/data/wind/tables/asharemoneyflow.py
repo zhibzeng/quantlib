@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMoneyflow(BaseModel):
     """
-    中国A股资金流向数据
+    4.40 中国A股资金流向数据
 
     Attributes
     ----------
@@ -69,7 +69,77 @@ class AShareMoneyflow(BaseModel):
     volume_diff_small_trader_act: NUMBER(20,4)
         散户量差(仅主动)   小单主动买量-小单主动卖量(手)
     volume_diff_med_trader: NUMBER(20,4)
-        中户量差(含主动被   中单买量-中单卖量(手)
+        中户量差(含主动被动)   中单买量-中单卖量(手)
+    volume_diff_med_trader_act: NUMBER(20,4)
+        中户量差(仅主动)   中单主动买量-中单主动卖量(手)
+    volume_diff_large_trader: NUMBER(20,4)
+        大户量差(含主动被动)   大单买量-大单卖量(手)
+    volume_diff_large_trader_act: NUMBER(20,4)
+        大户量差(仅主动)   大单主动买量-大单主动买量(手)
+    volume_diff_institute: NUMBER(20,4)
+        机构量差(含主动被动)   特大单买量-特大单卖量(手)
+    volume_diff_institute_act: NUMBER(20,4)
+        机构量差(仅主动)   特大单主动买量-特大单主动买量(手)
+    value_diff_small_trader: NUMBER(20,4)
+        散户金额差(含主动被动)   小单买额-小单卖额
+    value_diff_small_trader_act: NUMBER(20,4)
+        散户金额差(仅主动)   小单主动买额-小单主动卖额
+    value_diff_med_trader: NUMBER(20,4)
+        中户金额差(含主动被动)   中单买额-中单卖额
+    value_diff_med_trader_act: NUMBER(20,4)
+        中户金额差(仅主动)   中单主动买额-中单主动卖额
+    value_diff_large_trader: NUMBER(20,4)
+        大户金额差(含主动被动)   大单买额-大单卖额
+    value_diff_large_trader_act: NUMBER(20,4)
+        大户金额差(仅主动)   大单主动买额-大单主动买额
+    value_diff_institute: NUMBER(20,4)
+        机构金额差(含主动被动)   特大单买额-特大单卖额
+    value_diff_institute_act: NUMBER(20,4)
+        机构金额差(仅主动)   特大单主动买额-特大单主动卖额
+    s_mfd_inflowvolume: NUMBER(20,4)
+        净流入量   当日净流入量(手)
+    net_inflow_rate_volume: NUMBER(20,4)
+        流入率(量)   当日净流入量/成交股数(手/手)
+    s_mfd_inflow_openvolume: NUMBER(20,4)
+        开盘资金流入量   10点前的资金净流入量(手)
+    open_net_inflow_rate_volume: NUMBER(20,4)
+        开盘资金流入率(量)   10点前的资金净流入量/成交股数(手/手)
+    s_mfd_inflow_closevolume: NUMBER(20,4)
+        尾盘资金流入量   14：30后的资金净流入量(手)
+    close_net_inflow_rate_volume: NUMBER(20,4)
+        尾盘资金流入率(量)   14：30后的资金净流入量/成交股数(手/手)
+    s_mfd_inflow: NUMBER(20,4)
+        净流入金额   当日净流入资金额
+    net_inflow_rate_value: NUMBER(20,4)
+        流入率(金额)   当日净流入/成交额(万元/万元)
+    s_mfd_inflow_open: NUMBER(20,4)
+        开盘资金流入金额   10点前的资金净流入金额
+    open_net_inflow_rate_value: NUMBER(20,4)
+        开盘资金流入率(金额)   10点前的资金净流入金额/成交额(万元/万元)
+    s_mfd_inflow_close: NUMBER(20,4)
+        尾盘资金流入金额   14：30后的资金净流入金额
+    close_net_inflow_rate_value: NUMBER(20,4)
+        尾盘资金流入率(金额)   14：30后的资金净流入金额/成交额(万元/万元)
+    tot_volume_bid: NUMBER(20,4)
+        委买总量   当日委买总量
+    tot_volume_ask: NUMBER(20,4)
+        委卖总量   当日委卖总量
+    moneyflow_pct_volume: NUMBER(20,4)
+        资金流向占比(量)   当日资金净流入量/流通盘股数(手/万股)
+    open_moneyflow_pct_volume: NUMBER(20,4)
+        开盘资金流向占比(量)   10点前的资金净流向占比(手/万股)
+    close_moneyflow_pct_volume: NUMBER(20,4)
+        尾盘资金流向占比(量)   14：30后的资金流向占比(手/万股)
+    moneyflow_pct_value: NUMBER(20,4)
+        资金流向占比(金额)   当日资金净流入金额/流通市值(万元/(元*万股))
+    open_moneyflow_pct_value: NUMBER(20,4)
+        开盘资金流向占比(金额)   10点前的资金净流向占比(金额比)(万元/(元*万股))
+    close_moneyflow_pct_value: NUMBER(20,4)
+        尾盘资金流向占比(金额)   14：30后的资金流向占比(金额比)(万元/(元*万股))
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMoneyflow"
@@ -104,4 +174,39 @@ class AShareMoneyflow(BaseModel):
     volume_diff_small_trader = Column(NUMBER(20,4))
     volume_diff_small_trader_act = Column(NUMBER(20,4))
     volume_diff_med_trader = Column(NUMBER(20,4))
+    volume_diff_med_trader_act = Column(NUMBER(20,4))
+    volume_diff_large_trader = Column(NUMBER(20,4))
+    volume_diff_large_trader_act = Column(NUMBER(20,4))
+    volume_diff_institute = Column(NUMBER(20,4))
+    volume_diff_institute_act = Column(NUMBER(20,4))
+    value_diff_small_trader = Column(NUMBER(20,4))
+    value_diff_small_trader_act = Column(NUMBER(20,4))
+    value_diff_med_trader = Column(NUMBER(20,4))
+    value_diff_med_trader_act = Column(NUMBER(20,4))
+    value_diff_large_trader = Column(NUMBER(20,4))
+    value_diff_large_trader_act = Column(NUMBER(20,4))
+    value_diff_institute = Column(NUMBER(20,4))
+    value_diff_institute_act = Column(NUMBER(20,4))
+    s_mfd_inflowvolume = Column(NUMBER(20,4))
+    net_inflow_rate_volume = Column(NUMBER(20,4))
+    s_mfd_inflow_openvolume = Column(NUMBER(20,4))
+    open_net_inflow_rate_volume = Column(NUMBER(20,4))
+    s_mfd_inflow_closevolume = Column(NUMBER(20,4))
+    close_net_inflow_rate_volume = Column(NUMBER(20,4))
+    s_mfd_inflow = Column(NUMBER(20,4))
+    net_inflow_rate_value = Column(NUMBER(20,4))
+    s_mfd_inflow_open = Column(NUMBER(20,4))
+    open_net_inflow_rate_value = Column(NUMBER(20,4))
+    s_mfd_inflow_close = Column(NUMBER(20,4))
+    close_net_inflow_rate_value = Column(NUMBER(20,4))
+    tot_volume_bid = Column(NUMBER(20,4))
+    tot_volume_ask = Column(NUMBER(20,4))
+    moneyflow_pct_volume = Column(NUMBER(20,4))
+    open_moneyflow_pct_volume = Column(NUMBER(20,4))
+    close_moneyflow_pct_volume = Column(NUMBER(20,4))
+    moneyflow_pct_value = Column(NUMBER(20,4))
+    open_moneyflow_pct_value = Column(NUMBER(20,4))
+    close_moneyflow_pct_value = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondDescription(BaseModel):
     """
-    中国债券基本资料
+    4.118 中国债券基本资料
 
     Attributes
     ----------
@@ -128,6 +128,10 @@ class CBondDescription(BaseModel):
         是否可赎回   0:否1：是
     is_chooseright: VARCHAR2(1)
         是否有选择权   0:否1：是
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondDescription"
@@ -191,4 +195,6 @@ class CBondDescription(BaseModel):
     is_payadvanced = Column(VARCHAR2(1))
     is_callable = Column(VARCHAR2(1))
     is_chooseright = Column(VARCHAR2(1))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

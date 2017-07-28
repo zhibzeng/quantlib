@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareRalatedTrade(BaseModel):
     """
-    中国A股关联交易
+    4.93 中国A股关联交易
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class AShareRalatedTrade(BaseModel):
         货币代码   CNY
     s_relatedtrade_amount: VARCHAR2(20)
         交易金额   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareRalatedTrade"
@@ -41,4 +45,6 @@ class AShareRalatedTrade(BaseModel):
     s_relatedtrade_settletype = Column(VARCHAR2(300))
     crncy_code = Column(VARCHAR2(10))
     s_relatedtrade_amount = Column(VARCHAR2(20))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

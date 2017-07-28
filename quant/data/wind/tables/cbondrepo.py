@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondRepo(BaseModel):
     """
-    中国央行回购交易
+    4.165 中国央行回购交易
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class CBondRepo(BaseModel):
         招标方式   1价格招标2利率招标3数量招标
     b_info_repo_type: NUMBER(9,0)
         回购类型   517001000：正回购517002000：逆回购
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondRepo"
@@ -32,4 +36,6 @@ class CBondRepo(BaseModel):
     b_tender_amount = Column(NUMBER(20,4))
     b_tender_method = Column(NUMBER(9,0))
     b_info_repo_type = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

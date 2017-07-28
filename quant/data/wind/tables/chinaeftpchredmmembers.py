@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaEFTPchRedmMembers(BaseModel):
     """
-    中国ETF申购赎回成份
+    4.86 中国ETF申购赎回成份
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class ChinaEFTPchRedmMembers(BaseModel):
         现金替代溢价比例(%)   
     f_info_casubamount: NUMBER(20,4)
         固定替代金额(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaEFTPchRedmMembers"
@@ -35,4 +39,6 @@ class ChinaEFTPchRedmMembers(BaseModel):
     f_info_cashsubsign = Column(NUMBER(1,0))
     f_info_casubpremra = Column(NUMBER(20,4))
     f_info_casubamount = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

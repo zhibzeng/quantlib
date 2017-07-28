@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class MergerParticipant(BaseModel):
     """
-    并购事件参与方
+    4.112 并购事件参与方
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class MergerParticipant(BaseModel):
         标的方评估价值   
     appreciation_rate: NUMBER(20, 4)
         标的方增值率   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "MergerParticipant"
@@ -56,4 +60,6 @@ class MergerParticipant(BaseModel):
     stockright_proportion = Column(NUMBER(20, 4))
     evalue_value = Column(NUMBER(20, 4))
     appreciation_rate = Column(NUMBER(20, 4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

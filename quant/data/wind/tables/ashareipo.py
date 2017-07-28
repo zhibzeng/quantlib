@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIPO(BaseModel):
     """
-    中国A股首次公开发行数据
+    4.17 中国A股首次公开发行数据
 
     Attributes
     ----------
@@ -114,6 +114,10 @@ class AShareIPO(BaseModel):
         是否发行失败   0:发行正常;1:发行失败;2:发行暂缓
     s_ipo_otc_cash_pct: NUMBER(24,8)
         网下申购配售比例   网下中签率
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIPO"
@@ -170,4 +174,6 @@ class AShareIPO(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     is_failure = Column(NUMBER(5,0))
     s_ipo_otc_cash_pct = Column(NUMBER(24,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

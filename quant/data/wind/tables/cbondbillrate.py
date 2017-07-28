@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondBillRate(BaseModel):
     """
-    票据利率
+    4.171 票据利率
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class CBondBillRate(BaseModel):
         交易日期   
     b_info_rate: NUMBER(20,6)
         利率(%)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondBillRate"
@@ -23,4 +27,6 @@ class CBondBillRate(BaseModel):
     b_info_ratetype = Column(VARCHAR2(100))
     trade_dt = Column(VARCHAR2(8))
     b_info_rate = Column(NUMBER(20,6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

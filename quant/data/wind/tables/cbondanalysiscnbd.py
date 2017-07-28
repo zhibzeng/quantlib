@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondAnalysisCNBD(BaseModel):
     """
-    中债登估值
+    4.209 中债登估值
 
     Attributes
     ----------
@@ -68,6 +68,10 @@ class CBondAnalysisCNBD(BaseModel):
         流通场所   
     b_anal_credibility: NUMBER(20,4)
         可信度   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondAnalysisCNBD"
@@ -101,4 +105,6 @@ class CBondAnalysisCNBD(BaseModel):
     b_anal_bpyield = Column(NUMBER(20,4))
     b_anal_exchange = Column(NUMBER(20,4))
     b_anal_credibility = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

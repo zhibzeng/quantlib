@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCompanyfilings(BaseModel):
     """
-    中国A股公司公告
+    4.100 中国A股公司公告
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class AShareCompanyfilings(BaseModel):
         标题   
     s_est_flsabstract_inst: CLOB
         摘要   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCompanyfilings"
@@ -26,4 +30,6 @@ class AShareCompanyfilings(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     s_est_flstitle_inst = Column(VARCHAR2(100))
     s_est_flsabstract_inst = Column(CLOB)
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

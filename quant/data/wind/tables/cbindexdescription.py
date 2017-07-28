@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBIndexDescription(BaseModel):
     """
-    中国债券指数基本资料
+    4.161 中国债券指数基本资料
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CBIndexDescription(BaseModel):
         发布日期   
     s_info_index_weightsrule: VARCHAR2(10)
         加权方式   1：自由流通股本2：总股本3：分级靠档14：分级靠档25：新华富时6：MSCI7：沪深300反算权数8：分级靠档39：基本面50反算权数10：等权重
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBIndexDescription"
@@ -41,4 +45,6 @@ class CBIndexDescription(BaseModel):
     s_info_index_basept = Column(NUMBER(20,4))
     s_info_listdate = Column(VARCHAR2(8))
     s_info_index_weightsrule = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

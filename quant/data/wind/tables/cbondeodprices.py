@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondEODPrices(BaseModel):
     """
-    中国债券交易所债券行情
+    4.150 中国债券交易所债券行情
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class CBondEODPrices(BaseModel):
         成交金额(千元)   
     s_dq_avgprice: NUMBER(20,4)
         均价(VWAP)   成交金额/成交量
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondEODPrices"
@@ -53,4 +57,6 @@ class CBondEODPrices(BaseModel):
     s_dq_volume = Column(NUMBER(20,4))
     s_dq_amount = Column(NUMBER(20,4))
     s_dq_avgprice = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondPreRelease(BaseModel):
     """
-    中国债券预发行资料
+    4.131 中国债券预发行资料
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CBondPreRelease(BaseModel):
         参考久期   
     price_type_code: NUMBER(9,0)
         价格类型代码   利率：530001000价格：530003000
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondPreRelease"
@@ -41,4 +45,6 @@ class CBondPreRelease(BaseModel):
     s_base_info = Column(NUMBER(24,8))
     b_anal_rduration = Column(NUMBER(24,8))
     price_type_code = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

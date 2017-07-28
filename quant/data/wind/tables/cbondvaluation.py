@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondValuation(BaseModel):
     """
-    中国债券衍生指标
+    4.155 中国债券衍生指标
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class CBondValuation(BaseModel):
         到期收益率(%)   
     b_info_weightedrt: NUMBER(24,8)
         加权剩余期限(年)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondValuation"
@@ -56,4 +60,6 @@ class CBondValuation(BaseModel):
     b_anal_ptmyear = Column(NUMBER(20,4))
     b_anal_ytm = Column(NUMBER(24,8))
     b_info_weightedrt = Column(NUMBER(24,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

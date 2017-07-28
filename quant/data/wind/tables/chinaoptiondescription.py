@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaOptionDescription(BaseModel):
     """
-    中国期权基本资料
+    4.192 中国期权基本资料
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class ChinaOptionDescription(BaseModel):
         挂牌基准价   
     s_info_trade: VARCHAR2(1)
         是否交易   0:否1:是
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaOptionDescription"
@@ -56,4 +60,6 @@ class ChinaOptionDescription(BaseModel):
     s_info_lddate = Column(VARCHAR2(8))
     s_info_lprice = Column(NUMBER(20,4))
     s_info_trade = Column(VARCHAR2(1))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

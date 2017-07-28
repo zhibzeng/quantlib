@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareFinancialExpense(BaseModel):
     """
-    中国A股财务费用明细
+    4.58 中国A股财务费用明细
 
     Attributes
     ----------
@@ -17,7 +17,25 @@ class AShareFinancialExpense(BaseModel):
     report_period: VARCHAR2(8)
         报告期   
     statement_typecode: NUMBER(9,0)
-        报表类型代码   报表类型:408001000:合并报表408004000:合并报表(调整)408005000:合并报表(更正前)408006000:母公司报表408009000:
+        报表类型代码   报表类型:408001000:合并报表408004000:合并报表(调整)408005000:合并报表(更正前)408006000:母公司报表408009000:母公司报表(调整)408010000:母公司报表(更正前)
+    s_stmnote_intexp: NUMBER(20,4)
+        利息支出(元)   
+    s_stmnote_intinc: NUMBER(20,4)
+        减：利息收入(元)   
+    s_stmnote_exch: NUMBER(20,4)
+        汇兑损益(元)   
+    s_stmnote_fee: NUMBER(20,4)
+        手续费(元)   
+    s_stmnote_others: NUMBER(20,4)
+        其他(元)   
+    s_stmnote_finexp: NUMBER(20,4)
+        合计(元)   
+    s_stmnote_finexp_1: NUMBER(20,4)
+        减：利息资本化金额(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareFinancialExpense"
@@ -26,4 +44,13 @@ class AShareFinancialExpense(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     report_period = Column(VARCHAR2(8))
     statement_typecode = Column(NUMBER(9,0))
+    s_stmnote_intexp = Column(NUMBER(20,4))
+    s_stmnote_intinc = Column(NUMBER(20,4))
+    s_stmnote_exch = Column(NUMBER(20,4))
+    s_stmnote_fee = Column(NUMBER(20,4))
+    s_stmnote_others = Column(NUMBER(20,4))
+    s_stmnote_finexp = Column(NUMBER(20,4))
+    s_stmnote_finexp_1 = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

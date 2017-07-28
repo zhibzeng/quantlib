@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondIssuerRating(BaseModel):
     """
-    中国债券主体信用评级
+    4.145 中国债券主体信用评级
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class CBondIssuerRating(BaseModel):
         债券主体公司id   
     b_info_creditratingexplain: VARCHAR2(1000)
         信用评级说明   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondIssuerRating"
@@ -38,4 +42,6 @@ class CBondIssuerRating(BaseModel):
     b_info_creditratingagency = Column(VARCHAR2(10))
     s_info_compcode = Column(VARCHAR2(10))
     b_info_creditratingexplain = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

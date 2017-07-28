@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEquityTransfer(BaseModel):
     """
-    中国A股股权转让
+    4.108 中国A股股权转让
 
     Attributes
     ----------
@@ -58,6 +58,10 @@ class AShareEquityTransfer(BaseModel):
         证监会批准公告日期   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEquityTransfer"
@@ -86,4 +90,6 @@ class AShareEquityTransfer(BaseModel):
     sasacdate = Column(VARCHAR2(8))
     approveddate = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

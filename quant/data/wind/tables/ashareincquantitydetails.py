@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIncQuantityDetails(BaseModel):
     """
-    中国A股股权激励数量明细
+    4.97 中国A股股权激励数量明细
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class AShareIncQuantityDetails(BaseModel):
         占本次授予总数量比例(%)   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIncQuantityDetails"
@@ -35,4 +39,6 @@ class AShareIncQuantityDetails(BaseModel):
     s_inc_quantity = Column(NUMBER(20,4))
     s_inc_totalqtypct = Column(NUMBER(20,4))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

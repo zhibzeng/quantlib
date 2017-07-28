@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondIndexEODCNBD(BaseModel):
     """
-    中债登指数行情
+    4.210 中债登指数行情
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class CBondIndexEODCNBD(BaseModel):
         指数总市值(亿元)   
     avgmvduration: NUMBER(20,4)
         平均市值法久期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondIndexEODCNBD"
@@ -29,4 +33,6 @@ class CBondIndexEODCNBD(BaseModel):
     s_dq_close = Column(NUMBER(20,4))
     s_val_pe = Column(NUMBER(20,4))
     avgmvduration = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

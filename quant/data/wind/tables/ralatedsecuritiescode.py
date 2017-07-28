@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class RalatedSecuritiesCode(BaseModel):
     """
-    证券关系表
+    4.223 证券关系表
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class RalatedSecuritiesCode(BaseModel):
         生效日期   
     s_info_invalid_dt: VARCHAR2(8)
         失效日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "RalatedSecuritiesCode"
@@ -29,4 +33,6 @@ class RalatedSecuritiesCode(BaseModel):
     s_relation_typcode = Column(VARCHAR2(10))
     s_info_effective_dt = Column(VARCHAR2(8))
     s_info_invalid_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

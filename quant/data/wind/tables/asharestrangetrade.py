@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareStrangeTrade(BaseModel):
     """
-    中国A股证券交易异动营业部买卖信息
+    4.41 中国A股证券交易异动营业部买卖信息
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class AShareStrangeTrade(BaseModel):
         买入金额(元)   
     s_strange_sellamount: NUMBER(20,4)
         卖出金额(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareStrangeTrade"
@@ -44,4 +48,6 @@ class AShareStrangeTrade(BaseModel):
     s_strange_traderamount = Column(NUMBER(20,4))
     s_strange_buyamount = Column(NUMBER(20,4))
     s_strange_sellamount = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

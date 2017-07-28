@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMonthlyYield(BaseModel):
     """
-    中国A股月收益率
+    4.29 中国A股月收益率
 
     Attributes
     ----------
@@ -40,6 +40,10 @@ class AShareMonthlyYield(BaseModel):
         月收益率标准差(60月)   
     s_mq_avgpctchange60: NUMBER(20,4)
         月收益率平均值(60月)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMonthlyYield"
@@ -59,4 +63,6 @@ class AShareMonthlyYield(BaseModel):
     s_mq_varpctchange60 = Column(NUMBER(20,4))
     s_mq_devpctchange60 = Column(NUMBER(20,4))
     s_mq_avgpctchange60 = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

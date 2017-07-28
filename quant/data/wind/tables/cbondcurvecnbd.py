@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondCurveCNBD(BaseModel):
     """
-    中债登收益率曲线
+    4.208 中债登收益率曲线
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class CBondCurveCNBD(BaseModel):
         标准期限(年)   
     b_anal_yield: NUMBER(20,4)
         收益率(%)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondCurveCNBD"
@@ -32,4 +36,6 @@ class CBondCurveCNBD(BaseModel):
     b_anal_curvetype = Column(VARCHAR2(80))
     b_anal_curveterm = Column(NUMBER(20,4))
     b_anal_yield = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

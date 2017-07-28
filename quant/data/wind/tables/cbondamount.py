@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondAmount(BaseModel):
     """
-    中国债券份额变动
+    4.137 中国债券份额变动
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class CBondAmount(BaseModel):
         变动原因   1本金提前兑付2到期3回售4可转债上市5上市6赎回7增发8债券调换9转债转股
     b_info_outstandingbalance: NUMBER(20,4)
         债券份额(亿元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondAmount"
@@ -26,4 +30,6 @@ class CBondAmount(BaseModel):
     s_info_enddate = Column(VARCHAR2(8))
     b_info_changereason = Column(NUMBER(9,0))
     b_info_outstandingbalance = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

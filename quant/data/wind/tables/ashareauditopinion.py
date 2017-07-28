@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareAuditOpinion(BaseModel):
     """
-    中国A股审计意见
+    4.52 中国A股审计意见
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareAuditOpinion(BaseModel):
         会计师事务所   境内
     s_stmnote_audit_cpa: VARCHAR2(100)
         签字会计师   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareAuditOpinion"
@@ -32,4 +36,6 @@ class AShareAuditOpinion(BaseModel):
     s_stmnote_audit_category = Column(NUMBER(9,0))
     s_stmnote_audit_agency = Column(VARCHAR2(100))
     s_stmnote_audit_cpa = Column(VARCHAR2(100))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CGBbenchmark(BaseModel):
     """
-    中国国债基准收益率
+    4.189 中国国债基准收益率
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class CGBbenchmark(BaseModel):
         最高利率(%)   
     s_dq_low: NUMBER(20,4)
         最低利率(%)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CGBbenchmark"
@@ -32,4 +36,6 @@ class CGBbenchmark(BaseModel):
     s_dq_open = Column(NUMBER(20,4))
     s_dq_high = Column(NUMBER(20,4))
     s_dq_low = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

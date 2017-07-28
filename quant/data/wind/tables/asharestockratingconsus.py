@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareStockRatingConsus(BaseModel):
     """
-    中国A股投资评级汇总
+    4.76 中国A股投资评级汇总
 
     Attributes
     ----------
@@ -40,6 +40,10 @@ class AShareStockRatingConsus(BaseModel):
         一致预测目标价   
     s_est_priceinstnum: NUMBER(20,4)
         目标价预测机构数   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareStockRatingConsus"
@@ -59,4 +63,6 @@ class AShareStockRatingConsus(BaseModel):
     s_wrating_cycle = Column(VARCHAR2(10))
     s_est_price = Column(NUMBER(20,4))
     s_est_priceinstnum = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

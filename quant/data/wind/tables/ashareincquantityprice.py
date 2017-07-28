@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIncQuantityPrice(BaseModel):
     """
-    中国A股股权激励数量与价格
+    4.96 中国A股股权激励数量与价格
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class AShareIncQuantityPrice(BaseModel):
         截止日期   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIncQuantityPrice"
@@ -44,4 +48,6 @@ class AShareIncQuantityPrice(BaseModel):
     s_inc_dnexec_quantity = Column(NUMBER(20,4))
     s_inc_enddate = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

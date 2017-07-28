@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMajorEvent(BaseModel):
     """
-    中国A股重大事件表
+    4.90 中国A股重大事件表
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class AShareMajorEvent(BaseModel):
         事件说明   
     s_event_templateid: NUMBER(12,0)
         模板ID   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMajorEvent"
@@ -35,4 +39,6 @@ class AShareMajorEvent(BaseModel):
     s_event_expdate = Column(VARCHAR2(8))
     s_event_content = Column(VARCHAR2(4000))
     s_event_templateid = Column(NUMBER(12,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

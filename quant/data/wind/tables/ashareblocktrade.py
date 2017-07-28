@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareBlockTrade(BaseModel):
     """
-    中国A股大宗交易数据
+    4.34 中国A股大宗交易数据
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class AShareBlockTrade(BaseModel):
         卖方营业部名称   
     s_block_frequency: NUMBER(20,4)
         笔数   (同一代码+同一日期+同一机构+同一成交价+同一成交量)累计的笔数
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareBlockTrade"
@@ -41,4 +45,6 @@ class AShareBlockTrade(BaseModel):
     s_block_buyername = Column(VARCHAR2(200))
     s_block_sellername = Column(VARCHAR2(200))
     s_block_frequency = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

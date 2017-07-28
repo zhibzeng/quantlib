@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CommitProfitSummary(BaseModel):
     """
-    中国A股盈利承诺汇总表
+    4.102 中国A股盈利承诺汇总表
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class CommitProfitSummary(BaseModel):
         上市公司盈利预测(元)   
     supplytype: NUMBER(9,0)
         盈利补偿方法代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CommitProfitSummary"
@@ -56,4 +60,6 @@ class CommitProfitSummary(BaseModel):
     injectedassetnetprofitest = Column(NUMBER(20,4))
     earningest = Column(NUMBER(20,4))
     supplytype = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

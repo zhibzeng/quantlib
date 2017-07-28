@@ -1,0 +1,53 @@
+<html>
+    <head>
+        <script src="{{ 'js/jquery.min.js' |staticfile }}"></script>
+        <script src="{{ 'js/bootstrap.min.js' |staticfile }}"></script>
+        <script src="{{ 'js/bootstrap-select.min.js' |staticfile }}"></script>
+        <script src="{{ 'js/jquery-ui.min.js' |staticfile }}"></script>
+        <script src="{{ 'js/custom.js' |staticfile }}"></script>
+        <link href="{{ 'css/bootstrap.min.css' |staticfile }}" rel="stylesheet">
+        <link href="{{ 'css/bootstrap-select.min.css' |staticfile }}" rel="stylesheet">
+        <link href="{{ 'css/jquery-ui.min.css' |staticfile }}" rel="stylesheet">
+        <link href="{{ 'css/custom.css' |staticfile }}" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-1 col-sm-1">
+                    <select id="aggfunc" style="margin-top:5px">
+                        <option value="count">Count</option>
+                        <option value="distinct">Count Distinct</option>
+                        <option value="mean">Average</option>
+                        <option value="sum">Sum</option>
+                        <option value="max">Max</option>
+                        <option value="min">Min</option>
+                        <option value="std">Var</option>
+                        <option value="var">Std</option>
+                    </select>
+                </div>
+                <div class="col-md-11 col-sm-11"><ul class="fields nav nav-pills" id="idle-fields"></ul></div>
+            </div>
+            <div class="row">
+                <div class="col-md-1 col-sm-1">
+                    <!-- left-top -->
+                    <ul class="fields nav nav-pills nav-stacked" id="values"></ul>
+                </div>
+                <div class="col-md-11 col-sm-11">
+                    <!-- right-top -->
+                    <ul class="fields nav nav-pills" id="columns"></ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1 col-sm-1">
+                    <!-- left-bottom -->
+                    <ul class="fields nav nav-pill nav-stacked" id="index">
+                    </ul>
+                </div>
+                <div class="col-md-11 col-sm-11">
+                    <div id="table"></div>
+                    <!-- right-bottom -->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

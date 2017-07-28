@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEquityRelationships(BaseModel):
     """
-    中国A股股权关系
+    4.105 中国A股股权关系
 
     Attributes
     ----------
@@ -33,7 +33,15 @@ class AShareEquityRelationships(BaseModel):
     is_actualcontroller: NUMBER(5,0)
         股东是否为实际控制人   0:否1:是
     actualcontroller_type: VARCHAR2(80)
-        实际控制人类型   大学地方国有企业地方国资委地方政府个人国资委集体企业
+        实际控制人类型   大学地方国有企业地方国资委地方政府个人国资委集体企业境外其他职工持股会(工会)中央国家机关中央国有企业
+    actualcontroller_is_ann: NUMBER(5,0)
+        股东是否为公布实际控制人   0:否1:是
+    actualcontroller_intro: VARCHAR2(1000)
+        实际控制人简介   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEquityRelationships"
@@ -50,4 +58,8 @@ class AShareEquityRelationships(BaseModel):
     s_holder_pct = Column(NUMBER(20,4))
     is_actualcontroller = Column(NUMBER(5,0))
     actualcontroller_type = Column(VARCHAR2(80))
+    actualcontroller_is_ann = Column(NUMBER(5,0))
+    actualcontroller_intro = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

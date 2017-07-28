@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CCBondValuation(BaseModel):
     """
-    中国可转债衍生指标
+    4.141 中国可转债衍生指标
 
     Attributes
     ----------
@@ -40,6 +40,10 @@ class CCBondValuation(BaseModel):
         转股溢价   指定日转债收盘价－转换价值
     cb_anal_convpremiumratio: NUMBER(20,4)
         转股溢价率   [指定日转债收盘价－转换价值]/转换价值
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CCBondValuation"
@@ -59,4 +63,6 @@ class CCBondValuation(BaseModel):
     cb_anal_convvalue = Column(NUMBER(20,4))
     cb_anal_convpremium = Column(NUMBER(20,4))
     cb_anal_convpremiumratio = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

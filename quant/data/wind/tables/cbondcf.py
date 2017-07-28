@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondCF(BaseModel):
     """
-    中国债券现金流
+    4.154 中国债券现金流
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class CBondCF(BaseModel):
         期末每百元面额应付本金   
     b_info_paymentsum: NUMBER(22,6)
         期末每百元面额现金流合计   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondCF"
@@ -38,4 +42,6 @@ class CBondCF(BaseModel):
     b_info_paymentinterest = Column(NUMBER(22,6))
     b_info_paymentparvalue = Column(NUMBER(22,6))
     b_info_paymentsum = Column(NUMBER(22,6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

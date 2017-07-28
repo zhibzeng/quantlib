@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEquityPledgeInfo(BaseModel):
     """
-    中国A股股权质押信息
+    4.106 中国A股股权质押信息
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class AShareEquityPledgeInfo(BaseModel):
         解押日期   
     s_remark: VARCHAR2(1000)
         备注   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEquityPledgeInfo"
@@ -41,4 +45,6 @@ class AShareEquityPledgeInfo(BaseModel):
     s_pledgor = Column(VARCHAR2(200))
     s_discharge_date = Column(VARCHAR2(8))
     s_remark = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondTenderresult(BaseModel):
     """
-    中国债券招标结果
+    4.136 中国债券招标结果
 
     Attributes
     ----------
@@ -72,6 +72,10 @@ class CBondTenderresult(BaseModel):
         全场中标利差(%)   
     s_ipo_ovrsubratio: NUMBER(20,4)
         超额认购倍数   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondTenderresult"
@@ -107,4 +111,6 @@ class CBondTenderresult(BaseModel):
     b_tendrst_bidprice = Column(NUMBER(20,4))
     b_tendrst_bidspread = Column(NUMBER(20,4))
     s_ipo_ovrsubratio = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

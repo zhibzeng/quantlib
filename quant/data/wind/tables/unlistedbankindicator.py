@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedBankIndicator(BaseModel):
     """
-    非上市银行专用指标
+    4.59 非上市银行专用指标
 
     Attributes
     ----------
@@ -116,6 +116,10 @@ class UnlistedBankIndicator(BaseModel):
         计息负债是否是发布值   
     net_interest_margin_ifpub: NUMBER(1,0)
         净利差是否是发布值   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedBankIndicator"
@@ -173,4 +177,6 @@ class UnlistedBankIndicator(BaseModel):
     interest_bearing_asset_ifpub = Column(NUMBER(1,0))
     interest_bearing_lia_ifpub = Column(NUMBER(1,0))
     net_interest_margin_ifpub = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

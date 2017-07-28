@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CSIndexMembersCorpActions(BaseModel):
     """
-    中证指数成分公司行为
+    4.206 中证指数成分公司行为
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CSIndexMembersCorpActions(BaseModel):
         分红额英文：Dividendpershare   
     s_share_index: NUMBER(20,2)
         计算用股本英文：Sharesinindex   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CSIndexMembersCorpActions"
@@ -41,4 +45,6 @@ class CSIndexMembersCorpActions(BaseModel):
     s_rightsissue_price = Column(NUMBER(20,4))
     s_div_cash = Column(NUMBER(20,6))
     s_share_index = Column(NUMBER(20,2))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

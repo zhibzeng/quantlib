@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class FXRMBMidRate(BaseModel):
     """
-    中国外汇市场汇率
+    4.197 中国外汇市场汇率
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class FXRMBMidRate(BaseModel):
         日期   
     crncy_midrate: NUMBER(20,6)
         中间价   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "FXRMBMidRate"
@@ -23,4 +27,6 @@ class FXRMBMidRate(BaseModel):
     crncy_code = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     crncy_midrate = Column(NUMBER(20,6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CompIntroduction(BaseModel):
     """
-    公司简介
+    4.221 公司简介
 
     Attributes
     ----------
@@ -70,6 +70,10 @@ class CompIntroduction(BaseModel):
         员工总数(人)   
     main_business: VARCHAR2(1000)
         主要产品及业务   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CompIntroduction"
@@ -104,4 +108,6 @@ class CompIntroduction(BaseModel):
     company_type = Column(VARCHAR2(10))
     totalemployees = Column(NUMBER(20,0))
     main_business = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

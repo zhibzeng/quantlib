@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CGoldSpotDescription(BaseModel):
     """
-    中国黄金现货基本资料
+    4.183 中国黄金现货基本资料
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class CGoldSpotDescription(BaseModel):
         交易所   SGE：上海黄金交易所
     s_info_punit: VARCHAR2(40)
         交易单位   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CGoldSpotDescription"
@@ -29,4 +33,6 @@ class CGoldSpotDescription(BaseModel):
     s_info_name = Column(VARCHAR2(50))
     s_info_exchmarket = Column(VARCHAR2(10))
     s_info_punit = Column(VARCHAR2(40))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ASharePlacementDetails(BaseModel):
     """
-    中国A股网下配售机构获配明细
+    4.23 中国A股网下配售机构获配明细
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class ASharePlacementDetails(BaseModel):
         截止日期   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ASharePlacementDetails"
@@ -41,4 +45,6 @@ class ASharePlacementDetails(BaseModel):
     placement = Column(NUMBER(20,4))
     trade_dt = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

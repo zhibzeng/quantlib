@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedBankIncome(BaseModel):
     """
-    非上市银行利润表
+    4.63 非上市银行利润表
 
     Attributes
     ----------
@@ -110,6 +110,10 @@ class UnlistedBankIncome(BaseModel):
         综合收益总额(少数股东)   
     tot_compreh_inc_parent_comp: NUMBER(20,4)
         综合收益总额(母公司)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedBankIncome"
@@ -164,4 +168,6 @@ class UnlistedBankIncome(BaseModel):
     tot_compreh_inc = Column(NUMBER(20,4))
     tot_compreh_inc_min_shrhldr = Column(NUMBER(20,4))
     tot_compreh_inc_parent_comp = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

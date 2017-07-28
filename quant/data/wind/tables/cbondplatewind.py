@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondPlateWind(BaseModel):
     """
-    中国Wind债券概念板块
+    4.121 中国Wind债券概念板块
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class CBondPlateWind(BaseModel):
         板块代码   
     s_info_industryname: VARCHAR2(100)
         板块名称   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondPlateWind"
@@ -23,4 +27,6 @@ class CBondPlateWind(BaseModel):
     s_info_windcode = Column(VARCHAR2(40))
     s_info_industrycode = Column(VARCHAR2(20))
     s_info_industryname = Column(VARCHAR2(100))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

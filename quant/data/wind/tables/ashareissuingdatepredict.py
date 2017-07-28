@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIssuingDatePredict(BaseModel):
     """
-    中国A股定期报告披露日期
+    4.50 中国A股定期报告披露日期
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareIssuingDatePredict(BaseModel):
         更正公告披露次数   
     s_stm_correct_issuingdate: VARCHAR2(100)
         更正公告披露日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIssuingDatePredict"
@@ -32,4 +36,6 @@ class AShareIssuingDatePredict(BaseModel):
     s_stm_actual_issuingdate = Column(VARCHAR2(8))
     s_stm_correct_num = Column(VARCHAR2(20))
     s_stm_correct_issuingdate = Column(VARCHAR2(100))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

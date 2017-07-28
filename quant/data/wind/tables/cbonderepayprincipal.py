@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CbondERepayPrincipal(BaseModel):
     """
-    中国债券本金提前偿还明细
+    4.143 中国债券本金提前偿还明细
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class CbondERepayPrincipal(BaseModel):
         本金偿还比例   
     b_info_erepaytpe: NUMBER(1,0)
         提前还本方式代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CbondERepayPrincipal"
@@ -26,4 +30,6 @@ class CbondERepayPrincipal(BaseModel):
     b_info_repaypridt = Column(VARCHAR2(8))
     b_info_repayprirate = Column(NUMBER(20,4))
     b_info_erepaytpe = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

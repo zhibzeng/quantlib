@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class SIndexPerformance(BaseModel):
     """
-    中国股票指数业绩表现
+    4.89 中国股票指数业绩表现
 
     Attributes
     ----------
@@ -60,6 +60,10 @@ class SIndexPerformance(BaseModel):
         2年夏普比率   
     sharpratio_3y: NUMBER(20,6)
         3年夏普比率   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "SIndexPerformance"
@@ -89,4 +93,6 @@ class SIndexPerformance(BaseModel):
     sharpratio_1y = Column(NUMBER(20,6))
     sharpratio_2y = Column(NUMBER(20,6))
     sharpratio_3y = Column(NUMBER(20,6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

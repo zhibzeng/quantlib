@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCompRestricted(BaseModel):
     """
-    中国A股限售股解禁公司明细
+    4.22 中国A股限售股解禁公司明细
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareCompRestricted(BaseModel):
         可流通数量占总股本比例(%)   
     s_share_placement_enddt: VARCHAR2(8)
         配售截止日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCompRestricted"
@@ -38,4 +42,6 @@ class AShareCompRestricted(BaseModel):
     s_share_lst = Column(NUMBER(20,4))
     s_share_ratio = Column(NUMBER(20,4))
     s_share_placement_enddt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

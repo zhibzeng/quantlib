@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AMSCIIndexEOD(BaseModel):
     """
-    MSCI指数行情
+    4.203 MSCI指数行情
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AMSCIIndexEOD(BaseModel):
         调整市值(百万元)   
     s_dq_islocalcrncy: NUMBER(1,0)
         是否本地货币   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AMSCIIndexEOD"
@@ -38,4 +42,6 @@ class AMSCIIndexEOD(BaseModel):
     s_dq_clomktcap = Column(NUMBER(20,6))
     s_dq_adjmktcap = Column(NUMBER(20,6))
     s_dq_islocalcrncy = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

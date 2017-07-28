@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondBalanceSheet(BaseModel):
     """
-    中国债券发行主体资产负债表
+    4.158 中国债券发行主体资产负债表
 
     Attributes
     ----------
@@ -121,7 +121,157 @@ class CBondBalanceSheet(BaseModel):
     rcv_ceded_life_insur_rsrv: NUMBER(20,4)
         应收分保寿险责任准备金   
     rcv_ceded_lt_health_insur_rsrv: NUMBER(20,4)
-        应收分保长期健康险   
+        应收分保长期健康险责任准备金   
+    mrgn_paid: NUMBER(20,4)
+        存出保证金   
+    insured_pledge_loan: NUMBER(20,4)
+        保户质押贷款   
+    cap_mrgn_paid: NUMBER(20,4)
+        存出资本保证金   
+    independent_acct_assets: NUMBER(20,4)
+        独立账户资产   
+    clients_cap_deposit: NUMBER(20,4)
+        客户资金存款   
+    clients_rsrv_settle: NUMBER(20,4)
+        客户备付金   
+    incl_seat_fees_exchange: NUMBER(20,4)
+        其中:交易席位费   
+    rcv_invest: NUMBER(20,4)
+        应收款项类投资   
+    tot_assets: NUMBER(20,4)
+        资产总计   
+    st_borrow: NUMBER(20,4)
+        短期借款   
+    borrow_central_bank: NUMBER(20,4)
+        向中央银行借款   
+    deposit_received_ib_deposits: NUMBER(20,4)
+        吸收存款及同业存放   
+    loans_oth_banks: NUMBER(20,4)
+        拆入资金   
+    tradable_fin_liab: NUMBER(20,4)
+        交易性金融负债   
+    notes_payable: NUMBER(20,4)
+        应付票据   
+    acct_payable: NUMBER(20,4)
+        应付账款   
+    adv_from_cust: NUMBER(20,4)
+        预收款项   
+    fund_sales_fin_assets_rp: NUMBER(20,4)
+        卖出回购金融资产款   
+    handling_charges_comm_payable: NUMBER(20,4)
+        应付手续费及佣金   
+    empl_ben_payable: NUMBER(20,4)
+        应付职工薪酬   
+    taxes_surcharges_payable: NUMBER(20,4)
+        应交税费   
+    int_payable: NUMBER(20,4)
+        应付利息   
+    dvd_payable: NUMBER(20,4)
+        应付股利   
+    oth_payable: NUMBER(20,4)
+        其他应付款   
+    acc_exp: NUMBER(20,4)
+        预提费用   
+    deferred_inc: NUMBER(20,4)
+        递延收益   
+    st_bonds_payable: NUMBER(20,4)
+        应付短期债券   
+    payable_to_reinsurer: NUMBER(20,4)
+        应付分保账款   
+    rsrv_insur_cont: NUMBER(20,4)
+        保险合同准备金   
+    acting_trading_sec: NUMBER(20,4)
+        代理买卖证券款   
+    acting_uw_sec: NUMBER(20,4)
+        代理承销证券款   
+    non_cur_liab_due_within_1y: NUMBER(20,4)
+        一年内到期的非流动负债   
+    oth_cur_liab: NUMBER(20,4)
+        其他流动负债   
+    tot_cur_liab: NUMBER(20,4)
+        流动负债合计   
+    lt_borrow: NUMBER(20,4)
+        长期借款   
+    bonds_payable: NUMBER(20,4)
+        应付债券   
+    lt_payable: NUMBER(20,4)
+        长期应付款   
+    specific_item_payable: NUMBER(20,4)
+        专项应付款   
+    provisions: NUMBER(20,4)
+        预计负债   
+    deferred_tax_liab: NUMBER(20,4)
+        递延所得税负债   
+    deferred_inc_non_cur_liab: NUMBER(20,4)
+        递延收益-非流动负债   
+    oth_non_cur_liab: NUMBER(20,4)
+        其他非流动负债   
+    tot_non_cur_liab: NUMBER(20,4)
+        非流动负债合计   
+    liab_dep_oth_banks_fin_inst: NUMBER(20,4)
+        同业和其它金融机构存放款项   
+    derivative_fin_liab: NUMBER(20,4)
+        衍生金融负债   
+    cust_bank_dep: NUMBER(20,4)
+        吸收存款   
+    agency_bus_liab: NUMBER(20,4)
+        代理业务负债   
+    oth_liab: NUMBER(20,4)
+        其他负债   
+    prem_received_adv: NUMBER(20,4)
+        预收保费   
+    deposit_received: NUMBER(20,4)
+        存入保证金   
+    insured_deposit_invest: NUMBER(20,4)
+        保户储金及投资款   
+    unearned_prem_rsrv: NUMBER(20,4)
+        未到期责任准备金   
+    out_loss_rsrv: NUMBER(20,4)
+        未决赔款准备金   
+    life_insur_rsrv: NUMBER(20,4)
+        寿险责任准备金   
+    lt_health_insur_v: NUMBER(20,4)
+        长期健康险责任准备金   
+    independent_acct_liab: NUMBER(20,4)
+        独立账户负债   
+    incl_pledge_loan: NUMBER(20,4)
+        其中:质押借款   
+    claims_payable: NUMBER(20,4)
+        应付赔付款   
+    dvd_payable_insured: NUMBER(20,4)
+        应付保单红利   
+    tot_liab: NUMBER(20,4)
+        负债合计   
+    cap_stk: NUMBER(20,4)
+        股本   
+    cap_rsrv: NUMBER(20,4)
+        资本公积金   
+    special_rsrv: NUMBER(20,4)
+        专项储备   
+    surplus_rsrv: NUMBER(20,4)
+        盈余公积金   
+    undistributed_profit: NUMBER(20,4)
+        未分配利润   
+    less_tsy_stk: NUMBER(20,4)
+        减:库存股   
+    prov_nom_risks: NUMBER(20,4)
+        一般风险准备   
+    cnvd_diff_foreign_curr_stat: NUMBER(20,4)
+        外币报表折算差额   
+    unconfirmed_invest_loss: NUMBER(20,4)
+        未确认的投资损失   
+    minority_int: NUMBER(20,4)
+        少数股东权益   
+    tot_shrhldr_eqy_excl_min_int: NUMBER(20,4)
+        股东权益合计(不含少数股东权益)   
+    tot_shrhldr_eqy_incl_min_int: NUMBER(20,4)
+        股东权益合计(含少数股东权益)   
+    tot_liab_shrhldr_eqy: NUMBER(20,4)
+        负债及股东权益总计   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondBalanceSheet"
@@ -182,4 +332,79 @@ class CBondBalanceSheet(BaseModel):
     rcv_ceded_claim_rsrv = Column(NUMBER(20,4))
     rcv_ceded_life_insur_rsrv = Column(NUMBER(20,4))
     rcv_ceded_lt_health_insur_rsrv = Column(NUMBER(20,4))
+    mrgn_paid = Column(NUMBER(20,4))
+    insured_pledge_loan = Column(NUMBER(20,4))
+    cap_mrgn_paid = Column(NUMBER(20,4))
+    independent_acct_assets = Column(NUMBER(20,4))
+    clients_cap_deposit = Column(NUMBER(20,4))
+    clients_rsrv_settle = Column(NUMBER(20,4))
+    incl_seat_fees_exchange = Column(NUMBER(20,4))
+    rcv_invest = Column(NUMBER(20,4))
+    tot_assets = Column(NUMBER(20,4))
+    st_borrow = Column(NUMBER(20,4))
+    borrow_central_bank = Column(NUMBER(20,4))
+    deposit_received_ib_deposits = Column(NUMBER(20,4))
+    loans_oth_banks = Column(NUMBER(20,4))
+    tradable_fin_liab = Column(NUMBER(20,4))
+    notes_payable = Column(NUMBER(20,4))
+    acct_payable = Column(NUMBER(20,4))
+    adv_from_cust = Column(NUMBER(20,4))
+    fund_sales_fin_assets_rp = Column(NUMBER(20,4))
+    handling_charges_comm_payable = Column(NUMBER(20,4))
+    empl_ben_payable = Column(NUMBER(20,4))
+    taxes_surcharges_payable = Column(NUMBER(20,4))
+    int_payable = Column(NUMBER(20,4))
+    dvd_payable = Column(NUMBER(20,4))
+    oth_payable = Column(NUMBER(20,4))
+    acc_exp = Column(NUMBER(20,4))
+    deferred_inc = Column(NUMBER(20,4))
+    st_bonds_payable = Column(NUMBER(20,4))
+    payable_to_reinsurer = Column(NUMBER(20,4))
+    rsrv_insur_cont = Column(NUMBER(20,4))
+    acting_trading_sec = Column(NUMBER(20,4))
+    acting_uw_sec = Column(NUMBER(20,4))
+    non_cur_liab_due_within_1y = Column(NUMBER(20,4))
+    oth_cur_liab = Column(NUMBER(20,4))
+    tot_cur_liab = Column(NUMBER(20,4))
+    lt_borrow = Column(NUMBER(20,4))
+    bonds_payable = Column(NUMBER(20,4))
+    lt_payable = Column(NUMBER(20,4))
+    specific_item_payable = Column(NUMBER(20,4))
+    provisions = Column(NUMBER(20,4))
+    deferred_tax_liab = Column(NUMBER(20,4))
+    deferred_inc_non_cur_liab = Column(NUMBER(20,4))
+    oth_non_cur_liab = Column(NUMBER(20,4))
+    tot_non_cur_liab = Column(NUMBER(20,4))
+    liab_dep_oth_banks_fin_inst = Column(NUMBER(20,4))
+    derivative_fin_liab = Column(NUMBER(20,4))
+    cust_bank_dep = Column(NUMBER(20,4))
+    agency_bus_liab = Column(NUMBER(20,4))
+    oth_liab = Column(NUMBER(20,4))
+    prem_received_adv = Column(NUMBER(20,4))
+    deposit_received = Column(NUMBER(20,4))
+    insured_deposit_invest = Column(NUMBER(20,4))
+    unearned_prem_rsrv = Column(NUMBER(20,4))
+    out_loss_rsrv = Column(NUMBER(20,4))
+    life_insur_rsrv = Column(NUMBER(20,4))
+    lt_health_insur_v = Column(NUMBER(20,4))
+    independent_acct_liab = Column(NUMBER(20,4))
+    incl_pledge_loan = Column(NUMBER(20,4))
+    claims_payable = Column(NUMBER(20,4))
+    dvd_payable_insured = Column(NUMBER(20,4))
+    tot_liab = Column(NUMBER(20,4))
+    cap_stk = Column(NUMBER(20,4))
+    cap_rsrv = Column(NUMBER(20,4))
+    special_rsrv = Column(NUMBER(20,4))
+    surplus_rsrv = Column(NUMBER(20,4))
+    undistributed_profit = Column(NUMBER(20,4))
+    less_tsy_stk = Column(NUMBER(20,4))
+    prov_nom_risks = Column(NUMBER(20,4))
+    cnvd_diff_foreign_curr_stat = Column(NUMBER(20,4))
+    unconfirmed_invest_loss = Column(NUMBER(20,4))
+    minority_int = Column(NUMBER(20,4))
+    tot_shrhldr_eqy_excl_min_int = Column(NUMBER(20,4))
+    tot_shrhldr_eqy_incl_min_int = Column(NUMBER(20,4))
+    tot_liab_shrhldr_eqy = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

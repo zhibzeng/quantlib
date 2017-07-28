@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CFuturesDescription(BaseModel):
     """
-    中国期货基本资料
+    4.174 中国期货基本资料
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class CFuturesDescription(BaseModel):
         挂牌基准价   
     fs_info_ltdldate: VARCHAR2(8)
         最后交割日   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CFuturesDescription"
@@ -53,4 +57,6 @@ class CFuturesDescription(BaseModel):
     fs_info_dlmonth = Column(VARCHAR2(8))
     fs_info_lprice = Column(NUMBER(20,4))
     fs_info_ltdldate = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

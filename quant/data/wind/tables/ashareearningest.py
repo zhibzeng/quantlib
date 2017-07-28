@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEarningEst(BaseModel):
     """
-    中国A股盈利预测明细
+    4.73 中国A股盈利预测明细
 
     Attributes
     ----------
@@ -76,6 +76,10 @@ class AShareEarningEst(BaseModel):
         预测有效截止   
     s_est_ope: NUMBER(20,4)
         预测主营业务利润率   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEarningEst"
@@ -113,4 +117,6 @@ class AShareEarningEst(BaseModel):
     s_est_dividendyield = Column(NUMBER(20,4))
     s_est_enddate = Column(VARCHAR2(8))
     s_est_ope = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

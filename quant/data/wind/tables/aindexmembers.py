@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AIndexMembers(BaseModel):
     """
-    中国A股指数成份股
+    4.78 中国A股指数成份股
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AIndexMembers(BaseModel):
         剔除日期   
     cur_sign: NUMBER(1,0)
         最新标志   1:是0:否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AIndexMembers"
@@ -29,4 +33,6 @@ class AIndexMembers(BaseModel):
     s_con_indate = Column(VARCHAR2(8))
     s_con_outdate = Column(VARCHAR2(8))
     cur_sign = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

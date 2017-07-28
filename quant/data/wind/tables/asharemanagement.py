@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareManagement(BaseModel):
     """
-    中国A股公司管理层成员
+    4.13 中国A股公司管理层成员
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareManagement(BaseModel):
         职务   
     s_info_manager_introduction: VARCHAR2(2000)
         个人简历   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareManagement"
@@ -50,4 +54,6 @@ class AShareManagement(BaseModel):
     s_info_manager_type = Column(NUMBER(5,0))
     s_info_manager_post = Column(VARCHAR2(40))
     s_info_manager_introduction = Column(VARCHAR2(2000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

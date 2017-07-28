@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondIBRMBMonDMarOview(BaseModel):
     """
-    银行间本币货币市场日统计
+    4.156 银行间本币货币市场日统计
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class CBondIBRMBMonDMarOview(BaseModel):
         升降基点   
     b_dq_nomembersinvo: NUMBER(20,8)
         参与成员家数   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondIBRMBMonDMarOview"
@@ -44,4 +48,6 @@ class CBondIBRMBMonDMarOview(BaseModel):
     b_dq_wavrate = Column(NUMBER(20,8))
     b_dq_bpchange = Column(NUMBER(20,8))
     b_dq_nomembersinvo = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

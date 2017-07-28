@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMonthlyReportsofBrokers(BaseModel):
     """
-    中国A股券商月报
+    4.55 中国A股券商月报
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class AShareMonthlyReportsofBrokers(BaseModel):
         公司名称   
     s_info_compcode: VARCHAR2(10)
         公司ID   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMonthlyReportsofBrokers"
@@ -53,4 +57,6 @@ class AShareMonthlyReportsofBrokers(BaseModel):
     tot_shrhldr_eqy_incl_min_int = Column(NUMBER(20,4))
     s_info_compname = Column(VARCHAR2(100))
     s_info_compcode = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

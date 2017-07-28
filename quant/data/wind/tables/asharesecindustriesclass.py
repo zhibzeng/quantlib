@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareSECIndustriesClass(BaseModel):
     """
-    中国A股证监会行业分类
+    4.5 中国A股证监会行业分类
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AShareSECIndustriesClass(BaseModel):
         剔除日期   
     cur_sign: VARCHAR2(10)
         最新标志   1:是0:否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareSECIndustriesClass"
@@ -29,4 +33,6 @@ class AShareSECIndustriesClass(BaseModel):
     entry_dt = Column(VARCHAR2(8))
     remove_dt = Column(VARCHAR2(8))
     cur_sign = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

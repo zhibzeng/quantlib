@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CommitProfit(BaseModel):
     """
-    中国A股盈利承诺明细表
+    4.103 中国A股盈利承诺明细表
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CommitProfit(BaseModel):
         报告期   
     commitnetprofit: NUMBER(20,4)
         承诺净利润(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CommitProfit"
@@ -35,4 +39,6 @@ class CommitProfit(BaseModel):
     s_info_commitann_dt = Column(VARCHAR2(8))
     report_period = Column(VARCHAR2(8))
     commitnetprofit = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

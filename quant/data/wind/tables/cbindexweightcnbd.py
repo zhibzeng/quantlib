@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBIndexWeightCNBD(BaseModel):
     """
-    中债登指数权重
+    4.211 中债登指数权重
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class CBIndexWeightCNBD(BaseModel):
         交易日期   
     i_weight: NUMBER(20,8)
         权重   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBIndexWeightCNBD"
@@ -26,4 +30,6 @@ class CBIndexWeightCNBD(BaseModel):
     s_con_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     i_weight = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

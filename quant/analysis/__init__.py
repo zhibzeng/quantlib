@@ -3,8 +3,9 @@ import numpy as np
 import pandas as pd
 import pandas.tseries.offsets
 from ..data import wind
+from .pdpivot import pivot_table
 
-__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure']
+__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure', 'pivot_table']
 
 
 def cal_mdd(netvalue, compound=True):

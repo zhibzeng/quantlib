@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AshareISQA(BaseModel):
     """
-    中国A股机构调研问答明细
+    4.116 中国A股机构调研问答明细
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AshareISQA(BaseModel):
         问题内容   
     s_answercontent: VARCHAR2(4000)
         回答内容   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AshareISQA"
@@ -32,4 +36,6 @@ class AshareISQA(BaseModel):
     s_questiontype = Column(NUMBER(9,0))
     s_questioncontent = Column(VARCHAR2(2000))
     s_answercontent = Column(VARCHAR2(4000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

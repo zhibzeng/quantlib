@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIntroduction(BaseModel):
     """
-    中国A股公司简介
+    4.2 中国A股公司简介
 
     Attributes
     ----------
@@ -48,6 +48,10 @@ class AShareIntroduction(BaseModel):
         员工总数(人)   
     s_info_main_business: VARCHAR2(1000)
         主要产品及业务   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIntroduction"
@@ -71,4 +75,6 @@ class AShareIntroduction(BaseModel):
     s_info_company_type = Column(VARCHAR2(10))
     s_info_totalemployees = Column(NUMBER(20,0))
     s_info_main_business = Column(VARCHAR2(1000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

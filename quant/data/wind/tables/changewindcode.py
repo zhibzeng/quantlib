@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChangeWindcode(BaseModel):
     """
-    Wind代码变更表
+    4.222 Wind代码变更表
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class ChangeWindcode(BaseModel):
         变更后Wind代码   
     change_date: VARCHAR2(8)
         Wind代码变更日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChangeWindcode"
@@ -26,4 +30,6 @@ class ChangeWindcode(BaseModel):
     s_info_oldwindcode = Column(VARCHAR2(40))
     s_info_newwindcode = Column(VARCHAR2(40))
     change_date = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

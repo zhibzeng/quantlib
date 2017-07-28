@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMarginTradeSum(BaseModel):
     """
-    中国A股融资融券交易汇总
+    4.32 中国A股融资融券交易汇总
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareMarginTradeSum(BaseModel):
         融券卖出量(股,份,手)   上海：未公布;深圳：融券卖出量
     s_marsum_margintradebalance: NUMBER(20,4)
         融资融券余额(股,份,手)   上海：本日融资融券交易总量;深圳：融资融券余额;融资余额＋融券余额
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMarginTradeSum"
@@ -38,4 +42,6 @@ class AShareMarginTradeSum(BaseModel):
     s_marsum_seclendingbalance = Column(NUMBER(20,4))
     s_marsum_salesofborrowedsec = Column(NUMBER(20,4))
     s_marsum_margintradebalance = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

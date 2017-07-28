@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareFreeFloat(BaseModel):
     """
-    中国A股自由流通股本
+    4.16 中国A股自由流通股本
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AShareFreeFloat(BaseModel):
         变动日期(上市日)   
     ann_dt: VARCHAR2(8)
         公告日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareFreeFloat"
@@ -29,4 +33,6 @@ class AShareFreeFloat(BaseModel):
     s_share_freeshares = Column(NUMBER(20,4))
     change_dt1 = Column(VARCHAR2(8))
     ann_dt = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

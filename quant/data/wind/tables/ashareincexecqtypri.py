@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIncExecQtyPri(BaseModel):
     """
-    中国A股股权激励行权数量与价格
+    4.99 中国A股股权激励行权数量与价格
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareIncExecQtyPri(BaseModel):
         行权价格   
     s_inc_execdate: VARCHAR2(8)
         行权日期   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIncExecQtyPri"
@@ -32,4 +36,6 @@ class AShareIncExecQtyPri(BaseModel):
     s_inc_execqty = Column(NUMBER(20,4))
     s_inc_execpri = Column(NUMBER(20,4))
     s_inc_execdate = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

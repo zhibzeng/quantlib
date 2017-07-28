@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ASharePreviousName(BaseModel):
     """
-    中国A股证券曾用名
+    4.8 中国A股证券曾用名
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class ASharePreviousName(BaseModel):
         证券简称   
     changereason: NUMBER(9,0)
         变动原因代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ASharePreviousName"
@@ -32,4 +36,6 @@ class ASharePreviousName(BaseModel):
     ann_dt = Column(VARCHAR2(8))
     s_info_name = Column(VARCHAR2(40))
     changereason = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

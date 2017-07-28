@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class HiborPrices(BaseModel):
     """
-    HiBor行情
+    4.173 HiBor行情
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class HiborPrices(BaseModel):
         交易日期   
     b_info_rate: NUMBER(20,4)
         利率(%)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "HiborPrices"
@@ -23,4 +27,6 @@ class HiborPrices(BaseModel):
     s_info_windcode = Column(VARCHAR2(40))
     trade_dt = Column(VARCHAR2(8))
     b_info_rate = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

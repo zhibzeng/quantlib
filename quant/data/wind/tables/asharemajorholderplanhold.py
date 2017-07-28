@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMajorHolderPlanHold(BaseModel):
     """
-    中国A股大股东增持计划
+    4.43 中国A股大股东增持计划
 
     Attributes
     ----------
@@ -38,6 +38,10 @@ class AShareMajorHolderPlanHold(BaseModel):
         拟投入金额上限(亿元)   
     s_ph_priceuplimit: NUMBER(20,4)
         增持价格上限   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMajorHolderPlanHold"
@@ -56,4 +60,6 @@ class AShareMajorHolderPlanHold(BaseModel):
     s_ph_intendputmoneydownlimit = Column(NUMBER(20,4))
     s_ph_intendputmoneyuplimit = Column(NUMBER(20,4))
     s_ph_priceuplimit = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

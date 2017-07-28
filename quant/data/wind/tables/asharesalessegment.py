@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareSalesSegment(BaseModel):
     """
-    中国A股主营业务构成
+    4.57 中国A股主营业务构成
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareSalesSegment(BaseModel):
         主营业务利润(元)   
     s_segment_cost: NUMBER(20,4)
         主营业务成本(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareSalesSegment"
@@ -38,4 +42,6 @@ class AShareSalesSegment(BaseModel):
     s_segment_sales = Column(NUMBER(20,4))
     s_segment_profit = Column(NUMBER(20,4))
     s_segment_cost = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

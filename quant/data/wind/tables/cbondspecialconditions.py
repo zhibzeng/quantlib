@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondSpecialConditions(BaseModel):
     """
-    中国债券特殊条款
+    4.127 中国债券特殊条款
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class CBondSpecialConditions(BaseModel):
         票面利率调整下限   
     b_info_content: VARCHAR2(3000)
         条款内容   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondSpecialConditions"
@@ -44,4 +48,6 @@ class CBondSpecialConditions(BaseModel):
     b_info_couponadj_max = Column(NUMBER(20,4))
     b_info_couponadj_min = Column(NUMBER(20,4))
     b_info_content = Column(VARCHAR2(3000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CIndexFuturesPositions(BaseModel):
     """
-    中国股指期货成交及持仓
+    4.180 中国股指期货成交及持仓
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CIndexFuturesPositions(BaseModel):
         名次   
     s_oi_positionsnumc: NUMBER(20,4)
         比上交易日增减   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CIndexFuturesPositions"
@@ -35,4 +39,6 @@ class CIndexFuturesPositions(BaseModel):
     fs_info_positionsnum = Column(NUMBER(20,4))
     fs_info_rank = Column(NUMBER(5,0))
     s_oi_positionsnumc = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

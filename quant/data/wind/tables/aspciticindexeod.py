@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ASPCITICIndexEOD(BaseModel):
     """
-    中信标普指数行情
+    4.201 中信标普指数行情
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class ASPCITICIndexEOD(BaseModel):
         成交量(手)   
     s_dq_amount: NUMBER(20,4)
         成交金额(千元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ASPCITICIndexEOD"
@@ -41,4 +45,6 @@ class ASPCITICIndexEOD(BaseModel):
     s_dq_close = Column(NUMBER(20,4))
     s_dq_volume = Column(NUMBER(20,4))
     s_dq_amount = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

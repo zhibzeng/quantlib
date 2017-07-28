@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AIndexHS300Weight(BaseModel):
     """
-    沪深300指数成份股权重
+    4.204 沪深300指数成份股权重
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AIndexHS300Weight(BaseModel):
         总市值   
     i_weight_18: NUMBER(20,2)
         计算用市值   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AIndexHS300Weight"
@@ -50,4 +54,6 @@ class AIndexHS300Weight(BaseModel):
     i_weight_16 = Column(NUMBER(20,4))
     i_weight_17 = Column(NUMBER(20,2))
     i_weight_18 = Column(NUMBER(20,2))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

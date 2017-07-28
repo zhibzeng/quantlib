@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareStockSwap(BaseModel):
     """
-    中国A股股票置换
+    4.107 中国A股股票置换
 
     Attributes
     ----------
@@ -76,6 +76,10 @@ class AShareStockSwap(BaseModel):
         现金选择权现金到账日   
     effectivereportedshares: NUMBER(20,4)
         现金选择权有效申报股数   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareStockSwap"
@@ -113,4 +117,6 @@ class AShareStockSwap(BaseModel):
     plandescription = Column(VARCHAR2(300))
     casharrivaldate = Column(VARCHAR2(8))
     effectivereportedshares = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CWarrantHolder(BaseModel):
     """
-    中国权证持有人
+    4.191 中国权证持有人
 
     Attributes
     ----------
@@ -16,6 +16,10 @@ class CWarrantHolder(BaseModel):
         日期   
     holder: VARCHAR2(200)
         持有人   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CWarrantHolder"
@@ -23,4 +27,6 @@ class CWarrantHolder(BaseModel):
     f_info_windcode = Column(VARCHAR2(40))
     end_date = Column(VARCHAR2(8))
     holder = Column(VARCHAR2(200))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCapitalization(BaseModel):
     """
-    中国A股股本
+    4.15 中国A股股本
 
     Attributes
     ----------
@@ -96,6 +96,10 @@ class AShareCapitalization(BaseModel):
         公告日期   
     change_dt1: VARCHAR2(8)
         变动日期1   除权日或上市日或登记日
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCapitalization"
@@ -143,4 +147,6 @@ class AShareCapitalization(BaseModel):
     s_share_changereason = Column(VARCHAR2(30))
     ann_dt = Column(VARCHAR2(8))
     change_dt1 = Column(VARCHAR2(8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

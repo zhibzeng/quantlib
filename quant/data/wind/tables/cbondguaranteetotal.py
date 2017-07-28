@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondGuaranteeTotal(BaseModel):
     """
-    债券发行人担保数据（合计）
+    4.132 债券发行人担保数据（合计）
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondGuaranteeTotal(BaseModel):
         对外担保余额(亿元)   
     memo: VARCHAR2(2000)
         备注   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondGuaranteeTotal"
@@ -35,4 +39,6 @@ class CBondGuaranteeTotal(BaseModel):
     guar_inwards = Column(NUMBER(20,0))
     guar_outwards = Column(NUMBER(20,0))
     memo = Column(VARCHAR2(2000))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

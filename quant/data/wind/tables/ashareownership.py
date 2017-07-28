@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareOwnership(BaseModel):
     """
-    中国A股企业所有制板块
+    4.9 中国A股企业所有制板块
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareOwnership(BaseModel):
         剔除日期   
     cur_sign: NUMBER(1,0)
         最新标志   1:是；0：否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareOwnership"
@@ -32,4 +36,6 @@ class AShareOwnership(BaseModel):
     entry_dt = Column(VARCHAR2(8))
     remove_dt = Column(VARCHAR2(8))
     cur_sign = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

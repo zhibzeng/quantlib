@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class MergerEvent(BaseModel):
     """
-    并购事件
+    4.111 并购事件
 
     Attributes
     ----------
@@ -82,6 +82,10 @@ class MergerEvent(BaseModel):
         选用评估方法代码   注17
     is_be_approval: NUMBER(1, 0)
         是否已完成审批   注18
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "MergerEvent"
@@ -122,4 +126,6 @@ class MergerEvent(BaseModel):
     restructure_type_code = Column(NUMBER(9, 0))
     evalue_way_code = Column(NUMBER(9, 0))
     is_be_approval = Column(NUMBER(1, 0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

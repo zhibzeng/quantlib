@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondFuturesEODPrices(BaseModel):
     """
-    中国国债期货仿真交易日行情
+    4.185 中国国债期货仿真交易日行情
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class CBondFuturesEODPrices(BaseModel):
         持仓量(手)   
     s_dq_change: NUMBER(20,4)
         涨跌(元)   =收盘价-前结算价
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondFuturesEODPrices"
@@ -50,4 +54,6 @@ class CBondFuturesEODPrices(BaseModel):
     s_dq_amount = Column(NUMBER(20,4))
     s_dq_oi = Column(NUMBER(20,4))
     s_dq_change = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

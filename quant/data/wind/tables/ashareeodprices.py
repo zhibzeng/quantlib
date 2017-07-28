@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareEODPrices(BaseModel):
     """
-    中国A股日行情
+    4.25 中国A股日行情
 
     Attributes
     ----------
@@ -50,6 +50,10 @@ class AShareEODPrices(BaseModel):
         均价(VWAP)   成交金额/成交量
     s_dq_tradestatus: VARCHAR2(10)
         交易状态   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareEODPrices"
@@ -74,4 +78,6 @@ class AShareEODPrices(BaseModel):
     s_dq_adjfactor = Column(NUMBER(20,6))
     s_dq_avgprice = Column(NUMBER(20,4))
     s_dq_tradestatus = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareAgency(BaseModel):
     """
-    中国A股发行中介机构
+    4.10 中国A股发行中介机构
 
     Attributes
     ----------
@@ -26,6 +26,10 @@ class AShareAgency(BaseModel):
         截止日期   
     sequence: VARCHAR2(6)
         序号   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareAgency"
@@ -38,4 +42,6 @@ class AShareAgency(BaseModel):
     begindate = Column(VARCHAR2(8))
     enddate = Column(VARCHAR2(8))
     sequence = Column(VARCHAR2(6))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondfloatingrate(BaseModel):
     """
-    中国债券浮息债基础利率属性
+    4.126 中国债券浮息债基础利率属性
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondfloatingrate(BaseModel):
         计算基准利率所用付息日类型   1、前次付息日2、前次付息日的前一工作日3、付息日前两个工作日
     b_info_interestpreci: NUMBER(1,0)
         基准利率精度   0、基准利率未明确要求保留多少位小数2、基准利率要求保留两位小数
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondfloatingrate"
@@ -35,4 +39,6 @@ class CBondfloatingrate(BaseModel):
     b_info_interestfloor = Column(NUMBER(20,4))
     b_info_paymentdaytype = Column(VARCHAR2(2))
     b_info_interestpreci = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

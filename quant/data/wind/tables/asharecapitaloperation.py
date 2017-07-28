@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCapitalOperation(BaseModel):
     """
-    中国A股资本运作
+    4.94 中国A股资本运作
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class AShareCapitalOperation(BaseModel):
         参股公司Wind代码   记录上市公司A股代码
     s_end_bal: NUMBER(20,4)
         期末账面值   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCapitalOperation"
@@ -41,4 +45,6 @@ class AShareCapitalOperation(BaseModel):
     s_capitaloperation_companyname = Column(VARCHAR2(100))
     s_capitaloperat_compwindcode = Column(VARCHAR2(40))
     s_end_bal = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

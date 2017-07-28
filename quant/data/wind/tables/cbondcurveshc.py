@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondCurveSHC(BaseModel):
     """
-    中国债券上海清算所收益率曲线
+    4.216 中国债券上海清算所收益率曲线
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class CBondCurveSHC(BaseModel):
         年限   
     b_anal_yield: NUMBER(20,4)
         收益率(%)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondCurveSHC"
@@ -32,4 +36,6 @@ class CBondCurveSHC(BaseModel):
     b_anal_curvetype = Column(VARCHAR2(20))
     b_anal_curveterm = Column(NUMBER(20,4))
     b_anal_yield = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

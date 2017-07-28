@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedInsuranceIncome(BaseModel):
     """
-    非上市保险利润表
+    4.66 非上市保险利润表
 
     Attributes
     ----------
@@ -112,6 +112,10 @@ class UnlistedInsuranceIncome(BaseModel):
         净利润(不含少数股东损益)   
     minority_int_inc: NUMBER(20,4)
         少数股东损益   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedInsuranceIncome"
@@ -167,4 +171,6 @@ class UnlistedInsuranceIncome(BaseModel):
     net_profit_incl_min_int_inc = Column(NUMBER(20,4))
     net_profit_excl_min_int_inc = Column(NUMBER(20,4))
     minority_int_inc = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

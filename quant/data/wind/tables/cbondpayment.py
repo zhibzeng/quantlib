@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondPayment(BaseModel):
     """
-    中国债券付息和兑付
+    4.140 中国债券付息和兑付
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class CBondPayment(BaseModel):
         税后每手付息数   
     crncy_code: VARCHAR2(10)
         货币代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondPayment"
@@ -41,4 +45,6 @@ class CBondPayment(BaseModel):
     b_info_principalperthousands = Column(NUMBER(20,6))
     b_info_principalaftertax = Column(NUMBER(20,4))
     crncy_code = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedInsuranceBalanceSheet(BaseModel):
     """
-    非上市保险资产负债表
+    4.65 非上市保险资产负债表
 
     Attributes
     ----------
@@ -166,6 +166,10 @@ class UnlistedInsuranceBalanceSheet(BaseModel):
         负债及股东权益差额(合计平衡项目)   
     tot_liab_shrhldr_eqy: NUMBER(20,4)
         负债及股东权益总计   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedInsuranceBalanceSheet"
@@ -248,4 +252,6 @@ class UnlistedInsuranceBalanceSheet(BaseModel):
     spe_bal_liab_eqy = Column(NUMBER(20,4))
     tot_bal_liab_eqy = Column(NUMBER(20,4))
     tot_liab_shrhldr_eqy = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

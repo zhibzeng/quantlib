@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CSIndexDivisor(BaseModel):
     """
-    中证指数除数
+    4.207 中证指数除数
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class CSIndexDivisor(BaseModel):
         原除数英文：CurrentDivisor   
     i_new_divisor: NUMBER(20,4)
         调整后除数英文：NewDivisor   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CSIndexDivisor"
@@ -26,4 +30,6 @@ class CSIndexDivisor(BaseModel):
     trade_dt = Column(VARCHAR2(8))
     i_cur_divisor = Column(NUMBER(20,4))
     i_new_divisor = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

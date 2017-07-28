@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareProfitExpress(BaseModel):
     """
-    中国A股业绩快报
+    4.51 中国A股业绩快报
 
     Attributes
     ----------
@@ -36,6 +36,10 @@ class AShareProfitExpress(BaseModel):
         是否审计   1:是0:否
     yoynet_profit_excl_min_int_inc: NUMBER(20,4)
         去年同期修正后净利润   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareProfitExpress"
@@ -53,4 +57,6 @@ class AShareProfitExpress(BaseModel):
     roe_diluted = Column(NUMBER(20,4))
     s_isaudit = Column(NUMBER(5,0))
     yoynet_profit_excl_min_int_inc = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

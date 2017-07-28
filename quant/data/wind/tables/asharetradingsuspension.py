@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareTradingSuspension(BaseModel):
     """
-    中国A股停复牌信息
+    4.27 中国A股停复牌信息
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class AShareTradingSuspension(BaseModel):
         复牌日期   
     s_dq_changereason: VARCHAR2(400)
         停牌原因   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareTradingSuspension"
@@ -29,4 +33,6 @@ class AShareTradingSuspension(BaseModel):
     s_dq_suspendtype = Column(NUMBER(9,0))
     s_dq_resumpdate = Column(VARCHAR2(8))
     s_dq_changereason = Column(VARCHAR2(400))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareMarginTrade(BaseModel):
     """
-    中国A股融资融券交易明细
+    4.31 中国A股融资融券交易明细
 
     Attributes
     ----------
@@ -23,7 +23,17 @@ class AShareMarginTrade(BaseModel):
     s_margin_seclendingbalance: NUMBER(20,4)
         融券余额(元)   
     s_margin_seclendingbalancevol: NUMBER(20,4)
-        融券余量   股(标的证券为股票)
+        融券余量(股,份,手)   股(标的证券为股票)份(标的证券为基金)手(标的证券为债券)
+    s_margin_salesofborrowedsec: NUMBER(20,4)
+        融券卖出量(股,份,手)   股(标的证券为股票)份(标的证券为基金)手(标的证券为债券)
+    s_margin_repaymentofborrowsec: NUMBER(20,4)
+        融券偿还量(股,份,手)   股(标的证券为股票)份(标的证券为基金)手(标的证券为债券)
+    s_margin_margintradebalance: NUMBER(20,4)
+        融资融券余额(元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareMarginTrade"
@@ -35,4 +45,9 @@ class AShareMarginTrade(BaseModel):
     s_margin_repaymenttobroker = Column(NUMBER(20,4))
     s_margin_seclendingbalance = Column(NUMBER(20,4))
     s_margin_seclendingbalancevol = Column(NUMBER(20,4))
+    s_margin_salesofborrowedsec = Column(NUMBER(20,4))
+    s_margin_repaymentofborrowsec = Column(NUMBER(20,4))
+    s_margin_margintradebalance = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

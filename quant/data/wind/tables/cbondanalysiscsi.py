@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondAnalysisCSI(BaseModel):
     """
-    中证估值
+    4.212 中证估值
 
     Attributes
     ----------
@@ -30,6 +30,10 @@ class CBondAnalysisCSI(BaseModel):
         净价   
     b_anal_accrint_csi: NUMBER(20,4)
         应计利息   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondAnalysisCSI"
@@ -44,4 +48,6 @@ class CBondAnalysisCSI(BaseModel):
     b_anal_cnvxty_csi = Column(NUMBER(20,4))
     b_anal_net_csi = Column(NUMBER(20,4))
     b_anal_accrint_csi = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

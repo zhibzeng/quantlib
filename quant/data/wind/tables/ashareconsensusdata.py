@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareConsensusData(BaseModel):
     """
-    中国A股盈利预测汇总
+    4.74 中国A股盈利预测汇总
 
     Attributes
     ----------
@@ -41,7 +41,163 @@ class AShareConsensusData(BaseModel):
     ebitda_median: NUMBER(20,4)
         息税折旧摊销前利润中值(万元)   
     consen_data_cycle_typ: VARCHAR2(10)
-        综合值周期类型   综合值周期类型:263001000:30天263002000:90天
+        综合值周期类型   综合值周期类型:263001000:30天263002000:90天263003000:180天263004000：大事后180天
+    eps_dev: NUMBER(20,4)
+        每股收益标准差   
+    main_bus_inc_dev: NUMBER(20,4)
+        主营业务收入标准差(万元)   
+    net_profit_dev: NUMBER(20,4)
+        净利润标准差(万元)   
+    ebit_dev: NUMBER(20,4)
+        息税前利润标准差(万元)   
+    ebitda_dev: NUMBER(20,4)
+        息税折旧摊销前利润标准差(万元)   
+    eps_max: NUMBER(20,4)
+        每股收益最大值   
+    eps_min: NUMBER(20,4)
+        每股收益最小值   
+    main_bus_inc_max: NUMBER(20,4)
+        主营业务收入最大值(万元)   
+    main_bus_inc_min: NUMBER(20,4)
+        主营业务收入最小值(万元)   
+    main_bus_inc_upgrade: NUMBER(20,4)
+        主营业务收入调高家数(与一个月前相比)   
+    main_bus_inc_downgrade: NUMBER(20,4)
+        主营业务收入调低家数(与一个月前相比)   
+    main_bus_inc_maintain: NUMBER(20,4)
+        主营业务收入维持家数(与一个月前相比)   
+    net_profit_max: NUMBER(20,4)
+        净利润最大值(万元)   
+    net_profit_min: NUMBER(20,4)
+        净利润最小值(万元)   
+    net_profit_upgrade: NUMBER(20,4)
+        净利润调高家数(与一个月前相比)   
+    net_profit_downgrade: NUMBER(20,4)
+        净利润调低家数(与一个月前相比)   
+    net_profit_maintain: NUMBER(20,4)
+        净利润维持家数(与一个月前相比)   
+    s_est_avgcps: NUMBER(20,4)
+        每股现金流平均值   
+    s_est_mediancps: NUMBER(20,4)
+        每股现金流中值   
+    s_est_stdcps: NUMBER(20,4)
+        每股现金流标准差   
+    s_est_maxcps: NUMBER(20,4)
+        每股现金流最大值   
+    s_est_mincps: NUMBER(20,4)
+        每股现金流最小值   
+    s_est_avgdps: NUMBER(20,4)
+        每股股利平均值   
+    s_est_mediandps: NUMBER(20,4)
+        每股股利中值   
+    s_est_stddps: NUMBER(20,4)
+        每股股利标准差   
+    s_est_maxdps: NUMBER(20,4)
+        每股股利最大值   
+    s_est_mindps: NUMBER(20,4)
+        每股股利最小值   
+    ebit_max: NUMBER(20,4)
+        息税前利润最大值(万元)   
+    ebit_min: NUMBER(20,4)
+        息税前利润最小值(万元)   
+    ebitda_max: NUMBER(20,4)
+        息税折旧摊销前利润最大值(万元)   
+    ebitda_min: NUMBER(20,4)
+        息税折旧摊销前利润最小值(万元)   
+    s_est_avgbps: NUMBER(20,4)
+        每股净资产平均值   
+    s_est_medianbps: NUMBER(20,4)
+        每股净资产中值   
+    s_est_stdbps: NUMBER(20,4)
+        每股净资产标准差   
+    s_est_maxbps: NUMBER(20,4)
+        每股净资产最大值   
+    s_est_minbps: NUMBER(20,4)
+        每股净资产最小值   
+    s_est_avgebt: NUMBER(20,4)
+        利润总额平均值(万元)   
+    s_est_medianebt: NUMBER(20,4)
+        利润总额中值(万元)   
+    s_est_stdebt: NUMBER(20,4)
+        利润总额标准差(万元)   
+    s_est_maxebt: NUMBER(20,4)
+        利润总额最大值(万元)   
+    s_est_minebt: NUMBER(20,4)
+        利润总额最小值(万元)   
+    s_est_avgroa: NUMBER(20,4)
+        总资产收益率平均值(%)   
+    s_est_medianroa: NUMBER(20,4)
+        总资产收益率中值(%)   
+    s_est_stdroa: NUMBER(20,4)
+        总资产收益率标准差(%)   
+    s_est_maxroa: NUMBER(20,4)
+        总资产收益率最大值(%)   
+    s_est_minroa: NUMBER(20,4)
+        总资产收益率最小值(%)   
+    s_est_avgroe: NUMBER(20,4)
+        净资产收益率平均值(%)   
+    s_est_medianroe: NUMBER(20,4)
+        净资产收益率中值(%)   
+    s_est_stdroe: NUMBER(20,4)
+        净资产收益率标准差(%)   
+    s_est_maxroe: NUMBER(20,4)
+        净资产收益率最大值(%)   
+    s_est_minroe: NUMBER(20,4)
+        净资产收益率最小值(%)   
+    s_est_avgoperatingprofit: NUMBER(20,4)
+        营业利润平均值(万元)   
+    s_est_medianoperatingprofit: NUMBER(20,4)
+        营业利润中值(万元)   
+    s_est_stdoperatingprofit: NUMBER(20,4)
+        营业利润标准差(万元)   
+    s_est_maxoperatingprofit: NUMBER(20,4)
+        营业利润最大值(万元)   
+    s_est_minoperatingprofit: NUMBER(20,4)
+        营业利润最小值(万元)   
+    s_est_epsinstnum: NUMBER(20,4)
+        每股收益预测家数   
+    s_est_mainbusincinstnum: NUMBER(20,4)
+        主营业务收入预测家数   
+    s_est_netprofitinstnum: NUMBER(20,4)
+        净利润预测家数   
+    s_est_cpsinstnum: NUMBER(20,4)
+        每股现金流预测家数   
+    s_est_dpsinstnum: NUMBER(20,4)
+        每股股利预测家数   
+    s_est_ebitinstnum: NUMBER(20,4)
+        息税前利润预测家数   
+    s_est_ebitdainstnum: NUMBER(20,4)
+        息税折旧摊销前利润预测家数   
+    s_est_bpsinstnum: NUMBER(20,4)
+        每股净资产预测家数   
+    s_est_ebtinstnum: NUMBER(20,4)
+        利润总额预测家数   
+    s_est_roainstnum: NUMBER(20,4)
+        总资产收益率预测家数   
+    s_est_roeinstnum: NUMBER(20,4)
+        净资产资产收益率预测家数   
+    s_est_oprofitinstnum: NUMBER(20,4)
+        营业利润预测家数   
+    s_est_avgoc: NUMBER(20,4)
+        营业成本及附加平均值(万元)   
+    s_est_mediaoc: NUMBER(20,4)
+        营业成本及附加中值(万元)   
+    s_est_stoc: NUMBER(20,4)
+        营业成本及附加标准差(万元)   
+    s_est_maxoc: NUMBER(20,4)
+        营业成本及附加最大值(万元)   
+    s_est_minoc: NUMBER(20,4)
+        营业成本及附加最小值(万元)   
+    s_est_ocinstnum: NUMBER(20,4)
+        营业成本及附加预测家数   
+    s_est_baseshare: NUMBER(20,4)
+        预测基准股本综合值   
+    s_est_yeartype: VARCHAR2(20)
+        预测年度类型   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareConsensusData"
@@ -62,4 +218,82 @@ class AShareConsensusData(BaseModel):
     ebit_median = Column(NUMBER(20,4))
     ebitda_median = Column(NUMBER(20,4))
     consen_data_cycle_typ = Column(VARCHAR2(10))
+    eps_dev = Column(NUMBER(20,4))
+    main_bus_inc_dev = Column(NUMBER(20,4))
+    net_profit_dev = Column(NUMBER(20,4))
+    ebit_dev = Column(NUMBER(20,4))
+    ebitda_dev = Column(NUMBER(20,4))
+    eps_max = Column(NUMBER(20,4))
+    eps_min = Column(NUMBER(20,4))
+    main_bus_inc_max = Column(NUMBER(20,4))
+    main_bus_inc_min = Column(NUMBER(20,4))
+    main_bus_inc_upgrade = Column(NUMBER(20,4))
+    main_bus_inc_downgrade = Column(NUMBER(20,4))
+    main_bus_inc_maintain = Column(NUMBER(20,4))
+    net_profit_max = Column(NUMBER(20,4))
+    net_profit_min = Column(NUMBER(20,4))
+    net_profit_upgrade = Column(NUMBER(20,4))
+    net_profit_downgrade = Column(NUMBER(20,4))
+    net_profit_maintain = Column(NUMBER(20,4))
+    s_est_avgcps = Column(NUMBER(20,4))
+    s_est_mediancps = Column(NUMBER(20,4))
+    s_est_stdcps = Column(NUMBER(20,4))
+    s_est_maxcps = Column(NUMBER(20,4))
+    s_est_mincps = Column(NUMBER(20,4))
+    s_est_avgdps = Column(NUMBER(20,4))
+    s_est_mediandps = Column(NUMBER(20,4))
+    s_est_stddps = Column(NUMBER(20,4))
+    s_est_maxdps = Column(NUMBER(20,4))
+    s_est_mindps = Column(NUMBER(20,4))
+    ebit_max = Column(NUMBER(20,4))
+    ebit_min = Column(NUMBER(20,4))
+    ebitda_max = Column(NUMBER(20,4))
+    ebitda_min = Column(NUMBER(20,4))
+    s_est_avgbps = Column(NUMBER(20,4))
+    s_est_medianbps = Column(NUMBER(20,4))
+    s_est_stdbps = Column(NUMBER(20,4))
+    s_est_maxbps = Column(NUMBER(20,4))
+    s_est_minbps = Column(NUMBER(20,4))
+    s_est_avgebt = Column(NUMBER(20,4))
+    s_est_medianebt = Column(NUMBER(20,4))
+    s_est_stdebt = Column(NUMBER(20,4))
+    s_est_maxebt = Column(NUMBER(20,4))
+    s_est_minebt = Column(NUMBER(20,4))
+    s_est_avgroa = Column(NUMBER(20,4))
+    s_est_medianroa = Column(NUMBER(20,4))
+    s_est_stdroa = Column(NUMBER(20,4))
+    s_est_maxroa = Column(NUMBER(20,4))
+    s_est_minroa = Column(NUMBER(20,4))
+    s_est_avgroe = Column(NUMBER(20,4))
+    s_est_medianroe = Column(NUMBER(20,4))
+    s_est_stdroe = Column(NUMBER(20,4))
+    s_est_maxroe = Column(NUMBER(20,4))
+    s_est_minroe = Column(NUMBER(20,4))
+    s_est_avgoperatingprofit = Column(NUMBER(20,4))
+    s_est_medianoperatingprofit = Column(NUMBER(20,4))
+    s_est_stdoperatingprofit = Column(NUMBER(20,4))
+    s_est_maxoperatingprofit = Column(NUMBER(20,4))
+    s_est_minoperatingprofit = Column(NUMBER(20,4))
+    s_est_epsinstnum = Column(NUMBER(20,4))
+    s_est_mainbusincinstnum = Column(NUMBER(20,4))
+    s_est_netprofitinstnum = Column(NUMBER(20,4))
+    s_est_cpsinstnum = Column(NUMBER(20,4))
+    s_est_dpsinstnum = Column(NUMBER(20,4))
+    s_est_ebitinstnum = Column(NUMBER(20,4))
+    s_est_ebitdainstnum = Column(NUMBER(20,4))
+    s_est_bpsinstnum = Column(NUMBER(20,4))
+    s_est_ebtinstnum = Column(NUMBER(20,4))
+    s_est_roainstnum = Column(NUMBER(20,4))
+    s_est_roeinstnum = Column(NUMBER(20,4))
+    s_est_oprofitinstnum = Column(NUMBER(20,4))
+    s_est_avgoc = Column(NUMBER(20,4))
+    s_est_mediaoc = Column(NUMBER(20,4))
+    s_est_stoc = Column(NUMBER(20,4))
+    s_est_maxoc = Column(NUMBER(20,4))
+    s_est_minoc = Column(NUMBER(20,4))
+    s_est_ocinstnum = Column(NUMBER(20,4))
+    s_est_baseshare = Column(NUMBER(20,4))
+    s_est_yeartype = Column(VARCHAR2(20))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

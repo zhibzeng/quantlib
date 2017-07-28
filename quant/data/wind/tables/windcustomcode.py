@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class WindCustomCode(BaseModel):
     """
-    Wind兼容代码
+    4.218 Wind兼容代码
 
     Attributes
     ----------
@@ -46,6 +46,10 @@ class WindCustomCode(BaseModel):
         组织机构代码   
     s_info_typecode: NUMBER(9,0)
         分类代码   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "WindCustomCode"
@@ -68,4 +72,6 @@ class WindCustomCode(BaseModel):
     security_status = Column(NUMBER(9,0))
     s_info_org_code = Column(VARCHAR2(20))
     s_info_typecode = Column(NUMBER(9,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

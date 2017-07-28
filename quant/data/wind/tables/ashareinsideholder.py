@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareInsideHolder(BaseModel):
     """
-    中国A股内部人持股变动(中国A股前十大股东)
+    4.38 中国A股内部人持股变动(中国A股前十大股东)
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareInsideHolder(BaseModel):
         关联方序号   同一组关联股东为同一序号
     s_holder_sharecategoryname: VARCHAR2(200)
         持股性质   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareInsideHolder"
@@ -50,4 +54,6 @@ class AShareInsideHolder(BaseModel):
     s_holder_aname = Column(VARCHAR2(100))
     s_holder_sequence = Column(VARCHAR2(10))
     s_holder_sharecategoryname = Column(VARCHAR2(200))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

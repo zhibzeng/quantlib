@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondAnalysisSHC(BaseModel):
     """
-    中国债券上海清算所债券估值
+    4.215 中国债券上海清算所债券估值
 
     Attributes
     ----------
@@ -64,6 +64,10 @@ class CBondAnalysisSHC(BaseModel):
         日终应计利息   
     b_anal_surpluscapital: NUMBER(20,4)
         剩余本金   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondAnalysisSHC"
@@ -95,4 +99,6 @@ class CBondAnalysisSHC(BaseModel):
     b_anal_price_cnbd = Column(NUMBER(20,4))
     b_anal_bpyield = Column(NUMBER(20,4))
     b_anal_surpluscapital = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

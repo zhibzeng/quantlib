@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareProfitNotice(BaseModel):
     """
-    中国A股业绩预告
+    4.91 中国A股业绩预告
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class AShareProfitNotice(BaseModel):
         首次公告日   
     s_profitnotice_abstract: VARCHAR2(200)
         业绩预告摘要   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareProfitNotice"
@@ -50,4 +54,6 @@ class AShareProfitNotice(BaseModel):
     s_profitnotice_number = Column(NUMBER(15,4))
     s_profitnotice_firstanndate = Column(VARCHAR2(8))
     s_profitnotice_abstract = Column(VARCHAR2(200))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

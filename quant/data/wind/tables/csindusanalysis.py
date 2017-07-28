@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CSIndusAnalysis(BaseModel):
     """
-    中证行业估值
+    4.214 中证行业估值
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CSIndusAnalysis(BaseModel):
         市净率   
     sample_num: NUMBER(9)
         样本券个数   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CSIndusAnalysis"
@@ -35,4 +39,6 @@ class CSIndusAnalysis(BaseModel):
     indust_val_pe_ttm = Column(NUMBER(20,4))
     indust_val_pb = Column(NUMBER(20,4))
     sample_num = Column(NUMBER(9))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

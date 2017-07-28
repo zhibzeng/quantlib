@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaOptionContpro(BaseModel):
     """
-    中国期权标准合约属性
+    4.193 中国期权标准合约属性
 
     Attributes
     ----------
@@ -68,6 +68,10 @@ class ChinaOptionContpro(BaseModel):
         合约单位   
     s_info_counitdimension: VARCHAR2(40)
         合约单位量纲   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaOptionContpro"
@@ -101,4 +105,6 @@ class ChinaOptionContpro(BaseModel):
     s_info_quoteunit = Column(VARCHAR2(40))
     s_info_counit = Column(NUMBER(20))
     s_info_counitdimension = Column(VARCHAR2(40))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

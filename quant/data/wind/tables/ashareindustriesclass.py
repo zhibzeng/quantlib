@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareIndustriesClass(BaseModel):
     """
-    中国A股Wind行业分类
+    4.4 中国A股Wind行业分类
 
     Attributes
     ----------
@@ -22,6 +22,10 @@ class AShareIndustriesClass(BaseModel):
         剔除日期   
     cur_sign: VARCHAR2(10)
         最新标志   1:是0:否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareIndustriesClass"
@@ -32,4 +36,6 @@ class AShareIndustriesClass(BaseModel):
     entry_dt = Column(VARCHAR2(8))
     remove_dt = Column(VARCHAR2(8))
     cur_sign = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

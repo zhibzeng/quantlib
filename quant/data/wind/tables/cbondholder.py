@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondHolder(BaseModel):
     """
-    中国债券持有人
+    4.123 中国债券持有人
 
     Attributes
     ----------
@@ -24,6 +24,10 @@ class CBondHolder(BaseModel):
         持有数量(张)   
     b_issuer_sharecategory: VARCHAR2(1)
         持有人类型   1个人；2公司
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondHolder"
@@ -35,4 +39,6 @@ class CBondHolder(BaseModel):
     b_info_holder = Column(VARCHAR2(100))
     b_info_holdamount = Column(NUMBER(20,4))
     b_issuer_sharecategory = Column(VARCHAR2(1))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedIBrokerIndicator(BaseModel):
     """
-    非上市券商专用指标
+    4.61 非上市券商专用指标
 
     Attributes
     ----------
@@ -67,7 +67,11 @@ class UnlistedIBrokerIndicator(BaseModel):
     prop_equ_der_netcap: NUMBER(20,4)
         自营权益类证券及证券衍生品/净资本   
     prop_fixedincome_netcap: NUMBER(20,4)
-        自营固定收益类证券/   
+        自营固定收益类证券/净资本   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedIBrokerIndicator"
@@ -101,4 +105,6 @@ class UnlistedIBrokerIndicator(BaseModel):
     net_cap_net_assets = Column(NUMBER(20,4))
     prop_equ_der_netcap = Column(NUMBER(20,4))
     prop_fixedincome_netcap = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

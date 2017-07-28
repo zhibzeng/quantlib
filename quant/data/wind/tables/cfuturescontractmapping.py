@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CfuturesContractMapping(BaseModel):
     """
-    中国期货连续(主力)合约和月合约映射表
+    4.176 中国期货连续(主力)合约和月合约映射表
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class CfuturesContractMapping(BaseModel):
         截止日期   
     contract_id: VARCHAR2(10)
         合约ID   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CfuturesContractMapping"
@@ -29,4 +33,6 @@ class CfuturesContractMapping(BaseModel):
     startdate = Column(VARCHAR2(8))
     enddate = Column(VARCHAR2(8))
     contract_id = Column(VARCHAR2(10))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

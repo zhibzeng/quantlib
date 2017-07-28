@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class FileSyncTimeSchedule(BaseModel):
     """
-    FileSync调度计划
+    4.224 FileSync调度计划
 
     Attributes
     ----------
@@ -18,6 +18,10 @@ class FileSyncTimeSchedule(BaseModel):
         时间   
     weekly_parameter: VARCHAR2(50)
         周(参数)   0-6:周日-周一
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "FileSyncTimeSchedule"
@@ -26,4 +30,6 @@ class FileSyncTimeSchedule(BaseModel):
     frequency = Column(VARCHAR2(10))
     runtime = Column(VARCHAR2(100))
     weekly_parameter = Column(VARCHAR2(50))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

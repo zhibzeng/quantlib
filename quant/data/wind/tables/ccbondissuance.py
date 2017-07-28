@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CCBondIssuance(BaseModel):
     """
-    中国可转债发行
+    4.144 中国可转债发行
 
     Attributes
     ----------
@@ -122,6 +122,10 @@ class CCBondIssuance(BaseModel):
         网下中签率(不含优先配售)   
     cb_list_prerationvol: NUMBER(20,4)
         网下优先配售数量(张)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CCBondIssuance"
@@ -182,4 +186,6 @@ class CCBondIssuance(BaseModel):
     cb_list_effpchof = Column(NUMBER(20,4))
     cb_list_sucrateoff = Column(NUMBER(20,4))
     cb_list_prerationvol = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

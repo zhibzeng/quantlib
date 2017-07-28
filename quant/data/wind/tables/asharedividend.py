@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareDividend(BaseModel):
     """
-    中国A股分红
+    4.18 中国A股分红
 
     Attributes
     ----------
@@ -54,6 +54,10 @@ class AShareDividend(BaseModel):
         每股送股比例   
     s_div_conversedrate: Number(20,8)
         每股转增比例   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareDividend"
@@ -80,4 +84,6 @@ class AShareDividend(BaseModel):
     s_div_change = Column(VARCHAR2(500))
     s_div_bonusrate = Column(NUMBER(20,8))
     s_div_conversedrate = Column(NUMBER(20,8))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class ChinaEFTPchRedmList(BaseModel):
     """
-    中国ETF申购赎回清单
+    4.85 中国ETF申购赎回清单
 
     Attributes
     ----------
@@ -28,6 +28,10 @@ class ChinaEFTPchRedmList(BaseModel):
         申购赎回允许情况   1：允许
     f_info_connum: NUMBER(20,4)
         标的指数成分股数量   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "ChinaEFTPchRedmList"
@@ -41,4 +45,6 @@ class ChinaEFTPchRedmList(BaseModel):
     f_info_minprunits = Column(NUMBER(20,4))
     f_info_prpermit = Column(NUMBER(1,0))
     f_info_connum = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

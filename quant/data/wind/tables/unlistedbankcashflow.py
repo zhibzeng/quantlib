@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class UnlistedBankCashFlow(BaseModel):
     """
-    非上市银行现金流量表
+    4.64 非上市银行现金流量表
 
     Attributes
     ----------
@@ -192,6 +192,10 @@ class UnlistedBankCashFlow(BaseModel):
         间接法-现金净增加额差额(合计平衡项目)   
     im_net_incr_cash_cash_equ: NUMBER(20,4)
         间接法-现金及现金等价物净增加额   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "UnlistedBankCashFlow"
@@ -287,4 +291,6 @@ class UnlistedBankCashFlow(BaseModel):
     spe_bal_netcash_inc_undir = Column(NUMBER(20,4))
     tot_bal_netcash_inc_undir = Column(NUMBER(20,4))
     im_net_incr_cash_cash_equ = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

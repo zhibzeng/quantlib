@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class AShareCashFlow(BaseModel):
     """
-    中国A股现金流量表
+    4.47 中国A股现金流量表
 
     Attributes
     ----------
@@ -236,6 +236,10 @@ class AShareCashFlow(BaseModel):
         间接法-现金净增加额差额(特殊报表科目)   
     tot_bal_netcash_inc_undir: NUMBER(20,4)
         间接法-现金净增加额差额(合计平衡项目)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "AShareCashFlow"
@@ -353,4 +357,6 @@ class AShareCashFlow(BaseModel):
     tot_bal_netcash_equ_undir = Column(NUMBER(20,4))
     spe_bal_netcash_inc_undir = Column(NUMBER(20,4))
     tot_bal_netcash_inc_undir = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

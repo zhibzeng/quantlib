@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class SWIndexMembers(BaseModel):
     """
-    申万指数成份明细
+    4.200 申万指数成份明细
 
     Attributes
     ----------
@@ -20,6 +20,10 @@ class SWIndexMembers(BaseModel):
         剔除日期   
     cur_sign: NUMBER(1,0)
         最新标志   1:是0:否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "SWIndexMembers"
@@ -29,4 +33,6 @@ class SWIndexMembers(BaseModel):
     s_con_indate = Column(VARCHAR2(8))
     s_con_outdate = Column(VARCHAR2(8))
     cur_sign = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

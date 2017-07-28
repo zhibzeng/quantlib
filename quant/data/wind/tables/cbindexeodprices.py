@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBIndexEODPrices(BaseModel):
     """
-    中国债券指数日行情
+    4.163 中国债券指数日行情
 
     Attributes
     ----------
@@ -34,6 +34,10 @@ class CBIndexEODPrices(BaseModel):
         成交量(手)   
     s_dq_amount: NUMBER(20,4)
         成交金额(千元)   
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBIndexEODPrices"
@@ -50,4 +54,6 @@ class CBIndexEODPrices(BaseModel):
     s_dq_pctchange = Column(NUMBER(20,4))
     s_dq_volume = Column(NUMBER(20,4))
     s_dq_amount = Column(NUMBER(20,4))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     

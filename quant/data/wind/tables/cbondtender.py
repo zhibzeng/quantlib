@@ -4,7 +4,7 @@ VARCHAR2 = VARCHAR
 
 class CBondTender(BaseModel):
     """
-    中国债券招标
+    4.135 中国债券招标
 
     Attributes
     ----------
@@ -56,6 +56,10 @@ class CBondTender(BaseModel):
         标位步长   
     b_tender_concatenationornot: NUMBER(1,0)
         是否要求标位连续   1是；0否
+    opdate: DATETIME
+        opdate   
+    opmode: VARCHAR(1)
+        opmode   
 
     """
     __tablename__ = "CBondTender"
@@ -83,4 +87,6 @@ class CBondTender(BaseModel):
     b_tender_underwritingcost = Column(NUMBER(20,4))
     b_tender_spread = Column(VARCHAR2(20))
     b_tender_concatenationornot = Column(NUMBER(1,0))
+    opdate = Column(DATETIME)
+    opmode = Column(VARCHAR(1))
     
