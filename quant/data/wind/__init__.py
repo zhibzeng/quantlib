@@ -102,9 +102,8 @@ class WindDB:
         if last_update:
             sql_statement = sql_statement.where(opdate <= last_update)
         else:
-            # TODO: fetch max(opdate) and write it into register
             session = self.get_wind_connection().session
-            last_update = session.query(sql.func.max(opdate))[0]
+            last_update = session.query(sql.func.max(opdate))[0][0]
             self._set_last_update(table_name, last_update)
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
