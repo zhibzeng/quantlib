@@ -41,7 +41,7 @@ class NoSTUniverse(AbstractMod):
 class NoIPOUniverse(AbstractMod):
     def __init__(self, days=30):
         self.strategy = None
-        self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"])
+        self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"]).dropna()
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
 
     def __plug_in__(self, caller):

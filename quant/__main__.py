@@ -67,7 +67,9 @@ class QuantMain:
 
     @staticmethod
     def table(command, *args):
-        """Manage cache data"""
+        """Manage cache data
+        command must be one of ("ls", "rm", "update")
+        """
         command = command.lower()
         assert command in ("ls", "rm", "update"), "Command must be one of {`ls`, `rm`, `update`}"
         tree = defaultdict(list)

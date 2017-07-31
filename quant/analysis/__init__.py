@@ -72,7 +72,8 @@ def get_factor_exposure(position, factor_value, benchmark=None):
     data = pd.Series(np.empty(position.shape[0]), index=position.index)
     if benchmark:
         weights = wind.get_index_weight("AIndexHS300FreeWeight", benchmark)
-    for date in position.index:
+    common_index = set(position.index) & set(factor_value.index)
+    for date in sorted(common_index):
         if benchmark:
             offset_days = -date.day              # 计算当前的基准因子暴露
             while 1:
