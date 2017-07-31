@@ -6,7 +6,7 @@ from inspect import signature
 from datetime import date, datetime
 import pandas as pd
 import sqlalchemy as sa
-from sqlalchemy.sql import select, and_, column
+import sqlalchemy.sql as sql
 from dateutil.parser import parse
 from . import tables
 from ...common.localize import LOCALIZER
@@ -53,15 +53,21 @@ class WindDB:
         return self.wind_connection
 
     def _get_table(self, table_name):
-        engine = self.get_wind_connection().engine
-        meta = sa.MetaData()
-        table = sa.Table(table_name, meta, autoload=True, autoload_with=engine)
+        try:
+            table = getattr(tables, table_name)
+        except:
+            engine = self.get_wind_connection().engine
+            meta = sa.MetaData()
+            table = sa.Table(table_name, meta, autoload=True, autoload_with=engine)
         return table
 
     def _check_columns(self, table_name, columns):
         if not columns:
             table = self._get_table(table_name)
-            columns = set(col.name for col in table.columns)
+            if isinstance(table, sql.schema.Table):
+                columns = set(col.name for col in table.columns)
+            else:
+                columns = set(col.name for col in table.__table__.columns)
         elif isinstance(columns, str):
             columns = [columns]
         columns = set(map(str.lower, columns))
@@ -85,15 +91,20 @@ class WindDB:
         columns = set(columns)
         columns.add("object_id")
         parse_dates = {col: "%Y%m%d" for col in columns if col.endswith("_dt") or col.endswith("date")}
-        opdate = list(filter(lambda col: col.name.lower() == "opdate", table.columns))[0]
-        sql_statement = select([sa.Column(col) for col in columns]).select_from(table)
+        if isinstance(table, sql.schema.Table):
+            opdate = list(filter(lambda col: col.name.lower() == "opdate", table.columns))[0]
+            opdate.table = table
+            sql_statement = sql.select([sa.Column(col) for col in columns]).select_from(table)
+        else:
+            opdate = table.opdate
+            sql_statement = sql.select([getattr(table, col.lower()) for col in columns])
+        
         if last_update:
             sql_statement = sql_statement.where(opdate <= last_update)
         else:
-            # TODO: fetch max(opdate) and write it into register
             session = self.get_wind_connection().session
-            session.query(sql.func.max(opdate))
-            last_update = select([sql.func.max(opdate)]).select_from(table)
+            last_update = session.query(sql.func.max(opdate))[0][0]
+            self._set_last_update(table_name, last_update)
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
         filename = os.path.join(DATA_PATH, "wind.h5")
@@ -101,7 +112,7 @@ class WindDB:
             df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
 
     def _update_wind_table(self, table_name):
-        # FIXME: This doesn't work for unknown reason
+        # FIXME: This doesn't work for unknown reason (Maybe fixed @ 2017-07-30)
         sys.stdout.write("Updating table [{table}]..........".format(table=table_name))
         sys.stdout.flush()
         last_update = self._get_last_update(table_name) or parse("2000-01-01")
@@ -109,7 +120,7 @@ class WindDB:
         columns = self._get_dataset_columns(table_name) + ["object_id"]
         parse_dates = {col: "%Y%m%d" for col in columns if col.endswith("_dt") or col.endswith("date")}
         opdate = sa.Column("opdate")
-        sql_statement = select([sa.Column(col) for col in columns]).select_from(table)
+        sql_statement = sql.select([sa.Column(col) for col in columns]).select_from(table)
         sql_statement = sql_statement.where(opdate > last_update)
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
