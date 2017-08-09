@@ -31,8 +31,8 @@ class WindDB:
             registry = dict()
         return registry
 
-    def _get_last_update(self, table_name):
-        return self.__registry.get(table_name)
+    def _get_last_update(self, table_name, default=None):
+        return self.__registry.get(table_name, default)
 
     def _set_last_update(self, table_name, time):
         self.__registry[table_name] = time
@@ -115,7 +115,7 @@ class WindDB:
         # FIXME: This doesn't work for unknown reason (Maybe fixed @ 2017-07-30)
         sys.stdout.write("Updating table [{table}]..........".format(table=table_name))
         sys.stdout.flush()
-        last_update = self._get_last_update(table_name) or parse("2000-01-01")
+        last_update = self._get_last_update(table_name, parse("2000-01-01"))
         table = self._get_table(table_name)
         columns = self._get_dataset_columns(table_name) + ["object_id"]
         parse_dates = {col: "%Y%m%d" for col in columns if col.endswith("_dt") or col.endswith("date")}
@@ -129,7 +129,7 @@ class WindDB:
             for col in df.columns:
                 df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
         self._set_last_update(table_name, datetime.now())
-        sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r".format(table=table_name))
+        sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r{nrows} rows updated.\n".format(table=table_name, nrows=len(df)))
         sys.stdout.flush()
 
     def get_wind_table(self, table_name, columns=None):

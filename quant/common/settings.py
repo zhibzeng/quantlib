@@ -120,6 +120,12 @@ class ConfigManager:
     def __contains__(self, item):
         return item in self.__keys
 
+    def get(self, key, default):
+        try:
+            return getattr(self, key.upper())
+        except KeyError:
+            return default
+
     def add_argument(self, *args, **kwargs):
         """除了配置文件已有的参数外，新增命令行参数，与`argparse.ArgumentParser.add_argument`相同"""
         temp_parser = ArgumentParser()

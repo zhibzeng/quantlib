@@ -7,9 +7,11 @@ with open(os.path.join(os.path.dirname(__file__), 'quant/VERSION')) as f:
 def resolve_requirements():
     requirements = []
     with open('requirements.txt') as f:
-        line = f.readline().strip()
-        if not line.startswith("#"):
-            requirements.append(line.strip("\n"))
+        for line in f:
+            line = line.strip()
+            if not line.startswith("#"):
+                requirements.append(line.strip("\n"))
+    return requirements
 
 setup_args = dict(
     name='quantlib',
