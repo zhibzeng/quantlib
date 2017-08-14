@@ -105,7 +105,7 @@ class WindDB:
             session = self.get_wind_connection().session
             last_update = session.query(sql.func.max(opdate))[0][0]
             self._set_last_update(table_name, last_update)
-        print(str(sql_statement))
+        Logget.debug(str(sql_statement))
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
         filename = os.path.join(DATA_PATH, "wind.h5")
