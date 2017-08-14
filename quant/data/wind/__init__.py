@@ -105,6 +105,7 @@ class WindDB:
             session = self.get_wind_connection().session
             last_update = session.query(sql.func.max(opdate))[0][0]
             self._set_last_update(table_name, last_update)
+        print(str(sql_statement))
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
         filename = os.path.join(DATA_PATH, "wind.h5")
@@ -156,8 +157,8 @@ class WindDB:
                 index = "trade_dt"
             else:
                 raise RuntimeError("No index specified for DataFrame.pivot")
-        data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates()
-        return data.pivot(index=index, columns=columns, values=field)
+        data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates().dropna()
+        return data.pivot(index=index, columns=columns, values=field).sort_index()
 
     @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])
     def get_index_weight(self, table, s_info_windcode):
