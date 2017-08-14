@@ -141,7 +141,7 @@ class WindDB:
         filename = os.path.join(DATA_PATH, "wind.h5")
         data = {}
         for col in columns:
-            data[col] = pd.read_hdf(filename, key="/".join([table_name, col])).drop_duplicates(keep="last")
+            data[col] = pd.read_hdf(filename, key="/".join([table_name, col]))# .drop_duplicates(keep="last")
         return pd.DataFrame(data)
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
@@ -157,7 +157,7 @@ class WindDB:
                 index = "trade_dt"
             else:
                 raise RuntimeError("No index specified for DataFrame.pivot")
-        data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates().dropna()
+        data = self.get_wind_table(table, columns=[field, index, columns]).dropna(subset=[index, columns])
         return data.pivot(index=index, columns=columns, values=field).sort_index()
 
     @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])
