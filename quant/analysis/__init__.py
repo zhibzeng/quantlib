@@ -5,7 +5,7 @@ import pandas.tseries.offsets
 from ..data import wind
 # from .pdpivot import pivot_table     # This involves importing Pyside, which is unnecessarily in most cases.
 
-__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure', 'pivot_table']
+__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure']
 
 
 def cal_mdd(netvalue, compound=True):

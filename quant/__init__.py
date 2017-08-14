@@ -16,4 +16,4 @@ __all__ = ['data', 'transform', 'utils', 'analysis', '__version__',
            'cal_mdd', 'get_ic', 'get_factor_exposure', 'AbstractFactor',
            'mods', 'SimpleStrategy', 'AbstractStrategy',
            'wind', 'find_extreme_values', 'compute_zscore',
-           'get_residual', 'get_rtn', 'get_st_filter', 'pivot_table']
+           'get_residual', 'get_rtn', 'get_st_filter']

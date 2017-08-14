@@ -175,7 +175,9 @@ class WindDB:
         # data = data[data.s_info_windcode == s_info_windcode]
         table = self._get_table(table)
         columns = [table.trade_dt, table.i_weight, table.s_con_windcode]
-        sql_statement = sql.select(columns).select_from(table).filter(table.s_info_windcode==s_info_windcode)
+        sql_statement = sql.select(columns).select_from(table).where(table.s_info_windcode==s_info_windcode)
+        conn = self.get_wind_connection().engine
+        data = pd.read_sql(sql_statement, conn)
         data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
         return data.sort_index()
 
