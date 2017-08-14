@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pandas.tseries.offsets
 from ..data import wind
-from .pdpivot import pivot_table
+# from .pdpivot import pivot_table     # This involves importing Pyside, which is unnecessarily in most cases.
 
 __all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure', 'pivot_table']
 
@@ -33,7 +33,7 @@ def cal_mdd(netvalue, compound=True):
     return mdd
 
 
-def get_ic(table1, table2):
+def get_ic(table1, table2, method="spearman"):
     """
     求两组数据之间的IC score
 
@@ -41,18 +41,26 @@ def get_ic(table1, table2):
     ----------
     table1, table2: pd.DataFrame
         要计算IC的两个数据框
+    method: {'spearman', 'pearson', 'kendall'}
+        * pearson : standard correlation coefficient
+        * kendall : Kendall Tau correlation coefficient
+        * spearman : Spearman rank correlation
 
     Returns
     -------
     pd.Series
         每期的相关系数，求平均可得IC分数。
+
+    See Also
+    --------
+    pd.Series.corr
     """
     common_index = sorted(set(table1.index) & set(table2.index))
     ic = pd.Series(np.empty(len(common_index)), index=common_index)
     for date_idx in common_index:
         rk1 = table1.loc[date_idx]
         rk2 = table2.loc[date_idx]
-        corr = rk1.corr(rk2, method="spearman")
+        corr = rk1.corr(rk2, method=method)
         ic[date_idx] = corr
     return ic.dropna()
 

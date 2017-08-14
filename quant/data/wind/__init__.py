@@ -170,8 +170,11 @@ class WindDB:
         s_info_windcode
             要取权重的指数的万得代码
         """
-        data = self.get_wind_table(table, columns=["trade_dt", "s_con_windcode", "i_weight", "s_info_windcode"])
-        data = data[data.s_info_windcode == s_info_windcode]
+        # data = self.get_wind_table(table, columns=["trade_dt", "s_con_windcode", "i_weight", "s_info_windcode"])
+        # data = data[data.s_info_windcode == s_info_windcode]
+        table = self._get_table(table)
+        columns = [table.trade_dt, table.i_weight, table.s_con_windcode]
+        sql_statement = sql.select(columns).select_from(table).filter(table.s_info_windcode==s_info_windcode)
         data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
-        return data
+        return data.sort_index()
 

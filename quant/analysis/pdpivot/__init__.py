@@ -120,12 +120,3 @@ def pivot_table(data, categories=None):
     app = get_app(data)
     app.start()
 
-
-if __name__ == '__main__':
-    data = pd.DataFrame({
-        'method': ['method1', 'method2', 'method3'] * 9,
-        'loss': np.random.randn(27),
-        'data': (['data1'] * 3 + ['data2'] * 3 + ['data3'] * 3) * 3,
-        'user': np.random.binomial(1, 0.5, 27)
-    })
-    pivot_table(data, categories=['method', 'data', 'user'])
