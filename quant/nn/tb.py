@@ -9,7 +9,7 @@ __writer = None
 def get_writer():
     global __writer
     if __writer is None:
-        __writer = tb.SummaryWriter(CONFIG.TB_LOGDIR)
+        __writer = tb.SummaryWriter(CONFIG.get("TB_LOGDIR", "."))
     return __writer
 
 
