@@ -12,7 +12,7 @@ def get_step():
 def probar(iterable):
     global __step
     if isinstance(iterable, range):
-        total = (a.stop - a.start) / a.step
+        total = (iterable.stop - iterable.start) / iterable.step
     elif hasattr(iterable, "__len__"):
         total = len(iterable)
     else:
