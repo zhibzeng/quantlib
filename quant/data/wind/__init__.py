@@ -105,7 +105,7 @@ class WindDB:
             session = self.get_wind_connection().session
             last_update = session.query(sql.func.max(opdate))[0][0]
             self._set_last_update(table_name, last_update)
-        Logget.debug(str(sql_statement))
+        Logger.debug(str(sql_statement))
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
         filename = os.path.join(DATA_PATH, "wind.h5")
@@ -177,7 +177,7 @@ class WindDB:
         columns = [table.trade_dt, table.i_weight, table.s_con_windcode]
         sql_statement = sql.select(columns).select_from(table).where(table.s_info_windcode==s_info_windcode)
         conn = self.get_wind_connection().engine
-        data = pd.read_sql(sql_statement, conn)
+        data = pd.read_sql(sql_statement, conn, parse_dates={"trade_dt": "%Y%m%d"})
         data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
         return data.sort_index()
 

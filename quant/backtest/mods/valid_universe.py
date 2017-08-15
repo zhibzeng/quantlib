@@ -19,7 +19,7 @@ class NoSTUniverse(AbstractMod):
 
     @staticmethod
     def get_st_list():
-        st = wind.get_wind_table("AShareST", ["entry_dt", "ann_dt", "remove_dt", "s_info_windcode"])
+        st = wind.get_wind_table("AShareST", ["entry_dt", "remove_dt", "s_info_windcode"])
         st["entry_dt"] = pd.to_datetime(st["entry_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
