@@ -13,32 +13,32 @@ def get_writer():
     return __writer
 
 
-def add_histogram(name, values):
+def add_histogram(name, value):
     step = get_step()
-    writer = get_writer
-    writer.add_histogram(name, values, step)
-    return values
+    writer = get_writer()
+    writer.add_histogram(name, value, step)
+    return value
 
 
 def add_scalar(name, value):
     step = get_step()
-    writer = get_writer
-    writer.add_scalar(name, values, step)
-    return values
+    writer = get_writer()
+    writer.add_scalar(name, value, step)
+    return value
 
 
 def add_text(name, value):
     step = get_step()
-    writer = get_writer
-    writer.add_text(name, values, step)
-    return values
+    writer = get_writer()
+    writer.add_text(name, value, step)
+    return value
 
 
 def add_image(name, value):
     step = get_step()
-    writer = get_writer
-    writer.add_image(name, values, step)
-    return values
+    writer = get_writer()
+    writer.add_image(name, value, step)
+    return value
 
 
 

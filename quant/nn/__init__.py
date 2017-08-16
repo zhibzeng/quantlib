@@ -19,7 +19,7 @@ def probar(iterable):
         total = None
     __step = 0
     bar = ProgressBar(widgets=[Percentage(), Bar(), ETA()])
-    bar.start(maxvalue=total)
+    bar.start(max_value=total)
     for data in iterable:
         bar.update(__step)
         yield data
