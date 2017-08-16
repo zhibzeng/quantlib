@@ -1,4 +1,5 @@
 import tensorboard as tb
+import tensorboard.embedding as te
 from ..common.settings import CONFIG
 from . import get_step
 
@@ -41,4 +42,8 @@ def add_image(name, value):
     return value
 
 
-
+def add_embedding(mat, metadata=None, label_img=None):
+    writer = get_writer()
+    path = writer.file_writer.get_logdir()
+    te.add_embedding(mat, path, metadata, label_img)
+    return mat
