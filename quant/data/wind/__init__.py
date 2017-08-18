@@ -49,6 +49,7 @@ class WindDB:
                 db_name=CONFIG.WIND_DB_NAME,
                 username=CONFIG.WIND_USERNAME,
                 password=CONFIG.WIND_PASSWORD,
+                charset=CONFIG.WIND_CHARSET
             )
         return self.wind_connection
 
@@ -180,4 +181,10 @@ class WindDB:
         data = pd.read_sql(sql_statement, conn, parse_dates={"trade_dt": "%Y%m%d"})
         data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
         return data.sort_index()
+
+    @LOCALIZER.wrap("wind_basics.h5", const_key="basics")
+    def get_stock_basics(self):
+        table = self.get_wind_table("AShareDescription")
+        table.set_axis(0, table.s_info_windcode)
+        return table.drop("s_info_windcode", axis=1)
 

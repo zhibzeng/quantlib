@@ -18,7 +18,8 @@ class SQLClient:
                  password='',
                  db_name='quant',
                  db_type='mysql',
-                 db_driver='pymysql'):
+                 db_driver='pymysql',
+                 charset="utf-8"):
         """
         获得数据库连接
         Args:
@@ -36,9 +37,11 @@ class SQLClient:
                 数据库类型，如mysql, mssql
             db_driver (str):
                 数据库驱动，如pymysql
+            charset (str):
+                编码，对mssql中文可能需要设置为cp936
         """
         self.sqlalchemy_conn_string = \
-            '%(db_type)s+%(db_driver)s://%(username)s:%(password)s@%(host)s:%(port)s/%(db_name)s' %\
+            '%(db_type)s+%(db_driver)s://%(username)s:%(password)s@%(host)s:%(port)s/%(db_name)s?charset=%(charset)s' %\
             dict(
                 host=host,
                 port=port,
@@ -47,6 +50,7 @@ class SQLClient:
                 db_name=db_name,
                 db_driver=db_driver,
                 db_type=db_type,
+                charset=charset,
             )
         self.engine = sqlalchemy.create_engine(self.sqlalchemy_conn_string, echo=False)
         self.session = sqlalchemy.orm.sessionmaker(bind=self.engine)()

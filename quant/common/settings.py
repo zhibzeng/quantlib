@@ -198,6 +198,7 @@ def create_default_config():
             "wind_username = 'wind'",
             "wind_password = 'password'",
             "wind_db_name = 'quant'",
+            "wind_charset = 'cp936'",
             "",
             "# logging",
             "log_level = 'INFO'    # Loggin level, {'DEBUG', 'INFO', 'WARNING', 'ERROR', 'FATAL'}",
