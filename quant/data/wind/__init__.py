@@ -158,7 +158,7 @@ class WindDB:
                 index = "trade_dt"
             else:
                 raise RuntimeError("No index specified for DataFrame.pivot")
-        data = self.get_wind_table(table, columns=[field, index, columns]).dropna(subset=[index, columns])
+        data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates(subset=[index, columns], keep='last')
         return data.pivot(index=index, columns=columns, values=field).sort_index()
 
     @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])
