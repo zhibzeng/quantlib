@@ -9,17 +9,17 @@ def resolve_requirements():
     with open('requirements.txt') as f:
         for line in f:
             line = line.strip()
-            if not line.startswith("#"):
+            if line and not line.startswith("#"):
                 requirements.append(line.strip("\n"))
     return requirements
 
 setup_args = dict(
     name='quantlib',
     version=version,
-    packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script", "private"]),
+    packages=find_packages(exclude=["*.test", "*.test.*", "test.*", "test", "script", "private", "tests"]),
     install_requires=resolve_requirements(),
     include_package_data=True,
-    # scripts=["scripts/quantlib"],
+    scripts=["scripts/quantlib"],
     url='http://quantlib.readthedocs.io/',
     license='GNU',
     author='SnowWalkerJ',
