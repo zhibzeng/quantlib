@@ -19,6 +19,10 @@ class ConfigManager:
         self.parser = ArgumentParser()
         with open(self.path, "r") as config_file:
             self.data = self.__parse_config_file(config_file)
+        local_config = os.path.join(os.getcwd(), "config.cfg")
+        if path == CONFIG_PATH and os.path.exists(local_config):
+            with open(local_config, "r") as config_file:
+                self.data = self.__parse_config_file(config_file)
 
     def __parse_config_file(self, file):
         """
