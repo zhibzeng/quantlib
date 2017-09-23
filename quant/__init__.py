@@ -5,7 +5,7 @@ import os
 import pkgutil
 from . import data, transform, utils, analysis
 from .analysis import *
-from .backtest import *
+# from .backtest import *
 from .data import wind
 from .transform import *
 
