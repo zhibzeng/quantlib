@@ -176,6 +176,21 @@ class ConfigManager:
         """
         self.__set(key.upper(), value, 'default')
 
+    def get(self, item, default=None):
+        # try:
+        #     return object.__getattribute__(self, item)
+        # except AttributeError:
+        #     pass
+        item = item.upper()
+        if item not in self.data and item in self.__keys:
+            self.update()
+        if item not in self.data:
+            return default
+        try:
+            return self.data[item]['value']
+        except KeyError:
+            return self.data[item]['default']
+
     def update(self):
         """从命令行参数中更新所有配置"""
         args, _ = self.parser.parse_known_args()
