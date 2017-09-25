@@ -1,5 +1,7 @@
 from ...abigale import Abigale, exceptions
 from ...analysis import get_factor_exposure
+from ...common.settings import CONFIG
+from ...data import wind
 from ..common.mods import AbstractMod
 
 
@@ -21,7 +23,7 @@ class AbigaleMod(AbstractMod):
         self.table = table
         self.override = override
         self.metadata = metadata or {}
-        super(Abigale, self).__init__()
+        super(AbigaleMod, self).__init__()
 
     @classmethod
     def register_factor(cls, factor):
@@ -29,7 +31,7 @@ class AbigaleMod(AbstractMod):
 
     def get_benchmark(self):
         """获取基准标的的净值"""
-        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG..get("BENCHMARK", "000905.SH")] \
+        benchmark = wind.get_wind_data("AIndexEODPrices", "s_dq_close")[CONFIG.get("BENCHMARK", "000905.SH")] \
             .dropna().truncate(self.strategy.start_date, self.strategy.end_date)
         benchmark /= benchmark.iloc[0]
         return benchmark
