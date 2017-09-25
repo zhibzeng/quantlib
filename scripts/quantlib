@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from quant.__main__ import QuantMain, Fire
+from quant.__main__ import QuantMain
+from fire import Fire
 
 if __name__ == '__main__':
     Fire(QuantMain)

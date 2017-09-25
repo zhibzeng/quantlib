@@ -124,7 +124,7 @@ class ConfigManager:
     def __contains__(self, item):
         return item in self.__keys
 
-    def get(self, key, default):
+    def get(self, key, default=None):
         try:
             return getattr(self, key.upper())
         except KeyError:

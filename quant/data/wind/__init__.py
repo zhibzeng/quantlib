@@ -142,7 +142,8 @@ class WindDB:
         filename = os.path.join(DATA_PATH, "wind.h5")
         data = {}
         for col in columns:
-            data[col] = pd.read_hdf(filename, key="/".join([table_name, col]))# .drop_duplicates(keep="last")
+            data[col] = pd.read_hdf(filename, key="/".join([table_name, col]))
+            data[col] = data[col][~data[col].index.duplicated(keep="last")]
         return pd.DataFrame(data)
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
