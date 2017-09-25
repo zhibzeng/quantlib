@@ -31,3 +31,6 @@ class AbstractMod(metaclass=ABCMeta):
             MODS[key] = subclass
         return subclass
 
+    def __call__(self):
+        return self
+
