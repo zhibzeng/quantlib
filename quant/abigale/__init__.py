@@ -6,9 +6,12 @@ It helps upload timeseries data and backtest results to servers.
 import getpass
 from ..common.settings import CONFIG
 from .api import RestAPI
-from .exceptions import NotAuthorized
 from .serializers import DataFrameSerializer
 from .security import sha256
+from . import api, exceptions, versioncontrol
+
+
+__all__ = ['RestAPI', 'exceptions', 'sha256', 'versioncontrol', 'api']
 
 
 class Abigale:
@@ -48,7 +51,7 @@ class Abigale:
         if response["code"] == 200:
             return [response.get(field)  for field in fields]
         elif response["code"] == 403:
-            raise NotAuthorized(response.get("message"))
+            raise exceptions.NotAuthorized(response.get("message"))
         else:
             raise Exception("[{}]: {}".format(response.get("code"), response.get("message")))
 
