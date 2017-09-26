@@ -13,6 +13,7 @@ def commit(files, message):
     status = git.status(".")
     unstaged = set(status.unstaged) | set(status.untracked)
     to_submit = set(files) & unstaged
+    message = message or "committed @ {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     if to_submit:
         git.add(".", paths=list(to_submit))
         git.commit(".", message)

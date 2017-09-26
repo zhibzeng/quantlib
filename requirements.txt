@@ -10,7 +10,7 @@ fire
 jinja2
 lazy-property
 sklearn
-numba
+dulwich>=0.18.3
 
 # optional
 # pymysql

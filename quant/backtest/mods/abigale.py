@@ -7,7 +7,7 @@ from ..common.mods import AbstractMod
 
 class AbigaleMod(AbstractMod):
     risk_factors = set()
-    def __init__(self, workspace, table, override=False, metadata = None):
+    def __init__(self, workspace, table, override=False, metadata=None):
         """
         Parameters
         ==========
