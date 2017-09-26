@@ -49,7 +49,10 @@ class Abigale:
             raise Exception("[{}]: {}".format(response.status_code, response.reason))
         response = response.json()
         if response["code"] == 200:
-            return [response.get(field)  for field in fields]
+            result = tuple(response.get(field)  for field in fields)
+            if len(result) == 1:
+                return result[0]
+            return result
         elif response["code"] == 403:
             raise exceptions.NotAuthorized(response.get("message"))
         else:
