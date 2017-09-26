@@ -61,6 +61,7 @@ class AbigaleMod(AbstractMod):
         if not self.override and self.table in abigale.ls(abigale.username, self.workspace):
             raise exceptions.TableExistsException
         self.metadata.update(is_backtest=True)
+        data = pd.concat(data, axis=1)
         abigale.upload(self.workspace, self.table, data, self.metadata)
         
 
