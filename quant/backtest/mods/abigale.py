@@ -25,6 +25,10 @@ class AbigaleMod(AbstractMod):
         self.metadata = metadata or {}
         super(AbigaleMod, self).__init__()
 
+    def __plug_in__(self, caller):
+        self.strategy = caller
+        caller.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
+
     @classmethod
     def register_factor(cls, factor):
         cls.risk_factors.add(factor)
