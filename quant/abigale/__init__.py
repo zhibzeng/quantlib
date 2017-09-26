@@ -119,6 +119,6 @@ class Abigale:
             path.append(workspace)
         path = "/".join(path)
         resp = self.api.get("workspace/list", params={"path": path, "requires_metadata": False})
-        (items, ) = self._handle(resp, "items")
+        items = self._handle(resp, "items")
         return items
 
