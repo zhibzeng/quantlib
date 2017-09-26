@@ -5,6 +5,7 @@ It helps upload timeseries data and backtest results to servers.
 """
 import getpass
 from ..common.settings import CONFIG
+from ..common.logging import Logger
 from .api import RestAPI
 from .serializers import DataFrameSerializer
 from .security import sha256
@@ -79,7 +80,8 @@ class Abigale:
         json_data = DataFrameSerializer.serialize(df, True)
         params = {'metadata': metadata} if metadata else None
         resp = self.api.post("workspace/write/{workspace}/{table}".format(workspace=workspace, table=table), data=json_data, params=params)
-        return self._handle(resp)
+        self._handle(resp)
+        Logger.info("Uploaded {}/{}/{}".format(self.username, workspace, table))
 
     def fetch(self, user, workspace, table):
         """
