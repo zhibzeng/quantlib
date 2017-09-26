@@ -20,6 +20,7 @@ class AbstractMod(metaclass=ABCMeta):
             if hasattr(self, func_name):
                 func = getattr(self, func_name)
                 caller.event_manager.register(event, func)
+                Logger.debug("[Mod] Registered {} => {}".format(self.__class__, event_name))
 
     @classmethod
     def register(cls, subclass):
