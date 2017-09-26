@@ -3,6 +3,7 @@ quant.abigale is a python module that supports Abigale Project.
 It was originally part of the Abigale Project called AbiClient.
 It helps upload timeseries data and backtest results to servers.
 """
+import json
 import getpass
 from ..common.settings import CONFIG
 from ..common.logging import Logger
@@ -77,9 +78,11 @@ class Abigale:
             metadata to append. Annotate is_backtest=True to indicate this is a backtest
             result. Also, use `permissions` to control the read access to this dataset.
         """
-        json_data = DataFrameSerializer.serialize(df, True)
-        params = {'metadata': metadata} if metadata else None
-        resp = self.api.post("workspace/write/{workspace}/{table}".format(workspace=workspace, table=table), data=json_data, params=params)
+        json_data = DataFrameSerializer.serialize(df, False)
+        if metadata:
+            json_data["metadata"] = metadata
+        json_data = json.dumps(json_data)
+        resp = self.api.post("workspace/write/{workspace}/{table}".format(workspace=workspace, table=table), data=json_data)
         self._handle(resp)
         Logger.info("Uploaded {}/{}/{}".format(self.username, workspace, table))
 

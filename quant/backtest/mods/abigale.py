@@ -1,3 +1,4 @@
+import pandas as pd
 from ...abigale import Abigale, exceptions
 from ...analysis import get_factor_exposure
 from ...common.settings import CONFIG
@@ -60,7 +61,7 @@ class AbigaleMod(AbstractMod):
                 raise exceptions.LoginFailed
         if not self.override and self.table in abigale.ls(abigale.username, self.workspace):
             raise exceptions.TableExistsException
-        self.metadata.update(is_backtest=True)
+        self.metadata["is_backtest"] = True
         data = pd.concat(data, axis=1)
         abigale.upload(self.workspace, self.table, data, self.metadata)
         

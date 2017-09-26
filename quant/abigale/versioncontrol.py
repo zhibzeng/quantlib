@@ -19,4 +19,7 @@ def commit(files, message):
     if to_submit:
         git.add(".", paths=list(to_submit))
         git.commit(".", message)
-    return repo.head()
+    commit_id = repo.head()
+    if not isinstance(commit_id, str):
+        commit_id = commit_id.decode("utf-8")
+    return commit_id
