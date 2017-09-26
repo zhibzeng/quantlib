@@ -14,6 +14,8 @@ def commit(files, message):
     unstaged = set(status.unstaged) | set(status.untracked)
     to_submit = set(files) & unstaged
     message = message or "committed @ {}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    if isinstance(message, str):
+        message = message.encode("utf-8")
     if to_submit:
         git.add(".", paths=list(to_submit))
         git.commit(".", message)
