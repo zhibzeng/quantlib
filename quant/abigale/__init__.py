@@ -46,7 +46,7 @@ class Abigale:
     @staticmethod
     def _handle(response, *fields):
         if response.status_code == 403:
-            raise NotAuthorized()
+            raise exceptions.NotAuthorized()
         elif response.status_code != 200:
             raise Exception("[{}]: {}".format(response.status_code, response.reason))
         response = response.json()

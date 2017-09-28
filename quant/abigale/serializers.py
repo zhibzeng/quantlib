@@ -1,6 +1,5 @@
 import json
 import ujson
-import pytz
 import numpy as np
 import pandas as pd
 
@@ -37,7 +36,7 @@ class DataFrameSerializer(SerializerBase):
         df = pd.DataFrame(**data)
         try:
             df.index = pd.to_datetime(df.index)
-            df.index.tz=pytz.timezone("Asia/Shanghai")
+            df.index = df.index.tz_localize("Asia/Shanghai")
         except ValueError:
             pass
         return df
