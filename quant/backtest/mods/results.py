@@ -13,10 +13,6 @@ class ShowBasicResults(AbstractMod):
     def __init__(self):
         self.strategy = None
 
-    def __plug_in__(self, caller):
-        self.strategy = caller
-        self.strategy.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
-
     def on_backtest_finish(self, fund):
         net_value = fund.sheet["net_value"].copy()
         if CONFIG.BENCHMARK:

@@ -15,10 +15,6 @@ class Output(AbstractMod):
             CONFIG.add_argument("--output", "-o", action="append", help="output format",
                                 choices=["sheet", "position"], default=[], required=False)
 
-    def __plug_in__(self, caller):
-        self.strategy = caller
-        caller.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
-
     def on_backtest_finish(self, fund):
         filename = "%s_output.h5" % self.strategy.name
         formats = CONFIG.OUTPUT

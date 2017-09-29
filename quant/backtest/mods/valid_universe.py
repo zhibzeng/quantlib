@@ -24,10 +24,6 @@ class NoSTUniverse(AbstractMod):
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
 
-    def __plug_in__(self, caller):
-        self.strategy = caller
-        self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
-
     def handle_universe(self, universe):
         today = self.strategy.today
         st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
@@ -43,10 +39,6 @@ class NoIPOUniverse(AbstractMod):
         self.strategy = None
         self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"]).dropna()
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
-
-    def __plug_in__(self, caller):
-        self.strategy = caller
-        self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
 
     def handle_universe(self, universe):
         today = self.strategy.today
@@ -65,8 +57,7 @@ class NoUpLimitUniverse(AbstractMod):
         self.close_prices = None
 
     def __plug_in__(self, caller):
-        self.strategy = caller
-        self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
+        super(NoUpLimitUniverse, self).__plug_in__(caller)
         self.open_prices = caller.market.open_prices
         self.close_prices = caller.market.close_prices
 
@@ -93,10 +84,6 @@ class ActivelyTraded(AbstractMod):
         self.strategy = None
         self.threshold = threshold
         self.amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
-
-    def __plug_in__(self, caller):
-        self.strategy = caller
-        self.strategy.event_manager.register(EventType.GET_UNIVERSE, self.handle_universe)
 
     def handle_universe(self, universe):
         today = self.strategy.today
