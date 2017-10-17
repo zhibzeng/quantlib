@@ -10,9 +10,6 @@ from ...data import wind
 @AbstractMod.register
 class ShowBasicResults(AbstractMod):
     """简单显示年化平均收益、年化波动和夏普率"""
-    def __init__(self):
-        self.strategy = None
-
     def on_backtest_finish(self, fund):
         net_value = fund.sheet["net_value"].copy()
         if CONFIG.BENCHMARK:

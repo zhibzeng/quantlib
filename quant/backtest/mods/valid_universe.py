@@ -14,8 +14,8 @@ class NoSTUniverse(AbstractMod):
     会自动将universe中ST的股票去除。
     """
     def __init__(self):
-        self.strategy = None
         self.st = self.get_st_list()
+        super(NoSTUniverse, self).__init__()
 
     @staticmethod
     def get_st_list():
@@ -24,7 +24,7 @@ class NoSTUniverse(AbstractMod):
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
 
-    def handle_universe(self, universe):
+    def get_universe(self, universe):
         today = self.strategy.today
         st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st_stocks = list(st.s_info_windcode)
@@ -36,11 +36,11 @@ class NoSTUniverse(AbstractMod):
 @AbstractMod.register
 class NoIPOUniverse(AbstractMod):
     def __init__(self, days=30):
-        self.strategy = None
         self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"]).dropna()
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
+        super(NoIPOUniverse, self).__init__()
 
-    def handle_universe(self, universe):
+    def get_universe(self, universe):
         today = self.strategy.today
         invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
         for stock in invalid_stock:
@@ -52,16 +52,16 @@ class NoIPOUniverse(AbstractMod):
 class NoUpLimitUniverse(AbstractMod):
     """从可交易股票池中去除涨停股票"""
     def __init__(self):
-        self.strategy = None
         self.open_prices = None
         self.close_prices = None
+        super(NoUpLimitUniverse, self).__init__()
 
     def __plug_in__(self, caller):
         super(NoUpLimitUniverse, self).__plug_in__(caller)
         self.open_prices = caller.market.open_prices
         self.close_prices = caller.market.close_prices
 
-    def handle_universe(self, universe):
+    def get_universe(self, universe):
         today = self.strategy.today
         next_trading_day = today + TDay
         if next_trading_day not in self.strategy.market.market_data.index:
@@ -84,8 +84,9 @@ class ActivelyTraded(AbstractMod):
         self.strategy = None
         self.threshold = threshold
         self.amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
+        super(ActivelyTraded, self).__init__()
 
-    def handle_universe(self, universe):
+    def get_universe(self, universe):
         today = self.strategy.today
         today_amount = self.amount.loc[today]
         for stock in universe:
