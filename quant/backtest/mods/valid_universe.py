@@ -12,15 +12,17 @@ from ...utils.calendar import TDay
 class NoSTUniverse(AbstractMod):
     """NoSTUniverse模块
     会自动将universe中ST的股票去除。
+    将持有的已经进入ST的股票主动卖出。
     """
     def __init__(self):
         self.st = self.get_st_list()
+        self.st_stocks = []
         super(NoSTUniverse, self).__init__()
 
     @staticmethod
     def get_st_list():
-        st = wind.get_wind_table("AShareST", ["entry_dt", "remove_dt", "s_info_windcode"])
-        st["entry_dt"] = pd.to_datetime(st["entry_dt"])
+        st = wind.get_wind_table("AShareST", ["ann_dt", "remove_dt", "s_info_windcode"])
+        st["ann_dt"] = pd.to_datetime(st["ann_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
 
@@ -29,10 +31,28 @@ class NoSTUniverse(AbstractMod):
         # st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st = self.st
         st = st[(st['ann_dt'] <= today) & ((~st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
-        st_stocks = list(st.s_info_windcode)
-        for stock in st_stocks:
+        self.st_stocks = list(st.s_info_windcode)
+        for stock in self.st_stocks:
             if stock in universe:
                 universe.remove(stock)
+    
+    def on_backtest_after_handle(self):
+        fund = self.strategy.fund
+        if self.st_stocks is None:
+            return
+        if fund.__tobuy is not None:
+            for stock in self.st_stocks:
+                if stock in fund.__tobuy:
+                    fund.__tobuy[stock] = 0
+        else:
+            changed = False
+            position = fund.position.iloc[fund.today_idx, :-1].iteritems().to_dict()
+            for stock in self.st_stocks:
+                if stock in position:
+                    position[stock] = 0
+                    changed = True
+            if changed:
+                self.strategy.change_position(position)
 
 
 @AbstractMod.register
