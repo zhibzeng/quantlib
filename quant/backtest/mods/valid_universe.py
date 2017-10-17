@@ -24,7 +24,7 @@ class NoSTUniverse(AbstractMod):
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
 
-    def get_universe(self, universe):
+    def on_get_universe(self, universe):
         today = self.strategy.today
         st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st_stocks = list(st.s_info_windcode)
@@ -40,7 +40,7 @@ class NoIPOUniverse(AbstractMod):
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
         super(NoIPOUniverse, self).__init__()
 
-    def get_universe(self, universe):
+    def on_get_universe(self, universe):
         today = self.strategy.today
         invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
         for stock in invalid_stock:
@@ -61,7 +61,7 @@ class NoUpLimitUniverse(AbstractMod):
         self.open_prices = caller.market.open_prices
         self.close_prices = caller.market.close_prices
 
-    def get_universe(self, universe):
+    def on_get_universe(self, universe):
         today = self.strategy.today
         next_trading_day = today + TDay
         if next_trading_day not in self.strategy.market.market_data.index:
@@ -86,7 +86,7 @@ class ActivelyTraded(AbstractMod):
         self.amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
         super(ActivelyTraded, self).__init__()
 
-    def get_universe(self, universe):
+    def on_get_universe(self, universe):
         today = self.strategy.today
         today_amount = self.amount.loc[today]
         for stock in universe:
