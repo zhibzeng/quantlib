@@ -25,7 +25,10 @@ class AbstractMod(metaclass=ABCMeta):
     @classmethod
     def register(cls, subclass):
         global MODS
-        key = subclass.__name__
+        if isinstance(subclass, type):
+            key = subclass.__name__
+        elif isinstance(subclass, AbstractMod):
+            key = subclass.__class__.__name__
         if key in MODS:
             Logger.error("Mod `%s` has already been registered." % key)
         else:
