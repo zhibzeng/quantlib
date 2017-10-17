@@ -35,3 +35,16 @@ class AbstractMod(metaclass=ABCMeta):
     def __call__(self):
         return self
 
+    def unregister(self, subclass):
+        global MODS
+        if isinstance(subclass, AbstractMod) or isinstance(subclass, type):
+            key = subclass.__name__
+        elif isinstance(subclass, str):
+            key = subclass
+        else:
+            raise TypeError("Can't identify mod as `%s` type" % str(type(subclass)))
+        try:
+            del MODS[key]
+        except KeyError:
+            Logger.error("Found No Mod Named `%s`." % key)
+
