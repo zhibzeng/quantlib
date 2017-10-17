@@ -38,6 +38,7 @@ class AbstractMod(metaclass=ABCMeta):
     def __call__(self):
         return self
 
+    @classmethod
     def unregister(cls, subclass):
         global MODS
         if isinstance(subclass, AbstractMod) or isinstance(subclass, type):
