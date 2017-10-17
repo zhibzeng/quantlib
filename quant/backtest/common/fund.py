@@ -166,5 +166,8 @@ class Fund:
 
     @property
     def tobuy(self):
-        return self.__tobuy.copy()
+        if self.__tobuy:
+            return self.__tobuy.copy()
+        else:
+            return None
 
