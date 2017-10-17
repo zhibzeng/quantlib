@@ -21,8 +21,8 @@ class NoSTUniverse(AbstractMod):
 
     @staticmethod
     def get_st_list():
-        st = wind.get_wind_table("AShareST", ["ann_dt", "remove_dt", "s_info_windcode"])
-        st["ann_dt"] = pd.to_datetime(st["ann_dt"])
+        st = wind.get_wind_table("AShareST", ["entry_dt", "remove_dt", "s_info_windcode"])
+        st["entry_dt"] = pd.to_datetime(st["entry_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
 
@@ -30,7 +30,7 @@ class NoSTUniverse(AbstractMod):
         today = self.strategy.today
         # st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st = self.st
-        st = st[(st['ann_dt'] <= today) & ((~st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
+        st = st[(st['entry_dt'] <= today) & ((~st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
         self.st_stocks = list(st.s_info_windcode)
         for stock in self.st_stocks:
             if stock in universe:
