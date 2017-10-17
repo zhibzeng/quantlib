@@ -127,3 +127,6 @@ class Abigale:
         items = self._handle(resp, "items")
         return items
 
+    def rm(self, workspace, table):
+        path = "/".join(["workspace/delete", workspace, table])
+        self._handle(self.api.delete(path))
