@@ -42,14 +42,11 @@ class AbstractFactor:
         """Generate factor document"""
         factor_name = cls.factor_name or cls.__name__
         factor_values = cls.get_factor_value()
-        # strategy = SimpleStrategy(factor_values, mods=[])
-        # strategy.run()
         cls.h = HTML()
         with cls.h.html():
             cls._generate_head(factor_name)
             with cls.h.body():
                 cls._generate_basics(factor_name)
-                # cls._generate_backtest(strategy)
                 cls._generate_ic(factor_values)
         docstring = cls.h.render()
         with open("%s.html" % factor_name, "w", encoding="utf8") as output_file:
@@ -145,7 +142,6 @@ class AbstractFactor:
         if cls.factor_freq:
             data = data.resample(cls.factor_freq * TDay, closed='right', label='right').last()
         real_price = get_wind_data("AShareEODPrices", "s_dq_adjclose")
-        # real_price = real_price.resample("1d").ffill()
         real_price = real_price.loc[data.index]
         real_rtn = real_price.pct_change().shift(-1)
         ic_score = get_ic(data, real_rtn)
