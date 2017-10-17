@@ -40,19 +40,22 @@ class NoSTUniverse(AbstractMod):
         fund = self.strategy.fund
         if self.st_stocks is None:
             return
-        if fund.__tobuy is not None:
+        tobuy = fund.tobuy
+        changed = False
+        if tobuy is not None:
+            position = tobuy
             for stock in self.st_stocks:
-                if stock in fund.__tobuy:
-                    fund.__tobuy[stock] = 0
+                if stock in tobuy:
+                    position[stock] = 0
+                    changed = True
         else:
-            changed = False
             position = fund.position.iloc[fund.today_idx, :-1].iteritems().to_dict()
             for stock in self.st_stocks:
                 if stock in position:
                     position[stock] = 0
                     changed = True
-            if changed:
-                self.strategy.change_position(position)
+        if changed:
+            self.strategy.change_position(position)
 
 
 @AbstractMod.register
