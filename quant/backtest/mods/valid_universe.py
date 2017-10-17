@@ -28,7 +28,7 @@ class NoSTUniverse(AbstractMod):
         today = self.strategy.today
         # st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st = self.st
-        st = st[(st['entry_dt'] <= today) & ((~st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
+        st = st[(st['ann_dt'] <= today) & ((~st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
         st_stocks = list(st.s_info_windcode)
         for stock in st_stocks:
             if stock in universe:
