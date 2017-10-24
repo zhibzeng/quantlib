@@ -20,6 +20,7 @@ class AShareMarket:
         self.market_data["CASH"] = 0
         self.open_prices = wind.get_wind_data("AShareEODPrices", "s_dq_adjopen")
         self.close_prices = wind.get_wind_data("AShareEODPrices", "s_dq_adjclose")
+        self.preclose_prices = wind.get_wind_data("AShareEODPrices", "s_dq_adjpreclose")
         self.trading_days = self.market_data.index
 
     def on_newday(self, today):

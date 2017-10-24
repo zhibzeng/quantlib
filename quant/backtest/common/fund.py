@@ -148,13 +148,15 @@ class Fund:
         """
         today = self.strategy.today
         today_open = self.market.open_prices.loc[today]
+        today_close = self.market.close_prices.loc[today]
         try:
-            yesterday_close = self.market.close_prices.loc[today - TDay]
+            yesterday_close = self.market.preclose_prices.loc[today]
         except (KeyError, IndexError):
             return [], []
-        pct_change = today_open / yesterday_close - 1
-        uplimit = list(pct_change[pct_change > 0.09].index)
-        downlimit = list(pct_change[pct_change < -0.09].index)
+        pct_change1 = today_open / yesterday_close - 1
+        pct_change2 = today_close / yesterday_close - 1
+        uplimit = list(pct_change[(pct_change1 > 0.09) & (pct_change2 > 0.09)].index)
+        downlimit = list(pct_change[(pct_change1 < -0.09) & (pct_change2 < -0.09)].index)
         return uplimit, downlimit
 
     def change_position(self, tobuy_pct):
