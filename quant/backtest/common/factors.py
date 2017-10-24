@@ -15,7 +15,9 @@ def load_factor(path, module_name):
     for member in dir(module):
         if member.lower() == module_name:
             Logger.debug("[Factor] Loaded factor {}".format(member))
+            del sys.path[0]
             return getattr(module, member)
+    del sys.path[0]
 
 
 def get_factors():
