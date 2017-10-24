@@ -164,3 +164,10 @@ class Fund:
     def net_value(self):
         return self.sheet.loc[self.strategy.today, "net_value"]
 
+    @property
+    def tobuy(self):
+        if self.__tobuy:
+            return self.__tobuy.copy()
+        else:
+            return None
+
