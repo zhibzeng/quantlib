@@ -7,7 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from docutils.core import publish_parts
 from ..analysis import get_ic, get_factor_exposure
-from ..backtest import SimpleStrategy
+# from ..backtest import SimpleStrategy
 from ..common.settings import CONFIG
 from ..common.html import HTML
 from ..data import wind
