@@ -64,15 +64,14 @@
           <h1>因子暴露</h1>
           <script>var exposures = {};</script>
           <ul id="exposure-tab" class="nav nav-tabs bg-faded">
-            {% if exposure %}
-            {% for factor_name, expo in exposure %}
-            <script>exposures["{{factor_name}}"] = {{expo}};</script>
+            {% for x in exposure %}
+            {# with factor_name = x[0], expo = x[1] #}
+            <script>exposures["{{x[0]}}"] = {{x[1]}};</script>
             <li>
             
-                <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{factor_name}}">{{factor_name}}</a>
+                <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{x[0]}}">{{x[0]}}</a>
             </li>
             {% endfor %}
-            {% endif %}
           </ul>
             <div class="highcharts" id="highcharts-risk-exposure" style="height: 400px; width: 100%; min-width: 310px"></div>
         </div>

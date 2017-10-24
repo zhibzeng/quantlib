@@ -15,6 +15,8 @@ from ....analysis import get_factor_exposure
 from ....data import wind
 from ....common.settings import CONFIG
 from ....common.logging import Logger
+from ...common.factors import get_factors
+
 
 TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "statics/template.html")
 
@@ -100,3 +102,6 @@ class WebVisualizer(AbstractMod):
         elif CONFIG.OPEN_BROWSER:
             webbrowser.open_new_tab(filename)
 
+
+for factor in get_factors():
+    WebVisualizer.register_factor(factor)

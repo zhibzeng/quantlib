@@ -4,6 +4,7 @@ from ...analysis import get_factor_exposure
 from ...common.settings import CONFIG
 from ...data import wind
 from ..common.mods import AbstractMod
+from ..common.factors import get_factors
 
 
 class AbigaleMod(AbstractMod):
@@ -66,3 +67,5 @@ class AbigaleMod(AbstractMod):
         abigale.upload(self.workspace, self.table, data, self.metadata)
         
 
+for factor in get_factors():
+    AbigaleMod.register_factor(factor)
