@@ -1,7 +1,6 @@
 """
 Search and import default factors automatically
 """
-from glob import glob
 import importlib
 import os
 import sys
@@ -20,7 +19,7 @@ def load_factor(path, module_name):
 
 
 def get_factors():
-    PATH = os.path.join(MAINPATH, "factors")
+    PATH = os.path.join(MAIN_PATH, "factors")
     factors = []
     if os.path.exists(PATH):
         for filename in os.listdir(PATH):

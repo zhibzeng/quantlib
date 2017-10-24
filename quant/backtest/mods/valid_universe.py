@@ -21,8 +21,8 @@ class NoSTUniverse(AbstractMod):
 
     @staticmethod
     def get_st_list():
-        st = wind.get_wind_table("AShareST", ["ann_dt", "remove_dt", "s_info_windcode"])
-        st = st[(st['s_type_st'] == 'S' | (st['s_type_st'] == 'L'))]
+        st = wind.get_wind_table("AShareST", ["ann_dt", "remove_dt", "s_info_windcode", "s_type_st"])
+        st = st[(st['s_type_st'] == 'S') | (st['s_type_st'] == 'L')]
         st["ann_dt"] = pd.to_datetime(st["ann_dt"])
         st["remove_dt"] = pd.to_datetime(st["remove_dt"])
         return st
@@ -50,7 +50,7 @@ class NoSTUniverse(AbstractMod):
                     position[stock] = 0
                     changed = True
         else:
-            position = fund.position.iloc[fund.today_idx, :-1].iteritems().to_dict()
+            position = fund.position.iloc[fund.today_idx, :-1].to_dict()
             for stock in self.st_stocks:
                 if stock in position:
                     position[stock] = 0
