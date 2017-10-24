@@ -28,6 +28,7 @@ class AShareST(BaseModel):
     object_id = Column(VARCHAR2(100), primary_key=True)
     s_info_windcode = Column(VARCHAR2(40))
     s_type_st = Column(VARCHAR2(8))
+    ann_dt = Column(VARCHAR2(8))
     entry_dt = Column(VARCHAR2(8))
     remove_dt = Column(VARCHAR2(8))
     opdate = Column(DATETIME)
