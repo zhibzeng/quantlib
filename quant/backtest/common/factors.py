@@ -20,14 +20,18 @@ def load_factor(path, module_name):
     del sys.path[0]
 
 
+__factors = None
+
 def get_factors():
-    PATH = os.path.join(MAIN_PATH, "factors")
-    factors = []
-    if os.path.exists(PATH):
-        for filename in os.listdir(PATH):
-            if filename.endswith(".py") and filename != "__init__.py":
-                try:
-                    factors.append(load_factor(PATH, filename[:-3]))
-                except:
-                    pass
-    return factors
+    global __factors
+    if __factors is None:
+        __factors = []
+        PATH = os.path.join(MAIN_PATH, "factors")
+        if os.path.exists(PATH):
+            for filename in os.listdir(PATH):
+                if filename.endswith(".py") and filename != "__init__.py":
+                    try:
+                       __factors.append(load_factor(PATH, filename[:-3]))
+                    except:
+                        pass
+    return __factors
