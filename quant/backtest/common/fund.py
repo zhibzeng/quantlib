@@ -20,7 +20,7 @@ class Fund:
                                      index=self.trading_calendar,
                                      columns=list(self.universe)+["CASH"])
         self.delayed = {}
-        self.__tobuy = {}
+        self.__tobuy = None
         self.initialize()
 
     def initialize(self):
@@ -36,7 +36,7 @@ class Fund:
 
     def on_newday(self, today):
         self.today_idx += 1
-        assert self.trading_calendar[self.today_idx] == today
+        # assert self.trading_calendar[self.today_idx] == today
         self.settle()
         self.do_transactions()
         self.handle_delayed_stocks()
@@ -47,7 +47,7 @@ class Fund:
         positions based on market price change.
         This doesn't trade stocks.
         """
-        assert self.strategy.today == self.market.today
+        # assert self.strategy.today == self.market.today
         today = self.strategy.today
         if self.today_idx != 0:
             self.position.iloc[self.today_idx] = \
@@ -139,6 +139,16 @@ class Fund:
                 self.sheet.loc[today, "fee"] += fee
                 del self.delayed[stock]
                 Logger.debug("Sold delayed stock %s @ %s" % (stock, today.strftime("%Y-%m-%d")))
+
+    def exceptional_sell(self, stocklist):
+        """
+        Sell some stocks without `change_position`.
+        This method is not preferred by the user.
+        The only use of this method is for some mods to
+        intervene the portofolio.
+        """
+        for stock in stocklist:
+            self.delayed[stock] = 0
 
     def get_limits(self):
         """
