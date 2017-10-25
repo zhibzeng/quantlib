@@ -13,7 +13,7 @@ def load_factor(path, module_name):
     sys.path.insert(0, path)
     module = importlib.import_module(module_name)
     for member in dir(module):
-        if member.lower() == module_name:
+        if member.lower() == module_name.replace("_", ""):
             Logger.debug("[Factor] Loaded factor {}".format(member))
             del sys.path[0]
             return getattr(module, member)
