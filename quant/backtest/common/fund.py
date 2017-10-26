@@ -165,8 +165,8 @@ class Fund:
             return [], []
         pct_change1 = today_open / yesterday_close - 1
         pct_change2 = today_close / yesterday_close - 1
-        uplimit = list(pct_change[(pct_change1 > 0.09) & (pct_change2 > 0.09)].index)
-        downlimit = list(pct_change[(pct_change1 < -0.09) & (pct_change2 < -0.09)].index)
+        uplimit = list(pct_change1[(pct_change1 > 0.09) & (pct_change2 > 0.09)].index)
+        downlimit = list(pct_change1[(pct_change1 < -0.09) & (pct_change2 < -0.09)].index)
         return uplimit, downlimit
 
     def change_position(self, tobuy_pct):
