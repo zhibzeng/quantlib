@@ -38,25 +38,24 @@ class NoSTUniverse(AbstractMod):
                 universe.remove(stock)
     
     def on_backtest_after_handle(self):
+        """
+        Sell the ST stocks if they are in the tobuy-list (for whatever reason)
+        or poisition.
+        """
         fund = self.strategy.fund
         if self.st_stocks is None:
             return
         tobuy = fund.tobuy
-        changed = False
         if tobuy is not None:
-            position = tobuy
             for stock in self.st_stocks:
                 if stock in tobuy:
-                    position[stock] = 0
-                    changed = True
+                    tobuy[stock] = 0
+            self.strategy.change_position(tobuy)
         else:
             position = fund.position.iloc[fund.today_idx, :-1].to_dict()
-            for stock in self.st_stocks:
-                if stock in position:
-                    position[stock] = 0
-                    changed = True
-        if changed:
-            self.strategy.change_position(position)
+            to_sell = [stock for stock in self.st_stocks if position[stock] > 0]
+            if to_sell:
+                fund.exceptional_sell(to_sell)
 
 
 @AbstractMod.register
@@ -93,7 +92,7 @@ class NoUpLimitUniverse(AbstractMod):
         if next_trading_day not in self.strategy.market.market_data.index:
             return
         next_open = self.open_prices.loc[next_trading_day]
-        this_close = self.close_prices.loc[today]
+        this_close = self.preclose_prices.loc[next_trading_day]
         change = next_open / this_close - 1
         up_limit = change[change > 0.09].index
         for stock in up_limit:

@@ -13,6 +13,7 @@ class AShareMarket:
         self.today_market = None
         self.open_prices = None
         self.close_prices = None
+        self.preclose_prices = None
 
     def initalize_market(self, start_date, end_date):
         self.market_data = wind.get_wind_data("AShareEODPrices",
