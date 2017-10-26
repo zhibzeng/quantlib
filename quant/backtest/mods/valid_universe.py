@@ -78,13 +78,13 @@ class NoUpLimitUniverse(AbstractMod):
     """从可交易股票池中去除涨停股票"""
     def __init__(self):
         self.open_prices = None
-        self.close_prices = None
+        self.preclose_prices = None
         super(NoUpLimitUniverse, self).__init__()
 
     def __plug_in__(self, caller):
         super(NoUpLimitUniverse, self).__plug_in__(caller)
         self.open_prices = caller.market.open_prices
-        self.close_prices = caller.market.close_prices
+        self.preclose_prices = caller.market.preclose_prices
 
     def on_get_universe(self, universe):
         today = self.strategy.today

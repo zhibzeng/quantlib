@@ -12,12 +12,14 @@ from ...common.logging import Logger
 def load_factor(path, module_name):
     sys.path.insert(0, path)
     module = importlib.import_module(module_name)
+    factor = None
     for member in dir(module):
-        if member.lower() == module_name.replace("_", ""):
+        if member.lower().replace("_", "") == module_name.replace("_", ""):
             Logger.debug("[Factor] Loaded factor {}".format(member))
-            del sys.path[0]
-            return getattr(module, member)
+            factor = getattr(module, member)
+            break
     del sys.path[0]
+    return factor
 
 
 __factors = None
@@ -31,7 +33,9 @@ def get_factors():
             for filename in os.listdir(PATH):
                 if filename.endswith(".py") and filename != "__init__.py":
                     try:
-                       __factors.append(load_factor(PATH, filename[:-3]))
+                        factor = load_factor(PATH, filename[:-3])
+                        if factor is not None:
+                            __factors.append(factor)
                     except:
                         pass
     return __factors
