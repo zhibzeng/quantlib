@@ -1,5 +1,8 @@
 """
 Search and import default factors automatically
+The `get_factor` function finds modules under `~/.quantlib/factors`
+and subclasses of the AbstractFactor and load them to
+the namespace.
 """
 import importlib
 import os
@@ -9,22 +12,30 @@ from ...common.settings import MAIN_PATH
 from ...common.logging import Logger
 
 
-def load_factor(path, module_name):
+def load_factors(path, module_name):
     sys.path.insert(0, path)
-    module = importlib.import_module(module_name)
-    factor = None
-    for member in dir(module):
-        if member.lower().replace("_", "") == module_name.replace("_", ""):
-            Logger.debug("[Factor] Loaded factor {}".format(member))
-            factor = getattr(module, member)
-            break
+    factors = []
+    try:
+        module = importlib.import_module(module_name)
+    except:
+        return factors
+    for member_name in dir(module):
+        member = getattr(module, member_name)
+        if issubclass(member, AbstractFactor):
+            Logger.debug("[Factor] Loaded factor {}".format(member_name))
+            factors.append(member)
     del sys.path[0]
-    return factor
+    return factors
 
 
 __factors = None
 
 def get_factors():
+    """
+    Finds modules under `~/.quantlib/factors`
+    and subclasses of the AbstractFactor and
+    load them to the namespace.
+    """
     global __factors
     if __factors is None:
         __factors = []
@@ -32,10 +43,6 @@ def get_factors():
         if os.path.exists(PATH):
             for filename in os.listdir(PATH):
                 if filename.endswith(".py") and filename != "__init__.py":
-                    try:
-                        factor = load_factor(PATH, filename[:-3])
-                        if factor is not None:
-                            __factors.append(factor)
-                    except:
-                        pass
+                    factors = load_factors(PATH, filename[:-3])
+                    __factors.extend(factors)
     return __factors

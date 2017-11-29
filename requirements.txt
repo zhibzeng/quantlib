@@ -1,4 +1,5 @@
 # core
+ujson
 sqlalchemy
 pandas
 tables

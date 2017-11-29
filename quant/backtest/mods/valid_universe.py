@@ -5,6 +5,7 @@ import pandas as pd
 from ..common.mods import AbstractMod
 from ..common.events import EventType
 from ...data import wind
+from ...common.logging import Logger
 from ...utils.calendar import TDay
 
 
@@ -55,6 +56,9 @@ class NoSTUniverse(AbstractMod):
             position = fund.position.iloc[fund.today_idx, :-1].to_dict()
             to_sell = [stock for stock in self.st_stocks if position[stock] > 0]
             if to_sell:
+                today = self.strategy.today.strftime("%Y-%m-%d")
+                for stock in to_sell:
+                    Logger.debug("Sell {} @ {} because it's listed as ST".format(stock, today))
                 fund.exceptional_sell(to_sell)
 
 
