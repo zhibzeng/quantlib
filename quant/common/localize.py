@@ -34,7 +34,7 @@ class Localizer:
                     data = pd.read_hdf(filename, path)
                 except (KeyError, FileNotFoundError):
                     data = wrapped(*args, **kwargs)
-                    data.to_hdf(filename, path)
+                    data.to_hdf(filename, path, format='table')
                 return data
             return func
         return true_wrapper

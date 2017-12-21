@@ -4,6 +4,7 @@ import sys
 import pickle
 from inspect import signature
 from datetime import date, datetime
+import numpy as np
 import pandas as pd
 import sqlalchemy as sa
 import sqlalchemy.sql as sql
@@ -67,9 +68,9 @@ class WindDB:
         if not columns:
             table = self._get_table(table_name)
             if isinstance(table, sql.schema.Table):
-                columns = set(col.name for col in table.columns)
+                columns = set(col.name for col in table.columns if col.name.lower() != "object_id")
             else:
-                columns = set(col.name for col in table.__table__.columns)
+                columns = set(col.name for col in table.__table__.columns if col.name.lower() != "object_id")
         elif isinstance(columns, str):
             columns = [columns]
         columns = set(map(str.lower, columns))
@@ -186,20 +187,33 @@ class WindDB:
     @LOCALIZER.wrap("wind_basics.h5", const_key="basics")
     def get_stock_basics(self):
         table = self.get_wind_table("AShareDescription")
-        table.set_axis(0, table.s_info_windcode)
+        table.set_axis(table.s_info_windcode, axis=0)
         return table.drop("s_info_windcode", axis=1)
 
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
     def get_stock_st(self):
         table = self.get_wind_table("AShareST")
-        columns = self.get_stock_basics().s_info_windcode
-        start_date = table.entry_dt.min()
-        end_date = table.remove_dt.max()
+        table = table[pd.isnull(table.remove_dt) | (table.remove_dt > "2006-01-01")]
+        today = pd.to_datetime(date.today())
+
+        basics = self.get_stock_basics().dropna(subset=['s_info_listdate'])
+        basics = basics[pd.isnull(basics.s_info_delistdate) | (basics.s_info_delistdate > '2006-01-01')]
+        columns = basics.index
+
+        start_date = "2006-01-01"
+        end_date = max(today, table.remove_dt.max())
         index = pd.date_range(start_date, end_date, freq=TDay)
         st_table = pd.DataFrame(np.full((len(index), len(columns)), False), index=index, columns=columns)
         for _, row in table.iterrows():
             key = row.s_info_windcode
-            daterange = pd.date_range(row.entry_dt, row.remove_dt, freq=TDay)
+            start = row.entry_dt
+            if start < pd.to_datetime("2006-01-01"):
+                start = "2006-01-01"
+            end = row.remove_dt
+            if pd.isnull(end):
+                end = end_date
+            daterange = pd.date_range(start, end, freq=TDay)
             st_table.loc[daterange, key] = True
+        st_table.index.freq = None      # Can't save to hdf with freq
         return st_table
