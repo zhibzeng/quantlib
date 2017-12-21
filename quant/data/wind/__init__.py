@@ -9,6 +9,7 @@ import sqlalchemy as sa
 import sqlalchemy.sql as sql
 from dateutil.parser import parse
 from . import tables
+from ...utils.calendar import TDay
 from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG, DATA_PATH
 from ...common.db.sql import SQLClient
@@ -114,7 +115,6 @@ class WindDB:
             df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
 
     def _update_wind_table(self, table_name):
-        # FIXME: This doesn't work for unknown reason (Maybe fixed @ 2017-07-30)
         sys.stdout.write("Updating table [{table}]..........".format(table=table_name))
         sys.stdout.flush()
         last_update = self._get_last_update(table_name, parse("2000-01-01"))
@@ -189,3 +189,17 @@ class WindDB:
         table.set_axis(0, table.s_info_windcode)
         return table.drop("s_info_windcode", axis=1)
 
+
+    @LOCALIZER.wrap("wind_basics.h5", const_key="st")
+    def get_stock_st(self):
+        table = self.get_wind_table("AShareST")
+        columns = self.get_stock_basics().s_info_windcode
+        start_date = table.entry_dt.min()
+        end_date = table.remove_dt.max()
+        index = pd.date_range(start_date, end_date, freq=TDay)
+        st_table = pd.DataFrame(np.full((len(index), len(columns)), False), index=index, columns=columns)
+        for _, row in table.iterrows():
+            key = row.s_info_windcode
+            daterange = pd.date_range(row.entry_dt, row.remove_dt, freq=TDay)
+            st_table.loc[daterange, key] = True
+        return st_table

@@ -25,7 +25,7 @@ def find_extreme_values(data, distribution="norm", alpha=0.975):
             是否为离散值的布尔值序列
     """
     distribution_family = getattr(scipy.stats, distribution)
-    dist_parameters = distribution_family.fit(data)
+    dist_parameters = distribution_family.fit(data[np.isfinite(data)])
     distribution = distribution_family(*dist_parameters)
     low, high = distribution.interval(alpha)
     extreme = (data > high) | (data < low)
