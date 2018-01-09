@@ -5,7 +5,6 @@ from collections import defaultdict
 import fire
 import pandas as pd
 from .data import wind
-from .backtest import SimpleStrategy
 from .common.settings import CONFIG, DATA_PATH
 from .common.logging import Logger
 
@@ -133,6 +132,7 @@ class QuantMain:
 
     @staticmethod
     def _backtest_simple(h5_file, key):
+        from .backtest import SimpleStrategy
         predicted = pd.read_hdf(h5_file, key)
         strategy = SimpleStrategy(predicted)
         strategy.run()

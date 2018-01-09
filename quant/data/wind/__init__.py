@@ -4,6 +4,7 @@ import sys
 import pickle
 from inspect import signature
 from datetime import date, datetime
+from typing import List, Union
 import numpy as np
 import pandas as pd
 import sqlalchemy as sa
@@ -135,7 +136,7 @@ class WindDB:
         sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r{nrows} rows updated.\n".format(table=table_name, nrows=len(df)))
         sys.stdout.flush()
 
-    def get_wind_table(self, table_name, columns=None):
+    def get_wind_table(self, table_name: str, columns: Union[List[str], str]=None) -> pd.DataFrame:
         non_existing_columns = self._check_columns(table_name, columns)
         if non_existing_columns:
             self._add_wind_columns(table_name, non_existing_columns)
@@ -148,7 +149,7 @@ class WindDB:
         return pd.DataFrame(data)
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
-    def get_wind_data(self, table, field, index=None, columns=None):
+    def get_wind_data(self, table: str, field: str, index: str=None, columns: str=None) -> pd.DataFrame:
         column_names = [col.name for col in getattr(tables, table).__table__.columns]
         if columns is None:
             if "s_info_windcode" in column_names:
@@ -164,7 +165,7 @@ class WindDB:
         return data.pivot(index=index, columns=columns, values=field).sort_index()
 
     @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])
-    def get_index_weight(self, table, s_info_windcode):
+    def get_index_weight(self, table: str, s_info_windcode: str) -> pd.DataFrame:
         """从指定的表中获得指数权重
 
         Parameters
@@ -185,14 +186,14 @@ class WindDB:
         return data.sort_index()
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="basics")
-    def get_stock_basics(self):
+    def get_stock_basics(self) -> pd.DataFrame:
         table = self.get_wind_table("AShareDescription")
         table.set_axis(table.s_info_windcode, axis=0)
         return table.drop("s_info_windcode", axis=1)
 
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
-    def get_stock_st(self):
+    def get_stock_st(self) -> pd.DataFrame:
         table = self.get_wind_table("AShareST")
         table = table[pd.isnull(table.remove_dt) | (table.remove_dt > "2006-01-01")]
         today = pd.to_datetime(date.today())

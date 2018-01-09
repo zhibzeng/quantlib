@@ -21,7 +21,7 @@ def load_factors(path, module_name):
         return factors
     for member_name in dir(module):
         member = getattr(module, member_name)
-        if issubclass(member, AbstractFactor):
+        if isinstance(member, type) and issubclass(member, AbstractFactor):
             Logger.debug("[Factor] Loaded factor {}".format(member_name))
             factors.append(member)
     del sys.path[0]
