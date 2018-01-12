@@ -3,13 +3,16 @@ import os
 import sys
 import pickle
 from inspect import signature
+import warnings
 from datetime import date, datetime
 from typing import List, Union
+
 import numpy as np
 import pandas as pd
 import sqlalchemy as sa
 import sqlalchemy.sql as sql
 from dateutil.parser import parse
+
 from . import tables
 from ...utils.calendar import TDay
 from ...common.localize import LOCALIZER
@@ -191,9 +194,59 @@ class WindDB:
         table.set_axis(table.s_info_windcode, axis=0)
         return table.drop("s_info_windcode", axis=1)
 
+    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
+    def arrange_entry_table(self, table: str, field: str="", index: str=None, columns: str=None, default_value=None):
+        column_names = [col.name for col in getattr(tables, table).__table__.columns]
+        if columns is None:
+            if "s_info_windcode" in column_names:
+                column = "s_info_windcode"
+            else:
+                raise RuntimeError("No columns specified for DataFrame.pivot")
+        else:
+            column = columns
+        if "entry_dt" not in column_names and "remove_dt" not in column_names:
+            raise RuntimeError("`entry_dt` and/or `remove_dt` not in columns. Maybe this table is not suitable for this operation")
+        if field:
+            columns = [field, "entry_dt", "remove_dt", column]
+        else:
+            columns = ["entry_dt", "remove_dt", column]
+        table = self.get_wind_table(table, columns=columns)
+        table = table[pd.isnull(table.remove_dt)]
+
+        start_date = min(pd.to_datetime("2006-01-01"), table.entry_dt.min())
+        end_date = max(pd.to_datetime(date.today()), table.remove_dt.max())
+        index = pd.date_range(start_date, end_date, freq=TDay)
+        
+        basics = self.get_stock_basics().dropna(subset=['s_info_listdate'])
+        basics = basics[pd.isnull(basics.s_info_delistdate)]
+        columns = basics.index
+
+        if not field:
+            data = pd.DataFrame(np.full((len(index), len(columns)), False, dtype=bool), index=index, columns=columns)
+        else:
+            data = pd.DataFrame(np.full((len(index), len(columns)), default_value or table[field].dtype.type(), dtype=table[field].dtype), index=index, columns=columns)
+        
+        for _, row in table.iterrows():
+            key = row[column]
+            if key not in columns:
+                continue
+            start = row.entry_dt
+            end = row.remove_dt
+            if pd.isnull(end):
+                end = end_date
+            if not field:
+                data.loc[start:end, key] = True
+            else:
+                data.loc[start:end, key] = row[field]
+        data.index.freq = None      # Can't save to hdf with freq
+        return data
+
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
     def get_stock_st(self) -> pd.DataFrame:
+        warnings.warn(DeprecationWarning(
+            "This method is depreciated in favor of `arrange_entry_table`. "
+            "Use wind.arrange_entry_table('AShareST')"))
         table = self.get_wind_table("AShareST")
         table = table[pd.isnull(table.remove_dt) | (table.remove_dt > "2006-01-01")]
         today = pd.to_datetime(date.today())
