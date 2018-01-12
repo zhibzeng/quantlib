@@ -25,7 +25,7 @@ class Localizer:
                 sig = signature(wrapped)
                 bounded = sig.bind(*args, **kwargs)
                 bounded.apply_defaults()
-                path = "/".join(bounded.arguments[key] for key in keys) if keys is not None else ""
+                path = "/".join(str(bounded.arguments[key]) for key in keys) if keys is not None else ""
                 if const_key:
                     path = os.path.join(path, const_key)
                 if not path:

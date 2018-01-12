@@ -273,6 +273,7 @@ class WindDB:
             AShareIndustriesClassCITICS 中国A股中信行业分类
         level: {1, 2, 3} 行业等级
         """
+        level = int(level)
         tables = {
             "AShareIndustriesClass": "wind_ind_code",
             "AShareSECNIndustriesClass": "sec_ind_code",
