@@ -210,8 +210,12 @@ class WindDB:
             columns = [field, "entry_dt", "remove_dt", column]
         else:
             columns = ["entry_dt", "remove_dt", column]
-        table = self.get_wind_table(table, columns=columns)
-        table = table[pd.isnull(table.remove_dt)]
+        if isinstance(table, str):
+            table = self.get_wind_table(table, columns=columns)
+        elif not isinstance(table, pd.DataFrame):
+            raise TypeError("table must be either a str or DataFrame")
+        elif not set(columns).issubset(set(table.columns)):
+            raise KeyError("table columns must include all the indicated fields")
 
         start_date = min(pd.to_datetime("2006-01-01"), table.entry_dt.min())
         end_date = max(pd.to_datetime(date.today()), table.remove_dt.max())
@@ -246,7 +250,7 @@ class WindDB:
     def get_stock_st(self) -> pd.DataFrame:
         warnings.warn(DeprecationWarning(
             "This method is depreciated in favor of `arrange_entry_table`. "
-            "Use wind.arrange_entry_table('AShareST')"))
+            "Use wind.arrange_entry_table('AShareST').fillna(False)"))
         table = self.get_wind_table("AShareST")
         table = table[pd.isnull(table.remove_dt) | (table.remove_dt > "2006-01-01")]
         today = pd.to_datetime(date.today())
