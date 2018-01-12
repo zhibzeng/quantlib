@@ -138,7 +138,7 @@ class WindDB:
         sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r{nrows} rows updated.\n".format(table=table_name, nrows=len(df)))
         sys.stdout.flush()
 
-    def get_wind_table(self, table_name: str, columns: Union[List[str], str]=None) -> pd.DataFrame:
+    def get_wind_table(self, table_name: str, columns: Union[List[str], str]=None, format="table") -> pd.DataFrame:
         non_existing_columns = self._check_columns(table_name, columns)
         if non_existing_columns:
             self._add_wind_columns(table_name, non_existing_columns)
@@ -150,7 +150,7 @@ class WindDB:
             data[col] = data[col][~data[col].index.duplicated(keep="last")]
         return pd.DataFrame(data)
 
-    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
+    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"], format="fixed")
     def get_wind_data(self, table: str, field: str, index: str=None, columns: str=None) -> pd.DataFrame:
         column_names = [col.name for col in getattr(tables, table).__table__.columns]
         if columns is None:
@@ -166,7 +166,7 @@ class WindDB:
         data = self.get_wind_table(table, columns=[field, index, columns]).drop_duplicates(subset=[index, columns], keep='last')
         return data.pivot(index=index, columns=columns, values=field).sort_index()
 
-    @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"])
+    @LOCALIZER.wrap("wind_index_weight.h5", keys=["table", "s_info_windcode"], format="fixed")
     def get_index_weight(self, table: str, s_info_windcode: str) -> pd.DataFrame:
         """从指定的表中获得指数权重
 
@@ -187,14 +187,28 @@ class WindDB:
         data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
         return data.sort_index()
 
-    @LOCALIZER.wrap("wind_basics.h5", const_key="basics")
+    @LOCALIZER.wrap("wind_basics.h5", const_key="basics", format="fixed")
     def get_stock_basics(self) -> pd.DataFrame:
         table = self.get_wind_table("AShareDescription")
         table.set_axis(table.s_info_windcode, axis=0)
         return table.drop("s_info_windcode", axis=1)
 
-    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
-    def arrange_entry_table(self, table: str, field: str="", index: str=None, columns: str=None, default_value=None):
+    # @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"], format="fixed")
+    def arrange_entry_table(self, table: str, field: str="", columns: str=None, default_value=None):
+        """
+        把带有entry_dt, remove_dt的表重新整理成以股票为列、日期为行的透视表
+
+        Parameters
+        ==========
+            table: str
+                要查询的表名，或DataFrame数据框
+            field: str
+                以某字段为内容。如果为空，则生成的数据只含有True，False
+            columns: str
+                指定要作为列名的字段，默认为s_info_windcode
+            default_value
+                当一个日期不在任何entry_dt和remove_dt之间时，默认的值。如果为空，则使用对应字段的默认值。
+        """
         from ...utils.calendar import TDay
         column_names = [col.name for col in getattr(tables, table).__table__.columns]
         if columns is None:
@@ -245,6 +259,42 @@ class WindDB:
         data.index.freq = None      # Can't save to hdf with freq
         return data
 
+    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
+    def get_stock_industries(self, table: str, level: int) -> pd.DataFrame:
+        """
+        从指定的表中获取股票行业表
+
+        Parameters
+        ==========
+        table: str
+            AShareIndustriesClass 中国A股行业分类
+            AShareSECNIndustriesClass 中国A股证监会新版行业分类
+            AShareSECIndustriesClass 中国A股证监会行业分类
+            AShareIndustriesClassCITICS 中国A股中信行业分类
+        level: {1, 2, 3} 行业等级
+        """
+        tables = {
+            "AShareIndustriesClass": "wind_ind_code",
+            "AShareSECNIndustriesClass": "sec_ind_code",
+            "AShareSECIndustriesClass": "sec_ind_code",
+            "AShareIndustriesClassCITICS": "citics_ind_code",
+        }
+        lengths = {
+            1: 4,
+            2: 6,
+            3: 8
+        }
+        industry_codes = (self
+            .get_wind_table("AShareIndustriesCode", ["industriesname", "industriescode", "levelnum"])
+            .query("levelnum==@level+1")
+        )
+        industry_codes.industriescode = industry_codes.industriescode.str[:lengths[level]]
+        industry_codes, industry_names = zip(*industry_codes[["industriescode", "industriesname"]].to_records(index=False))
+        field_name = tables[table]
+        industry = wind.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
+        industry[field_name] = industry[field_name].str[:lengths[level]]
+        industry = self.arrange_entry_table(industry, field_name).bfill().replace(industry_codes, industry_names)
+        return industry
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
     def get_stock_st(self) -> pd.DataFrame:

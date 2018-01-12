@@ -9,7 +9,7 @@ class Localizer:
     def __init__(self, path):
         self.path = path
 
-    def wrap(self, filename, keys=None, const_key=None):
+    def wrap(self, filename, keys=None, const_key=None, format="fixed"):
         if keys is None and const_key is None:
             raise ValueError("Either `keys` or `const_key` must not be None")
         filename = os.path.join(self.path, filename)
@@ -34,7 +34,7 @@ class Localizer:
                     data = pd.read_hdf(filename, path)
                 except (KeyError, FileNotFoundError):
                     data = wrapped(*args, **kwargs)
-                    data.to_hdf(filename, path, format='table')
+                    data.to_hdf(filename, path, format=format)
                 return data
             return func
         return true_wrapper
