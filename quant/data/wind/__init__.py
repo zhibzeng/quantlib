@@ -14,7 +14,6 @@ import sqlalchemy.sql as sql
 from dateutil.parser import parse
 
 from . import tables
-from ...utils.calendar import TDay
 from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG, DATA_PATH
 from ...common.db.sql import SQLClient
@@ -196,6 +195,7 @@ class WindDB:
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"])
     def arrange_entry_table(self, table: str, field: str="", index: str=None, columns: str=None, default_value=None):
+        from ...utils.calendar import TDay
         column_names = [col.name for col in getattr(tables, table).__table__.columns]
         if columns is None:
             if "s_info_windcode" in column_names:
@@ -248,6 +248,7 @@ class WindDB:
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
     def get_stock_st(self) -> pd.DataFrame:
+        from ...utils.calendar import TDay
         warnings.warn(DeprecationWarning(
             "This method is depreciated in favor of `arrange_entry_table`. "
             "Use wind.arrange_entry_table('AShareST').fillna(False)"))
