@@ -66,10 +66,10 @@
           <ul id="exposure-tab" class="nav nav-tabs bg-faded">
             {% for x in exposure %}
             {# with factor_name = x[0], expo = x[1] #}
-            <script>exposures["{{x[0]}}"] = {{x[1]}};</script>
+            <script>exposures["{{ factor_name }}"] = {{ expo }};</script>
             <li>
             
-                <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{x[0]}}">{{x[0]}}</a>
+                <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{ factor_name }}">{{ factor_name }}</a>
             </li>
             {% endfor %}
           </ul>
