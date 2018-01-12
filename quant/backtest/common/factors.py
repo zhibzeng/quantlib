@@ -14,16 +14,16 @@ from ...common.logging import Logger
 
 def load_factors(path, module_name):
     sys.path.insert(0, path)
-    factors = []
+    factors = set()
     try:
         module = importlib.import_module(module_name)
     except:
         return factors
     for member_name in dir(module):
         member = getattr(module, member_name)
-        if isinstance(member, type) and issubclass(member, AbstractFactor):
+        if isinstance(member, type) and issubclass(member, AbstractFactor) and member is not AbstractFactor:
             Logger.debug("[Factor] Loaded factor {}".format(member_name))
-            factors.append(member)
+            factors.add(member)
     del sys.path[0]
     return factors
 
@@ -38,11 +38,11 @@ def get_factors():
     """
     global __factors
     if __factors is None:
-        __factors = []
+        __factors = set()
         PATH = os.path.join(MAIN_PATH, "factors")
         if os.path.exists(PATH):
             for filename in os.listdir(PATH):
                 if filename.endswith(".py") and filename != "__init__.py":
                     factors = load_factors(PATH, filename[:-3])
-                    __factors.extend(factors)
-    return __factors
+                    __factors |= factors
+    return list(__factors)
