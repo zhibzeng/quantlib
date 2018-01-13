@@ -304,7 +304,7 @@ class WindDB:
         industry_codes.industriescode = industry_codes.industriescode.str[:lengths[level]]
         industry_codes, industry_names = zip(*industry_codes[["industriescode", "industriesname"]].to_records(index=False))
         field_name = tables[table]
-        industry = wind.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
+        industry = self.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
         industry[field_name] = industry[field_name].str[:lengths[level]]
         industry = self.arrange_entry_table(industry, field_name).bfill().replace(industry_codes, industry_names)
         return industry
