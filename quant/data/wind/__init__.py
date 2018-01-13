@@ -207,29 +207,41 @@ class WindDB:
             columns: str
                 指定要作为列名的字段，默认为s_info_windcode
             default_value
-                当一个日期不在任何entry_dt和remove_dt之间时，默认的值。如果为空，则使用对应字段的默认值。
+                当一个日期不在任何entry_dt和remove_dt之间时，默认的值。如果为空，则使用对应字段类型的默认值。
         """
         from ...utils.calendar import TDay
-        column_names = [col.name for col in getattr(tables, table).__table__.columns]
-        if columns is None:
-            if "s_info_windcode" in column_names:
-                column = "s_info_windcode"
-            else:
-                raise RuntimeError("No columns specified for DataFrame.pivot")
-        else:
-            column = columns
-        if "entry_dt" not in column_names and "remove_dt" not in column_names:
-            raise RuntimeError("`entry_dt` and/or `remove_dt` not in columns. Maybe this table is not suitable for this operation")
-        if field:
-            columns = [field, "entry_dt", "remove_dt", column]
-        else:
-            columns = ["entry_dt", "remove_dt", column]
         if isinstance(table, str):
+            column_names = [col.name for col in getattr(tables, table).__table__.columns]
+            if columns is None:
+                if "s_info_windcode" in column_names:
+                    column = "s_info_windcode"
+                else:
+                    raise RuntimeError("No columns specified for DataFrame.pivot")
+            else:
+                column = columns
+            if "entry_dt" not in column_names or "remove_dt" not in column_names:
+                raise RuntimeError("`entry_dt` and/or `remove_dt` not in columns. Maybe this table is not suitable for this operation")
+            if field:
+                columns = [field, "entry_dt", "remove_dt", column]
+            else:
+                columns = ["entry_dt", "remove_dt", column]
             table = self.get_wind_table(table, columns=columns)
-        elif not isinstance(table, pd.DataFrame):
+        elif isinstance(table, pd.DataFrame):
+            column_names = set(table.columns)
+            if columns is None:
+                if "s_info_windcode" in column_names:
+                    column = "s_info_windcode"
+                else:
+                    raise RuntimeError("No columns specified for DataFrame.pivot")
+            if "entry_dt" not in column_names or "remove_dt" not in column_names:
+                raise RuntimeError("`entry_dt` and/or `remove_dt` not in columns. Maybe this table is not suitable for this operation")
+            if field:
+                columns = [field, "entry_dt", "remove_dt", column]
+            else:
+                columns = ["entry_dt", "remove_dt", column]
+            assert set(columns).issubset(column_names):
+        else:
             raise TypeError("table must be either a str or DataFrame")
-        elif not set(columns).issubset(set(table.columns)):
-            raise KeyError("table columns must include all the indicated fields")
 
         start_date = min(pd.to_datetime("2006-01-01"), table.entry_dt.min())
         end_date = max(pd.to_datetime(date.today()), table.remove_dt.max())
@@ -273,7 +285,7 @@ class WindDB:
             AShareIndustriesClassCITICS 中国A股中信行业分类
         level: {1, 2, 3} 行业等级
         """
-        level = int(level)
+        level = level
         tables = {
             "AShareIndustriesClass": "wind_ind_code",
             "AShareSECNIndustriesClass": "sec_ind_code",
