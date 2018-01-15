@@ -21,7 +21,6 @@ from ..utils.calendar import TradingCalendar, TDay
 
 class AbstractStrategy:
     """股票回测策略基类"""
-    # TODO: 个股收益明细
     name = "strategy"
     """策略名称，用于结果输出"""
     start_date = None
@@ -194,31 +193,33 @@ class NeutralStrategy(SimpleStrategy):
         A_ub = []
         b_ub = []
 
-        for factor, regularizer_weight in self.neutral_factors.items():
+        for factor, epsilon in self.neutral_factors.items():
             factor_data = self.factor_data[factor.factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
-            import ipdb
-            # ipdb.set_trace()
+            
             A_ub.append(stocks_exposure)
-            b_ub.append(index_exposure + 0.1)
+            b_ub.append(index_exposure + epsilon)
 
             A_ub.append(-stocks_exposure)
-            b_ub.append(0.1 - index_exposure)
+            b_ub.append(epsilon - index_exposure)
+            
+
 
         kwargs["A_ub"] = np.stack(A_ub)
         kwargs["b_ub"] = np.stack(b_ub)
 
-        kwargs["bounds"] = [(0, 0.02)] * len(stocks)
+        kwargs["bounds"] = [(0, 0.1)] * len(stocks)
 
         result = linprog(**kwargs)
 
         if not result.success:
-            Logger.warn("Optimization: %s" % result.message)
+            Logger.warn("Optimization Problem: %s" % result.message)
 
         x = result.x
         weights = pd.Series(x, index=stocks)
+        assert (weights >= 0).all()
         return weights[weights > 0]
 
 
