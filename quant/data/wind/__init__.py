@@ -301,7 +301,13 @@ class WindDB:
         field_name = tables[table]
         industry = self.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
         industry[field_name] = industry[field_name].str[:lengths[level]]
-        industry = self.arrange_entry_table(industry, field_name).bfill().replace(industry_codes, industry_names)
+        catetory_dtype = pd.api.types.CategoricalDtype(categories=set(industry_names))
+        industry = (self
+            .arrange_entry_table(industry, field_name)
+            .bfill()
+            .replace(industry_codes, industry_names)
+            .astype({col: catetory_dtype for col in set(industry.s_info_windcode)})
+        )
         return industry
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="st")
