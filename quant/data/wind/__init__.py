@@ -1,4 +1,5 @@
 """Wind数据库接口"""
+from collections import defaultdict
 import os
 import sys
 import pickle
@@ -194,7 +195,7 @@ class WindDB:
         return table.drop("s_info_windcode", axis=1)
 
     # @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"], format="fixed")
-    def arrange_entry_table(self, table: str, field: str="", columns: str=None, default_value=None):
+    def arrange_entry_table(self, table: str, field: str="", columns: str=None):
         """
         把带有entry_dt, remove_dt的表重新整理成以股票为列、日期为行的透视表
 
@@ -206,8 +207,6 @@ class WindDB:
                 以某字段为内容。如果为空，则生成的数据只含有True，False
             columns: str
                 指定要作为列名的字段，默认为s_info_windcode
-            default_value
-                当一个日期不在任何entry_dt和remove_dt之间时，默认的值。如果为空，则使用对应字段类型的默认值。
         """
         from ...utils.calendar import TDay
         if isinstance(table, str):
@@ -239,7 +238,7 @@ class WindDB:
                 columns = [field, "entry_dt", "remove_dt", column]
             else:
                 columns = ["entry_dt", "remove_dt", column]
-            assert set(columns).issubset(column_names):
+            assert set(columns).issubset(column_names)
         else:
             raise TypeError("table must be either a str or DataFrame")
 
@@ -251,28 +250,23 @@ class WindDB:
         basics = basics[pd.isnull(basics.s_info_delistdate)]
         columns = basics.index
 
-        if not field:
-            data = pd.DataFrame(np.full((len(index), len(columns)), False, dtype=bool), index=index, columns=columns)
-        else:
-            data = pd.DataFrame(np.full((len(index), len(columns)), default_value or table[field].dtype.type(), dtype=table[field].dtype), index=index, columns=columns)
-        
+        data = defaultdict(list)
         for _, row in table.iterrows():
             key = row[column]
             if key not in columns:
                 continue
             start = row.entry_dt
-            end = row.remove_dt
-            if pd.isnull(end):
-                end = end_date
-            if not field:
-                data.loc[start:end, key] = True
-            else:
-                data.loc[start:end, key] = row[field]
-        data.index.freq = None      # Can't save to hdf with freq
+            end = end_date if pd.isnull(row.remove_dt) else row.remove_dt
+            idx = pd.date_range(start, end, freq=TDay)
+            value = [True if not field else row[field]] * len(idx)
+            series = pd.Series(value, index=idx)
+            data[key].append(series)
+        data = pd.concat([pd.concat(item, 0).rename(key) for key, item in data.items()], 1)
+
         return data
 
     # @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
-    def get_stock_industries(self, table: str, level: int) -> pd.DataFrame:
+    def get_stock_industries(self, table: str, level: int=1) -> pd.DataFrame:
         """
         从指定的表中获取股票行业表
 
@@ -283,7 +277,8 @@ class WindDB:
             AShareSECNIndustriesClass 中国A股证监会新版行业分类
             AShareSECIndustriesClass 中国A股证监会行业分类
             AShareIndustriesClassCITICS 中国A股中信行业分类
-        level: {1, 2, 3} 行业等级
+        level: {1, 2, 3}
+            行业等级
         """
         level = level
         tables = {
