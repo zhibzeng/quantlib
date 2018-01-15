@@ -253,16 +253,19 @@ class WindDB:
         data = defaultdict(list)
         for _, row in table.iterrows():
             key = row[column]
-            if key not in columns:
-                continue
             start = row.entry_dt
             end = end_date if pd.isnull(row.remove_dt) else row.remove_dt
             idx = pd.date_range(start, end, freq=TDay)
             value = [True if not field else row[field]] * len(idx)
             series = pd.Series(value, index=idx)
             data[key].append(series)
-        data = pd.concat([pd.concat(item, 0).rename(key) for key, item in data.items()], 1)
-
+        data2 = []
+        for key, item in data.items():
+            series = pd.concat(item, 0).rename(key)
+            series = series[~series.index.duplicated(keep='last')]
+            data2.append(series)
+        data = pd.concat(data2, 1)
+        data[list(set(columns)-set(data.columns))] = None
         return data
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
@@ -302,11 +305,12 @@ class WindDB:
         industry = self.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
         industry[field_name] = industry[field_name].str[:lengths[level]]
         catetory_dtype = pd.api.types.CategoricalDtype(categories=set(industry_names))
+        # catetory_dtype = pd.api.types.CategoricalDtype(categories=set(industry[field_name].dropna()))
         industry = (self
             .arrange_entry_table(industry, field_name)
             .bfill()
             .replace(industry_codes, industry_names)
-            .astype({col: catetory_dtype for col in set(industry.s_info_windcode)})
+            # .astype({col: catetory_dtype for col in set(industry.s_info_windcode.dropna())})
         )
         return industry
 
