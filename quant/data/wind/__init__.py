@@ -265,7 +265,7 @@ class WindDB:
 
         return data
 
-    # @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
+    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
     def get_stock_industries(self, table: str, level: int=1) -> pd.DataFrame:
         """
         从指定的表中获取股票行业表
