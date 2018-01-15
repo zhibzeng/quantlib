@@ -1,17 +1,18 @@
-import os
 import base64
-from io import BytesIO
+import os
 from abc import abstractstaticmethod
+from io import BytesIO
+
 import jinja2
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 from docutils.core import publish_parts
-from ..analysis import get_ic, get_factor_exposure
-# from ..backtest import SimpleStrategy
-from ..common.settings import CONFIG
-from ..common.html import HTML
-from ..data import wind
-from ..utils.calendar import TDay
+
+from ...analysis import get_factor_exposure, get_ic
+from ...common.html import HTML
+from ...common.settings import CONFIG
+from ...data import wind
+from ...utils.calendar import TDay
 
 
 class AbstractFactor:

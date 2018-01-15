@@ -140,9 +140,9 @@ class SimpleStrategy(AbstractStrategy):
         self.change_position({stock: share_per_stock for stock in buy})
 
 
-class NeutralStrategy(SimpleStrategy):
+class ConstrainedStrategy(SimpleStrategy):
     """
-    中性策略，在SimpleStrategy的基础上对冲一些风险
+    中性策略，在SimpleStrategy的基础上控制行业和因子暴露
     """
     def __init__(self, *args, neutral_factors={}, **kwargs):
         self.neutral_factors = neutral_factors
@@ -150,7 +150,7 @@ class NeutralStrategy(SimpleStrategy):
                             for factor in neutral_factors.keys()}
         self.index_weights = wind.get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
                             .resample("1d").ffill() / 100
-        super(NeutralStrategy, self).__init__(*args, **kwargs)
+        super(ConstrainedStrategy, self).__init__(*args, **kwargs)
 
     def handle(self, today, universe):
         try:
@@ -204,8 +204,6 @@ class NeutralStrategy(SimpleStrategy):
 
             A_ub.append(-stocks_exposure)
             b_ub.append(epsilon - index_exposure)
-            
-
 
         kwargs["A_ub"] = np.stack(A_ub)
         kwargs["b_ub"] = np.stack(b_ub)
@@ -221,5 +219,3 @@ class NeutralStrategy(SimpleStrategy):
         weights = pd.Series(x, index=stocks)
         assert (weights >= 0).all()
         return weights[weights > 0]
-
-
