@@ -242,6 +242,8 @@ class WindDB:
         else:
             raise TypeError("table must be either a str or DataFrame")
 
+        dtype = table[field].dtype if field else bool
+
         start_date = min(pd.to_datetime("2006-01-01"), table.entry_dt.min())
         end_date = max(pd.to_datetime(date.today()), table.remove_dt.max())
         index = pd.date_range(start_date, end_date, freq=TDay)
@@ -265,7 +267,11 @@ class WindDB:
             series = series[~series.index.duplicated(keep='last')]
             data2.append(series)
         data = pd.concat(data2, 1)
-        data[list(set(columns)-set(data.columns))] = None
+        
+        rest_columns = set(columns) - set(data.columns)
+        if rest_columns:
+            idx = pd.date_range(start_date, end_date, freq=TDay)
+            data = pd.concat([data, pd.DataFrame(np.full((len(idx), len(rest_columns)), None, dtype=dtype), index=idx, columns=rest_columns)], 1) 
         return data
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])

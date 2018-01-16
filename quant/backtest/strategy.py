@@ -1,5 +1,6 @@
 """股票类回测策略"""
 from abc import abstractmethod
+from datetime import date
 from scipy.optimize import linprog
 import numpy as np
 import pandas as pd
@@ -149,7 +150,10 @@ class ConstrainedStrategy(SimpleStrategy):
         self.factor_data = {factor.factor_name: factor.get_factor_value()
                             for factor in neutral_factors.keys()}
         self.index_weights = wind.get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
-                            .resample("1d").ffill() / 100
+                            .resample("1d").ffill()
+        rest_index = pd.date_range(self.index_weights.index[-1], pd.to_datetime(date.today()), freq=TDay)
+        rest_df = pd.DataFrame(np.full((len(rest_index)-1, len(self.index_weights.columns)), None), index=rest_index[1:], columns=self.index_weights.columns)
+        self.index_weights = pd.concat([self.index_weights, rest_df], 0).ffill() / 100
         super(ConstrainedStrategy, self).__init__(*args, **kwargs)
 
     def handle(self, today, universe):
@@ -159,8 +163,8 @@ class ConstrainedStrategy(SimpleStrategy):
             return
         predicted = self.predicted.loc[today, universe].dropna()
         stocks = predicted.index
-        weights = self.optimize(predicted, today).sort_values(ascending=False)
-        weights = weights[weights > 0]
+        weights = self.optimize(predicted, today)
+        weights = weights[weights > 0].sort_values(ascending=False)
         if self.buy_count:
             weights = weights.iloc[:self.buy_count]
             weights /= weights.sum()
@@ -184,6 +188,7 @@ class ConstrainedStrategy(SimpleStrategy):
             The percentage of each stock to buy.
         """
         index_weight = self.index_weights.loc[today].fillna(0)
+        index_weight = index_weight / index_weight.sum()
         stocks = list(predicted.index)
 
         kwargs = {}
@@ -217,5 +222,5 @@ class ConstrainedStrategy(SimpleStrategy):
 
         x = result.x
         weights = pd.Series(x, index=stocks)
-        assert (weights >= 0).all()
+        # assert (weights >= 0).all()
         return weights[weights > 0]
