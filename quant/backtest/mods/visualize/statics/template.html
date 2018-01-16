@@ -65,7 +65,7 @@
           <script>var exposures = {};</script>
           <ul id="exposure-tab" class="nav nav-tabs bg-faded">
             {% for x in exposure %}
-            {# with factor_name = x[0], expo = x[1] #}
+            {% with factor_name = x[0], expo = x[1] %}
             <script>exposures["{{ factor_name }}"] = {{ expo }};</script>
             <li>
             

@@ -154,6 +154,14 @@ class ConstrainedStrategy(SimpleStrategy):
         rest_index = pd.date_range(self.index_weights.index[-1], pd.to_datetime(date.today()), freq=TDay)
         rest_df = pd.DataFrame(np.full((len(rest_index)-1, len(self.index_weights.columns)), None), index=rest_index[1:], columns=self.index_weights.columns)
         self.index_weights = pd.concat([self.index_weights, rest_df], 0).ffill() / 100
+        try:
+            import mosek
+        except ImportError:
+            Logger.debug("Mosek not installed, use scipy to construct portfolio, which may be much slower")
+            self.optimize = self.optimize_with_scipy
+        else:
+            Logger.debug("Use Mosek to construct portfolio")
+            self.optimize = self.optimize_with_mosek
         super(ConstrainedStrategy, self).__init__(*args, **kwargs)
 
     def handle(self, today, universe):
@@ -170,7 +178,7 @@ class ConstrainedStrategy(SimpleStrategy):
             weights /= weights.sum()
         self.change_position(dict(weights.iteritems()))
 
-    def optimize(self, predicted, today):
+    def optimize_with_scipy(self, predicted, today):
         """
         Solve the optimization problem to maximize profits and minimize risks.
         Note this method does not support short selling (negative weight).
@@ -224,3 +232,23 @@ class ConstrainedStrategy(SimpleStrategy):
         weights = pd.Series(x, index=stocks)
         # assert (weights >= 0).all()
         return weights[weights > 0]
+
+    def optimize_with_mosek(self, predicted, today):
+        from mosek.fusion import Expr, Model, ObjectiveSense, Domain
+        index_weight = self.index_weights.loc[today].fillna(0)
+        index_weight = index_weight / index_weight.sum()
+        stocks = list(predicted.index)
+
+        with Model("portfolio") as M:
+            x = M.variable("x", len(stocks), Domain.inRange(0, 0.05))
+            M.constraint("sum", Expr.sum(x), Domain.equalsTo(1.0))
+            for factor, epsilon in self.neutral_factors.items():
+                factor_data = self.factor_data[factor.factor_name].loc[today]
+                factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
+                index_exposure = (index_weight * factor_data).sum()
+                stocks_exposure = factor_data.loc[stocks].values
+                M.constraint(factor.factor_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-epsilon, index_exposure+epsilon))
+            M.objective("MaxRtn", ObjectiveSense.Maximize, Expr.dot(predicted.tolist(), x))
+            M.solve()
+            weights = pd.Series(list(x.level()), index=stocks)
+        return weights
