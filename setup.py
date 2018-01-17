@@ -46,8 +46,6 @@ try:
 except ImportError:
     from distutils.core import setup
 else:
-    setup_args['install_requires'] = [
-        'pyinstaller',
-    ]
+    setup_args['install_requires'].append('pyinstaller')
 
 setup(**setup_args)
