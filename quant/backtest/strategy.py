@@ -200,6 +200,7 @@ class ConstrainedStrategy(SimpleStrategy):
         stocks = list(predicted.index)
 
         kwargs = {}
+        kwargs['method'] = 'interior-point'   # Use `interior-point` which is efficient
         kwargs['c'] = - predicted.values
         kwargs["A_eq"] = np.ones_like(predicted.values).reshape(1, -1)       # \Sum{x} == 1
         kwargs["b_eq"] = np.ones((1, 1), dtype=np.float32)
@@ -234,6 +235,12 @@ class ConstrainedStrategy(SimpleStrategy):
         return weights[weights > 0]
 
     def optimize_with_mosek(self, predicted, today):
+        """
+        Construct the portfolio with Mosek. It's about 30x faster than the scipy implementation
+        and it is more flexible. Use this as first choice.
+        But since it's a commercial software, a license is needed. If you don't have one, use optlang
+        instead.
+        """
         from mosek.fusion import Expr, Model, ObjectiveSense, Domain
         index_weight = self.index_weights.loc[today].fillna(0)
         index_weight = index_weight / index_weight.sum()
@@ -251,4 +258,36 @@ class ConstrainedStrategy(SimpleStrategy):
             M.objective("MaxRtn", ObjectiveSense.Maximize, Expr.dot(predicted.tolist(), x))
             M.solve()
             weights = pd.Series(list(x.level()), index=stocks)
-        return weights
+        return weights[weights > 0]
+
+    def optimize_with_optlang(self, predicted, today):
+        """
+        Optlang is an interface for several different solvers, including the open source GLPK.
+        It may run faster than scipy, but not tested.
+        """
+        # TODO: implement this algorithm and test for performance.
+        import optlang as opt
+        from operator import mul
+        from itertools import starmap
+        def dot(a, b):
+            "Dot product"
+            return sum(starmap(mul, zip(a, b)))
+        index_weight = self.index_weights.loc[today].fillna(0)
+        index_weight = index_weight / index_weight.sum()
+        stocks = list(predicted.index)
+        model = opt.Model(name="portfolio")
+        x = [opt.Variable(stock, lb=0, ub=0.05) for stock in stocks]
+        constraints = [opt.Constraint(sum(x), lb=1.0, ub=1.0)]
+        for factor, epsilon in self.neutral_factors.items():
+            factor_data = self.factor_data[factor.factor_name].loc[today]
+            factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
+            index_exposure = (index_weight * factor_data).sum()
+            stocks_exposure = factor_data.loc[stocks].values
+            constraints.append(opt.Constraint(dot(x, stocks_exposure), lb=index_exposure-epsilon, ub=index_exposure+epsilon))
+        model.objective = opt.Objective(dot(x, predicted), direction='max')
+        model.add(constraints)
+        model.optimize()
+        index, x = zip(model.variables.items())
+        weights = pd.Series(x, index=index)
+        return weights[weights > 0]
+

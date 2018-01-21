@@ -1,5 +1,4 @@
 """回测时使用的行情接口"""
-from lazy_property import LazyProperty
 from ...data import wind
 
 
