@@ -71,6 +71,7 @@
             
                 <a class="{% if loop.first %}active {% endif %}nav-link" href="#highcharts-risk-exposure" id="{{ factor_name }}">{{ factor_name }}</a>
             </li>
+            {% endwith %}
             {% endfor %}
           </ul>
             <div class="highcharts" id="highcharts-risk-exposure" style="height: 400px; width: 100%; min-width: 310px"></div>

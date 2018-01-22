@@ -89,8 +89,10 @@ class WebVisualizer(AbstractMod):
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
         info["exposure"] = sorted([(factor.factor_name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors])
-        with open(TEMPLATE_FILE, encoding="utf8") as template_file:
-            template = jinja2.Template(template_file.read())
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'statics')), extensions=('jinja2.ext.with_', ))
+        template = env.get_template('template.html')
+        # with open(TEMPLATE_FILE, encoding="utf8") as template_file:
+        #     template = jinja2.Template(template_file.read())
         html = template.render(**info)
         filename = "%s.html" % info["strategy_name"]
         filename = os.path.realpath(filename)
