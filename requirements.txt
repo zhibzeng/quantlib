@@ -20,3 +20,6 @@ dulwich>=0.18.3
 sphinxcontrib-fulltoc
 numpydoc
 sphinx_rtd_theme
+
+# For pypi document
+pypandoc

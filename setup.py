@@ -1,4 +1,5 @@
 import os
+import pypandoc
 from setuptools import find_packages
 
 with open(os.path.join(os.path.dirname(__file__), 'quant/VERSION')) as f:
@@ -24,13 +25,13 @@ setup_args = dict(
     license='GNU',
     author='SnowWalkerJ',
     author_email='jike3212001@163.com',
-    description='',
+    description='A Quant library that helps data processing and backtesting',
+    long_decription=pypandoc.convert("README.md", "rst"),
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'License :: OSI Approved :: GNU License',
 
         'Operating System :: OS Independent',
         'Operating System :: POSIX',
