@@ -47,8 +47,7 @@ def __compute_zscore(data: np.ndarray, axis: int = -1, clip: float = 3.0):
         sliced = data.__getitem__(_slice)
         extremes = find_extreme_values(sliced)
         score = (sliced - np.nanmedian(sliced[~extremes])) / np.nanstd(sliced[~extremes])
-        score[score > clip] = clip
-        score[score < -clip] = -clip
+        score = np.clip(score, -clip, clip)
         epsilon = 1e-4
         total_err = 1.0
         avg = np.nanmean(score[~extremes])
@@ -56,7 +55,7 @@ def __compute_zscore(data: np.ndarray, axis: int = -1, clip: float = 3.0):
         z = (score - avg) / sd
         while total_err > epsilon:
             if (abs(z) >= clip).any():
-                z[abs(z) >= clip] = clip * np.sign(z[abs(z) >= clip])
+                z = np.clip(z, -clip, clip)
             avg = np.nanmean(z)
             err = np.nanstd(z)
             total_err = abs(avg) + abs(err - 1)

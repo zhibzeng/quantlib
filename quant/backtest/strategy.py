@@ -13,11 +13,6 @@ from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data import wind
 from ..utils.calendar import TradingCalendar, TDay
-# from ..utils.optimize import Variable, Constant, reduce_sum
-# from ..utils.optimize.tensor import Unit
-# from ..utils.optimize.optimizer import Optimizer
-# from ..utils.optimize.graph import Graph
-# from ..utils.optimize.train import SGD
 
 
 class AbstractStrategy:
