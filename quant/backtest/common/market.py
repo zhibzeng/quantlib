@@ -17,7 +17,7 @@ class AShareMarket:
     def initalize_market(self, start_date, end_date):
         # self.market_data = wind.get_wind_data("AShareEODPrices",
         #                                       "s_dq_pctchange").truncate(start_date, end_date) / 100
-        self.market_data = (wind.get_wind_data("AShareEODPrices", "s_dq_amount") / wind.get_wind_data("AShareEODPrices", "s_dq_volume")) \
+        self.market_data = (wind.get_wind_data("AShareEODPrices", "s_dq_avgprice") * wind.get_wind_data("AShareEODPrices", "s_dq_adjfactor")) \
             .pct_change() \
             .fillna(0) \
             .truncate(start_date, end_date)
