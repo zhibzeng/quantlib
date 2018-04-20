@@ -2,7 +2,9 @@ import os
 from inspect import signature
 from functools import wraps
 import pandas as pd
+from tables.exceptions import HDF5ExtError
 from ..common.settings import DATA_PATH
+from ..common.logging import Logger
 
 
 class Localizer:
@@ -34,7 +36,10 @@ class Localizer:
                     data = pd.read_hdf(filename, path)
                 except (KeyError, FileNotFoundError):
                     data = wrapped(*args, **kwargs)
-                    data.to_hdf(filename, path, format=format)
+                    try:
+                        data.to_hdf(filename, path, format=format)
+                    except HDF5ExtError as e:
+                        Logger.error("Can't write to HDF5. {}".format(e))
                 return data
             return func
         return true_wrapper
