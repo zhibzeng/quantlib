@@ -274,6 +274,22 @@ class WindDB:
             data = pd.concat([data, pd.DataFrame(np.full((len(idx), len(rest_columns)), None, dtype=dtype), index=idx, columns=rest_columns)], 1) 
         return data
 
+    def get_consensus_data(self, field: str, est_years: int=1) -> pd.DataFrame:
+        """
+        A股盈利预测汇总
+        """
+        sql = """
+        select s_info_windcode, est_dt, {}
+        from AShareConsensusData
+        where s_est_yeartype='FY{}'
+        and consen_data_cycle_typ='263003000'
+        order by opdate desc
+        """.format(field, est_years)
+        conn = self.get_wind_connection().engine
+        df = pd.read_sql_query(sql, conn, parse_dates={'est_dt': '%Y%m%d'}).drop_duplicates(['s_info_windcode', 'est_dt'])
+        pivot_table = df.pivot(index='est_dt', columns='s_info_windcode', values=field).ffill()
+        return pivot_table
+
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "level"])
     def get_stock_industries(self, table: str, level: int=1) -> pd.DataFrame:
         """

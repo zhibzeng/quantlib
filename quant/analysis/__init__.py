@@ -3,9 +3,11 @@ import numpy as np
 import pandas as pd
 import pandas.tseries.offsets
 from ..data import wind
+from . import barra
+from .barra import Factor
 # from .pdpivot import pivot_table     # This involves importing Pyside, which is unnecessarily in most cases.
 
-__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure']
+__all__ = ['cal_mdd', 'get_ic', 'get_factor_exposure', 'barra', 'Factor']
 
 
 def cal_mdd(netvalue, compound=True):

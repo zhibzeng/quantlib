@@ -12,6 +12,8 @@ from .common.market import AShareMarket
 from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data import wind
+from ..analysis.barra import Factor
+from ..analysis.barra.factors.industry import INDUSTRY_FACTORS
 from ..utils.calendar import TradingCalendar, TDay
 
 
@@ -136,14 +138,20 @@ class SimpleStrategy(AbstractStrategy):
         self.change_position({stock: share_per_stock for stock in buy})
 
 
-class ConstrainedStrategy(SimpleStrategy):
+class ConstraintStrategy(SimpleStrategy):
     """
     中性策略，在SimpleStrategy的基础上控制行业和因子暴露
     """
-    def __init__(self, *args, neutral_factors={}, **kwargs):
-        self.neutral_factors = neutral_factors
-        self.factor_data = {factor.factor_name: factor.get_factor_value()
-                            for factor in neutral_factors.keys()}
+    def __init__(self, neutral_config, *args, **kwargs):
+        self.neutral_config = neutral_config
+        self.factor_data = {
+            factor_name: getattr(Factor, factor_name).get_exposures()
+            for factor_name in neutral_config['factors'].keys()
+        }
+        self.industry_data = {
+            industry_name: industry_factor.get_exposures()
+            for industry_name, industry_factor in INDUSTRY_FACTORS.items()
+        }
         self.index_weights = wind.get_index_weight("AIndexHS300FreeWeight", CONFIG.BENCHMARK) \
                             .resample("1d").ffill()
         rest_index = pd.date_range(self.index_weights.index[-1], pd.to_datetime(date.today()), freq=TDay)
@@ -157,7 +165,7 @@ class ConstrainedStrategy(SimpleStrategy):
         else:
             Logger.debug("Use Mosek to construct portfolio")
             self.optimize = self.optimize_with_mosek
-        super(ConstrainedStrategy, self).__init__(*args, **kwargs)
+        super(ConstraintStrategy, self).__init__(*args, **kwargs)
 
     def handle(self, today, universe):
         try:
@@ -165,7 +173,6 @@ class ConstrainedStrategy(SimpleStrategy):
         except KeyError:
             return
         predicted = self.predicted.loc[today, universe].dropna()
-        stocks = predicted.index
         weights = self.optimize(predicted, today)
         weights = weights[weights > 0].sort_values(ascending=False)
         if self.buy_count:
@@ -198,12 +205,12 @@ class ConstrainedStrategy(SimpleStrategy):
         kwargs['method'] = 'interior-point'   # Use `interior-point` which is efficient
         kwargs['c'] = - predicted.values
         kwargs["A_eq"] = np.ones_like(predicted.values).reshape(1, -1)       # \Sum{x} == 1
-        kwargs["b_eq"] = np.ones((1, 1), dtype=np.float32)
+        kwargs["b_eq"] = np.ones((1, 1), dtype="float32")
         A_ub = []
         b_ub = []
 
-        for factor, epsilon in self.neutral_factors.items():
-            factor_data = self.factor_data[factor.factor_name].loc[today]
+        for factor_name, epsilon in self.neutral_config['factors'].items():
+            factor_data = self.factor_data[factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
@@ -214,10 +221,21 @@ class ConstrainedStrategy(SimpleStrategy):
             A_ub.append(-stocks_exposure)
             b_ub.append(epsilon - index_exposure)
 
+        for industry_name, epsilon in self.neutral_config['industries'].items():
+            industry_data = self.industry_data[industry_name].loc[today].fillna(0)
+            index_exposure = (index_weight * industry_data).sum()
+            stocks_exposure = industry_data.loc[stocks].values
+            
+            A_ub.append(stocks_exposure)
+            b_ub.append(index_exposure + epsilon)
+
+            A_ub.append(-stocks_exposure)
+            b_ub.append(epsilon - index_exposure)
+
         kwargs["A_ub"] = np.stack(A_ub)
         kwargs["b_ub"] = np.stack(b_ub)
 
-        kwargs["bounds"] = [(0, 0.1)] * len(stocks)
+        kwargs["bounds"] = [(0, self.neutral_config['stocks'])] * len(stocks)
 
         result = linprog(**kwargs)
 
@@ -232,7 +250,7 @@ class ConstrainedStrategy(SimpleStrategy):
     def optimize_with_mosek(self, predicted, today):
         """
         Construct the portfolio with Mosek. It's about 30x faster than the scipy implementation
-        and it is more flexible. Use this as first choice.
+        and it is more flexible. Use this as default.
         But since it's a commercial software, a license is needed. If you don't have one, use optlang
         instead.
         """
@@ -242,14 +260,19 @@ class ConstrainedStrategy(SimpleStrategy):
         stocks = list(predicted.index)
 
         with Model("portfolio") as M:
-            x = M.variable("x", len(stocks), Domain.inRange(0, 0.05))
+            x = M.variable("x", len(stocks), Domain.inRange(0, self.neutral_config['stocks']))
             M.constraint("sum", Expr.sum(x), Domain.equalsTo(1.0))
-            for factor, epsilon in self.neutral_factors.items():
-                factor_data = self.factor_data[factor.factor_name].loc[today]
+            for factor_name, limit in self.neutral_config['factors'].items():
+                factor_data = self.factor_data[factor_name].loc[today]
                 factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
                 index_exposure = (index_weight * factor_data).sum()
                 stocks_exposure = factor_data.loc[stocks].values
-                M.constraint(factor.factor_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-epsilon, index_exposure+epsilon))
+                M.constraint(factor_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-limit, index_exposure+limit))
+            for industry_name, limit in self.neutral_config['industries'].items():
+                industry_data = self.industry_data[industry_name].loc[today].fillna(0)
+                index_exposure = (index_weight * industry_data).sum()
+                stocks_exposure = industry_data.loc[stocks].values
+                M.constraint(industry_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-limit, index_exposure+limit))
             M.objective("MaxRtn", ObjectiveSense.Maximize, Expr.dot(predicted.tolist(), x))
             M.solve()
             weights = pd.Series(list(x.level()), index=stocks)
@@ -271,14 +294,19 @@ class ConstrainedStrategy(SimpleStrategy):
         index_weight = index_weight / index_weight.sum()
         stocks = list(predicted.index)
         model = opt.Model(name="portfolio")
-        x = [opt.Variable(stock, lb=0, ub=0.05) for stock in stocks]
+        x = [opt.Variable(stock, lb=0, ub=self.neutral_config['stocks']) for stock in stocks]
         constraints = [opt.Constraint(sum(x), lb=1.0, ub=1.0)]
-        for factor, epsilon in self.neutral_factors.items():
-            factor_data = self.factor_data[factor.factor_name].loc[today]
+        for factor_name, limit in self.neutral_config['factors'].items():
+            factor_data = self.factor_data[factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
-            constraints.append(opt.Constraint(dot(x, stocks_exposure), lb=index_exposure-epsilon, ub=index_exposure+epsilon))
+            constraints.append(opt.Constraint(dot(x, stocks_exposure), lb=index_exposure-limit, ub=index_exposure+limit))
+        for industry_name, limit in self.neutral_config['industries'].items():
+            industry_data = self.industry_data[industry_name].loc[today].fillna(0)
+            index_exposure = (index_weight * industry_data).sum()
+            stocks_exposure = industry_data.loc[stocks].values
+            constraints.append(opt.Constraint(dot(x, stocks_exposure), lb=index_exposure-limit, ub=index_exposure+limit))
         model.objective = opt.Objective(dot(x, predicted), direction='max')
         model.add(constraints)
         model.optimize()

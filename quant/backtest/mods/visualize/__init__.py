@@ -13,9 +13,9 @@ from ...common.events import EventType
 from ...common.mods import AbstractMod
 from ....analysis import get_factor_exposure
 from ....data import wind
+from ....barra import Factor
 from ....common.settings import CONFIG
 from ....common.logging import Logger
-from ...common.factors import get_factors
 
 
 TEMPLATE_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], "statics/template.html")
@@ -66,8 +66,7 @@ class WebVisualizer(AbstractMod):
 
     def get_exposure(self, position, factor):
         """计算持仓的因子暴露"""
-        factor_name = factor.factor_name
-        factor_value = factor.get_factor_value()
+        factor_value = factor.get_exposures()
         exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
         return self.series2json(exposure)
 
@@ -88,7 +87,7 @@ class WebVisualizer(AbstractMod):
         info["relative"] = self.series2json((fund.sheet["net_value"] / benchmark).dropna())
         info["stocks"] = json.dumps(stocks)
         info["fee"] = fund.sheet["fee"].sum()
-        info["exposure"] = sorted([(factor.factor_name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors])
+        info["exposure"] = sorted([(factor.name.replace(" ", ""), self.get_exposure(fund.position, factor)) for factor in self.risk_factors])
         env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'statics')), extensions=('jinja2.ext.with_', ))
         template = env.get_template('template.html')
         # with open(TEMPLATE_FILE, encoding="utf8") as template_file:
@@ -105,5 +104,6 @@ class WebVisualizer(AbstractMod):
             webbrowser.open_new_tab(filename)
 
 
-for factor in get_factors():
-    WebVisualizer.register_factor(factor)
+for factor_name, factor in Factor.get_factors().items():
+    if not factor_name.startswith("Industry"):
+        WebVisualizer.register_factor(factor)

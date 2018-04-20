@@ -9,7 +9,7 @@ class SerializerBase:
     def serialize(data):
         raise NotImplementedError
 
-    @ staticmethod
+    @staticmethod
     def unserialize(data):
         raise NotImplementedError
 

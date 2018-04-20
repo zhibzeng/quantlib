@@ -5,11 +5,9 @@ pandas
 tables
 scipy
 richenum
-lxml
 matplotlib
 fire
 jinja2
-lazy-property
 sklearn
 dulwich>=0.18.3
 

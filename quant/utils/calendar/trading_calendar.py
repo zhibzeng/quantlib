@@ -11,17 +11,6 @@ class TradingCalendar:
     def __init__(self):
         self.__holidays = None
 
-    # @staticmethod
-    # @LOCALIZER.wrap("holiday")
-    # def get_holidays():
-    #     """到上期所网站获取期货市场休市日期"""
-    #     import lxml.etree
-    #     url = 'http://www.cffex.com.cn/sj/jyrl/index_6782.xml'
-    #     tree = lxml.etree.parse(url)
-    #     root = tree.getroot()
-    #     holidays = root.xpath("doc[contains(title/text(), '休市')]/pubDate/text()")
-    #     return pd.Series(holidays)
-
     @staticmethod
     @LOCALIZER.wrap("holiday.h5", const_key="holiday")
     def get_holidays():

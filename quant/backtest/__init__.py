@@ -1,3 +1,3 @@
 from . import mods
-from .strategy import AbstractStrategy, SimpleStrategy, ConstrainedStrategy
+from .strategy import AbstractStrategy, SimpleStrategy, ConstraintStrategy
 
