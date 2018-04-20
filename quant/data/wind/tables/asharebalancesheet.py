@@ -306,7 +306,30 @@ class AShareBalanceSheet(BaseModel):
         负债及股东权益差额(特殊报表项目)   
     tot_bal_liab_eqy_diff: NUMBER(20,4)
         负债及股东权益差额(合计平衡项目)   
-    : )
+    lt_payroll_payable: NUMBER(20,4)
+        长期应付职工薪酬
+    other_comp_income: NUMBER(20,4)
+        其他综合收益
+    other_equity_tools: NUMBER(20,4)
+        其他权益工具
+    other_equity_tools_p_shr: NUMBER(20,4)
+        其他权益工具：优先股
+    lending_funds: NUMBER(20,4)
+        融出资金
+    accounts_receivable: NUMBER(20,4)
+        应收款项
+    st_financing_payable: NUMBER(20,4)
+        应收短期融资款
+    payables: NUMBER(20,4)
+        应付款项
+    s_info_compcode: VARCHAR2(10)
+        公司ID
+    tot_shr: NUMBER(20,4)
+        期末总资本（单位：股）
+    hfs_assets: NUMBER(20,4)
+        持有待售的资产
+    hfs_sales: NUMBER(20,4)
+        持有待售的负债
            
     opdate: DATETIME
         opdate   
@@ -464,6 +487,18 @@ class AShareBalanceSheet(BaseModel):
     tot_bal_shrhldr_eqy_diff = Column(NUMBER(20,4))
     spe_bal_liab_eqy_diff = Column(NUMBER(20,4))
     tot_bal_liab_eqy_diff = Column(NUMBER(20,4))
+    lt_payroll_payable = Column(NUMBER(20,4))
+    other_comp_income = Column(NUMBER(20,4))
+    other_equity_tools = Column(NUMBER(20,4))
+    other_equity_tools_p_shr = Column(NUMBER(20,4))
+    lending_funds = Column(NUMBER(20,4))
+    accounts_receivable = Column(NUMBER(20,4))
+    st_financing_payable = Column(NUMBER(20,4))
+    payables = Column(NUMBER(20,4))
+    s_info_compcode = VARCHAR2(10)
+    tot_shr = Column(NUMBER(20,4))
+    hfs_assets = Column(NUMBER(20,4))
+    hfs_sales = Column(NUMBER(20,4))
     opdate = Column(DATETIME)
     opmode = Column(VARCHAR(1))
     
