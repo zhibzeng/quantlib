@@ -33,10 +33,8 @@ class NoSTUniverse(AbstractMod):
         # st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
         st = self.st
         st = st[(st['ann_dt'] <= today) & ((st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
-        self.st_stocks = list(st.s_info_windcode)
-        for stock in self.st_stocks:
-            if stock in universe:
-                universe.remove(stock)
+        self.st_stocks = set(st.s_info_windcode)
+        universe.difference_update(self.st_stocks)
     
     def on_backtest_after_handle(self):
         """
@@ -69,12 +67,24 @@ class NoIPOUniverse(AbstractMod):
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
         super(NoIPOUniverse, self).__init__()
 
-    def on_get_universe(self, universe):
+    def on_get_universe(self, universe: set):
         today = self.strategy.today
         invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
-        for stock in invalid_stock:
-            if stock in universe:
-                universe.remove(stock)
+        universe.difference_update(invalid_stock)
+
+@AbstractMod.register
+class NoSmallUniverse(AbstractMod):
+    """
+    去除市值50亿以下的股票
+    """
+    def __init__(self):
+        self.size = wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_mv")
+
+    def on_get_universe(self, universe: set):
+        today = self.strategy.today
+        size = self.size.loc[today]
+        stocks = set(size.index[size > 500000])
+        universe.intersection_update(stocks)
 
 
 @AbstractMod.register
@@ -90,7 +100,7 @@ class NoUpLimitUniverse(AbstractMod):
         self.open_prices = caller.market.open_prices
         self.preclose_prices = caller.market.preclose_prices
 
-    def on_get_universe(self, universe):
+    def on_get_universe(self, universe: set):
         today = self.strategy.today
         next_trading_day = today + TDay
         if next_trading_day not in self.strategy.market.market_data.index:
@@ -98,10 +108,8 @@ class NoUpLimitUniverse(AbstractMod):
         next_open = self.open_prices.loc[next_trading_day]
         this_close = self.preclose_prices.loc[next_trading_day]
         change = next_open / this_close - 1
-        up_limit = change[change > 0.09].index
-        for stock in up_limit:
-            if stock in universe:
-                universe.remove(stock)
+        no_up_limit = set(change[change <= 0.09].index)
+        universe.intersection_update(no_up_limit)
 
 
 @AbstractMod.register
@@ -115,10 +123,9 @@ class ActivelyTraded(AbstractMod):
         self.amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
         super(ActivelyTraded, self).__init__()
 
-    def on_get_universe(self, universe):
+    def on_get_universe(self, universe: set):
         today = self.strategy.today
         today_amount = self.amount.loc[today]
-        for stock in universe:
-            if today_amount[stock] < self.threshold:
-                universe.remove(stock)
+        valid = set(today_amount.index[today_amount >= self.threshold])
+        universe.intersection_update(valid)
 

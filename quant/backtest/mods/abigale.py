@@ -1,39 +1,18 @@
+import ujson
 import pandas as pd
 from ...abigale import Abigale, exceptions
 from ...analysis import get_factor_exposure
 from ...common.settings import CONFIG
 from ...data import wind
 from ..common.mods import AbstractMod
-from ..common.factors import get_factors
+from ...analysis.barra import Factor
 
 
+@AbstractMod.register
 class AbigaleMod(AbstractMod):
-    risk_factors = set()
-    def __init__(self, workspace, table, override=False, metadata=None):
-        """
-        Parameters
-        ==========
-        workspace: str
-            workspace to store the result data
-        table: str
-            table name
-        override: bool
-            Whether to override if the target place is already occupied, defaults False.
-            If this is set to False, raises TableExistsException if occupied
-        """
-        self.workspace = workspace
-        self.table = table
-        self.override = override
-        self.metadata = metadata or {}
+    def __init__(self):
+        self.weights = {}
         super(AbigaleMod, self).__init__()
-
-    # def __plug_in__(self, caller):
-    #     self.strategy = caller
-    #     caller.event_manager.register(EventType.BACKTEST_FINISH, self.on_backtest_finish)
-
-    @classmethod
-    def register_factor(cls, factor):
-        cls.risk_factors.add(factor)
 
     def get_benchmark(self):
         """获取基准标的的净值"""
@@ -44,28 +23,91 @@ class AbigaleMod(AbstractMod):
     
     def get_exposure(self, position, factor):
         """计算持仓的因子暴露"""
-        factor_name = factor.factor_name
-        factor_value = factor.get_factor_value()
-        exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK).resample("1m").mean()
-        return exposure.rename(factor_name)
+        factor_name = factor.name
+        factor_value = factor.get_exposures()
+        exposure = (get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK)
+            .resample("1m")
+            .mean()
+            .rename(factor_name)
+        )
+        return exposure
+
+    def on_change_position(self, weight):
+        self.weights[self.strategy.today] = pd.Series(weight)
 
     def on_backtest_finish(self, fund):
+        weights = pd.DataFrame(self.weights).T
+        weights.index = pd.to_datetime(weights.index)
         benchmark = self.get_benchmark()
-        data = [
-            (fund.sheet["net_value"] / benchmark).dropna().rename("netValue")
-        ]
-        for factor in self.risk_factors:
-            data.append(self.get_exposure(fund.position, factor))
-        abigale = Abigale()
-        if not abigale.api.auth:
-            if not abigale.login():
-                raise exceptions.LoginFailed
-        if not self.override and self.table in abigale.ls(abigale.username, self.workspace):
-            raise exceptions.TableExistsException
-        self.metadata["is_backtest"] = True
-        data = pd.concat(data, axis=1)
-        abigale.upload(self.workspace, self.table, data, self.metadata)
-        
+        relative_net_value = (fund.sheet["net_value"] / benchmark).dropna().rename("netValue")
+        data = {
+            "strategyName": self.strategy.name,
+            "basic": self.generate_basic_info(relative_net_value, weights),
+            "netValues": self.generate_net_values(relative_net_value),
+            "styleRisks": self.generate_style_risks(weights),
+            "industryRisks": self.generate_industry_risks(weights)
+        }
+        with open(f'{self.strategy.name}.json', 'w') as f:
+            ujson.dump(data, f)
 
-for factor in get_factors():
-    AbigaleMod.register_factor(factor)
+    def generate_basic_info(self, net_values, weights):
+        """
+        生成基本信息，包括：每年的平均收益率、波动率、夏普率、换手率、回撤
+        """
+        years = sorted(net_values.index.year.unique())
+        data = []
+        for year in years:
+            idx = net_values.index[net_values.index.year == year]
+            nv = net_values.loc[idx]
+            idx = weights.index[weights.index.year == year]
+            w = weights.loc[idx]
+            data.append(self._basic_info_item(str(year), nv, w))
+        data.append(self._basic_info_item("Total", net_values, weights))
+        return data
+
+    def generate_net_values(self, net_values):
+        return [
+            [int(idx.timestamp() * 1000), value]
+            for idx, value in net_values.iteritems()
+        ]
+
+    def generate_style_risks(self, weights):
+        style_risks = {}
+        for factor in Factor.get_factors().values():
+            if factor.name.startswith("Industry"):
+                continue
+            series = self.get_exposure(weights, factor)
+            style_risks[factor.name] = [
+                [int(idx.timestamp() * 1000), value]
+                for idx, value in series.iteritems()
+            ]
+        return style_risks
+
+    def generate_industry_risks(self, weights):
+        industry_risks = {}
+        for factor in Factor.get_factors().values():
+            if not factor.name.startswith("Industry"):
+                continue
+            series = self.get_exposure(weights, factor)
+            industry_risks[factor.name[8:]] = [
+                [int(idx.timestamp() * 1000), value]
+                for idx, value in series.iteritems()
+            ]
+        return industry_risks
+
+    @staticmethod
+    def _basic_info_item(name, nv, weights):
+        rtns = nv.pct_change()
+        rtn = rtns.mean() * 252
+        std = rtns.std() * 252 ** 0.5
+        sharpe = rtn / std
+        mdd = (1 - nv / nv.cummax() ).max()
+        turnover = abs(weights.diff()).sum(1).sum() / 2 / (weights.index[-1] - weights.index[0]).days * 252
+        return {
+            'period': name,
+            'rtn': f'{rtn*100:0.2f}%',
+            'volatility': f'{std*100:0.2f}%',
+            'sharpe': f'{sharpe:0.2f}',
+            'mdd': f'{mdd*100:0.1f}%',
+            'turnover': f'{turnover*100:0.1f}%'
+        }

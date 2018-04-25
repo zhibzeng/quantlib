@@ -10,10 +10,10 @@ from ..common.logging import Logger
 from .api import RestAPI
 from .serializers import DataFrameSerializer
 from .security import sha256
-from . import api, exceptions, versioncontrol
+from . import api, exceptions
 
 
-__all__ = ['RestAPI', 'exceptions', 'sha256', 'versioncontrol', 'api']
+__all__ = ['RestAPI', 'exceptions', 'sha256', 'api']
 
 
 class Abigale:
@@ -60,73 +60,14 @@ class Abigale:
         else:
             raise Exception("[{}]: {}".format(response.get("code"), response.get("message")))
 
-    def upload(self, workspace, table, df, metadata=None):
-        """
-        Upload a DataFrame or Series to the server. The index of the
-        data must be DatetimeIndex, because the backend is `arctic` and it
-        only supports indexing with datetime.
+    def ls(self, path):
+        data = self._handle(self.api.get('/files/ls', params={'path': path}), 'data')
+        return data
 
-        Parameters
-        ==========
-        workspace: str
-            workspace to store the data
-        table: str
-            name of the data
-        df: Union[pd.DataFrame, pd.Series]
-            the data to upload
-        metadata: dict
-            metadata to append. Annotate is_backtest=True to indicate this is a backtest
-            result. Also, use `permissions` to control the read access to this dataset.
+    def create_strategy(self, path, name, data):
         """
-        json_data = DataFrameSerializer.serialize(df, False)
-        if metadata:
-            json_data["metadata"] = metadata
-        json_data = json.dumps(json_data)
-        resp = self.api.post("workspace/write/{workspace}/{table}".format(workspace=workspace, table=table), data=json_data)
-        self._handle(resp)
-        Logger.info("Uploaded {}/{}/{}".format(self.username, workspace, table))
-
-    def fetch(self, user, workspace, table):
+        Create a new strategy file named `name` under `path` with `data`
         """
-        Fetch a dataset from the server.
+        status = self._handle(self.api.post('files/new', params={'path': path, 'name': name}, data=data), 'status')
+        return status
 
-        Parameters
-        ==========
-        user: str
-            the owner of the workspace
-        workspace: str
-            workspace name
-        table: str
-            dataset name
-        
-        Returns
-        =======
-        (data, metadata):
-            data is a Series or DataFrame, metadata is a dict.
-        """
-        resp = self.api.get("workspace/read/{user}/{workspace}/{table}".format(workspace=workspace, table=table, user=user))
-        data, metadata = self._handle(resp, "data", "metadata")
-        data = DataFrameSerializer.unserialize(data)
-        return data, metadata
-
-    def ls(self, username=None, workspace=None):
-        """
-        list the content of a path. 
-
-        - If both `username` and `workspace` are None, list all the users that owns workspaces;
-        - If `username` if given and `workspace` is None, list all workspaces owned by the user;
-        - If both are provided, list all the dataset under the workspace owned by the user.]
-        """
-        path = []
-        if username:
-            path.append(username)
-        if workspace:
-            path.append(workspace)
-        path = "/".join(path)
-        resp = self.api.get("workspace/list", params={"path": path, "requires_metadata": False})
-        items = self._handle(resp, "items")
-        return items
-
-    def rm(self, workspace, table):
-        path = "/".join(["workspace/delete", workspace, table])
-        self._handle(self.api.delete(path))

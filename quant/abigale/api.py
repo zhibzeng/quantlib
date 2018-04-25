@@ -45,7 +45,7 @@ class RestAPI:
     def login(self, username, password):
         # self.session.headers["Authorization"] = "basic " + base64.b64encode("{}:{}".format(self.username, self.password).encode("utf8")).decode("utf8")
         self.auth = requests.auth.HTTPBasicAuth(username, password)
-        return self.get("/auth/username").json().get("username")
+        return self.get("/users/whoami").json().get("username")
 
     def login_with_token(self, token):
         self.auth = TokenAuth(token)

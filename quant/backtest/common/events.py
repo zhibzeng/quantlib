@@ -8,6 +8,7 @@ EventType = Enum("EventType", ("INIT_AFTER_LOAD_DATA",
                                "BACKTEST_START",
                                "BACKTEST_NEWDAY",
                                "BACKTEST_AFTER_HANDLE",
+                               "CHANGE_POSITION",
                                "GET_UNIVERSE",
                                "BACKTEST_FINISH"))
 

@@ -74,9 +74,9 @@ class AbstractStrategy:
             self.fund.on_newday(day)
             self.today_position = self.fund.position.loc[day].copy()
             self.event_manager.trigger(EventType.BACKTEST_NEWDAY, self.today)
-            universe = list(self.market.today_market.dropna().index)
+            universe = set(self.market.today_market.dropna().index)
             self.event_manager.trigger(EventType.GET_UNIVERSE, universe)
-            self.handle(day, universe)
+            self.handle(day, list(universe))
             self.event_manager.trigger(EventType.BACKTEST_AFTER_HANDLE)
         self.event_manager.trigger(EventType.BACKTEST_FINISH, self.fund)
         return self
@@ -86,7 +86,7 @@ class AbstractStrategy:
         """净值序列， pd.Series"""
         return self.fund.net_value
 
-    def change_position(self, tobuy_pct):
+    def change_position(self, tobuy_pct: dict):
         """更新持仓比例
 
         Parameters
@@ -94,6 +94,7 @@ class AbstractStrategy:
         tobuy_pct: dict
             以股票代码为键，持仓比例为值
         """
+        self.event_manager.trigger(EventType.CHANGE_POSITION, tobuy_pct.copy())
         return self.fund.change_position(tobuy_pct)
 
     @abstractmethod

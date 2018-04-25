@@ -13,7 +13,7 @@ from ...common.events import EventType
 from ...common.mods import AbstractMod
 from ....analysis import get_factor_exposure
 from ....data import wind
-from ....barra import Factor
+from ....analysis.barra import Factor
 from ....common.settings import CONFIG
 from ....common.logging import Logger
 
