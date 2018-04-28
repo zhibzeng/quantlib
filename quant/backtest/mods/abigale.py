@@ -102,7 +102,7 @@ class AbigaleMod(AbstractMod):
         std = rtns.std() * 252 ** 0.5
         sharpe = rtn / std
         mdd = (1 - nv / nv.cummax() ).max()
-        turnover = abs(weights.diff()).sum(1).sum() / 2 / (weights.index[-1] - weights.index[0]).days * 252
+        turnover = weights.fillna(0).diff().abs().sum(1).sum() / (weights.index[-1] - weights.index[0]).days * 252
         return {
             'period': name,
             'rtn': f'{rtn*100:0.2f}%',

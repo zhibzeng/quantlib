@@ -72,6 +72,7 @@ class NoIPOUniverse(AbstractMod):
         invalid_stock = list(self.ipo[self.ipo.s_ipo_listdate > today].s_info_windcode)
         universe.difference_update(invalid_stock)
 
+
 @AbstractMod.register
 class NoSmallUniverse(AbstractMod):
     """
