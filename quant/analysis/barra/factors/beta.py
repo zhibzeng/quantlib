@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
 from ....common.localize import LOCALIZER
 from ....common.math_helpers import exponential_decay_weight
 from ....data import wind
@@ -32,11 +33,9 @@ class BetaDescriptor(Descriptor):
         result = []
         for i in range(T, len(df)):
             sub_df = df.iloc[i-T:i].dropna(axis=1, thresh=T//2)
-            X, Y = sub_df.iloc[:, 0], sub_df.iloc[:, 1:]
-            X, Y = (X - X.mean()).values, (Y - Y.mean()).values
-            XY = np.nansum(Y.T * X * weights, 1) / (~np.isnan(Y.T) @ weights)
-            XX = (X ** 2 * weights).sum()
-            result.append(pd.Series(XY / XX, index=sub_df.columns[1:], name=df.index[i]))
+            X, Y = sub_df.iloc[:, 0:1], sub_df.iloc[:, 1:]
+            model = sm.WLS(Y.values, X.values, weights, missing='none').fit()
+            result.append(pd.Series(model.params[0], index=Y.columns).rename(df.index[i]))
         result = pd.concat(result, 1).T
         return result
 
