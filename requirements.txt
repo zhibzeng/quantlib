@@ -9,7 +9,7 @@ matplotlib
 fire
 jinja2
 sklearn
-dulwich>=0.18.3
+statsmodels
 
 # optional
 # pymysql

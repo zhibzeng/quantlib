@@ -52,7 +52,7 @@ class IndustryFactor(Factor):
         self.name = name
         self.data = data
     
-    def get_exposures(self) -> pd.DataFrame:
+    def get_exposures(self, fillna=None) -> pd.DataFrame:
         return self.data
 
 

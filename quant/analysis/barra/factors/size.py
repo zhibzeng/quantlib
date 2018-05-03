@@ -8,7 +8,7 @@ from .base import Descriptor, Factor
 class LnCap(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="LnCap")
     def get_raw_value(self):
-        return np.log(wind.get_wind_data("AShareEODDerivativeIndicator", "s_dq_mv"))
+        return np.log(wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_mv"))
 
 
 Size = Factor("Size", [LnCap()], [1.0])

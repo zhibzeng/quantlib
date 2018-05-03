@@ -1,8 +1,11 @@
+import json
 import ujson
 import pandas as pd
 from ...abigale import Abigale, exceptions
 from ...analysis import get_factor_exposure
+from ...analysis.barra.factors import get_factor_yields
 from ...common.settings import CONFIG
+from ...common.logging import Logger
 from ...data import wind
 from ..common.mods import AbstractMod
 from ...analysis.barra import Factor
@@ -45,10 +48,12 @@ class AbigaleMod(AbstractMod):
             "basic": self.generate_basic_info(relative_net_value, weights),
             "netValues": self.generate_net_values(relative_net_value),
             "styleRisks": self.generate_style_risks(weights),
-            "industryRisks": self.generate_industry_risks(weights)
+            "industryRisks": self.generate_industry_risks(weights),
+            "factorYields": self.generate_factor_exposure_yields()
         }
         with open(f'{self.strategy.name}.json', 'w') as f:
-            ujson.dump(data, f)
+            json.dump(data, f)
+        Logger.info(f"回测结果输出到{self.strategy.name}.json")
 
     def generate_basic_info(self, net_values, weights):
         """
@@ -70,6 +75,38 @@ class AbigaleMod(AbstractMod):
             [int(idx.timestamp() * 1000), value]
             for idx, value in net_values.iteritems()
         ]
+
+    def generate_factor_exposure_yields(self):
+        position = self.strategy.fund.position.apply(lambda x: x / x.sum(), axis=1)
+        factor_yields = get_factor_yields()
+        factor_exposure_yields = {}
+
+        # calculate factor yields one by one
+        for factor in factor_yields.columns:
+            factor_value = getattr(Factor, factor).get_exposures()
+            exposure = get_factor_exposure(position, factor_value, benchmark=CONFIG.BENCHMARK)
+            yields = exposure * factor_yields[factor]
+            factor_exposure_yields[factor] = yields.dropna()
+        
+        # Sum all industry yields
+        industry_exposure_yields = sum(value for key, value in factor_exposure_yields.items() if key.startswith("Industry"))
+        for key in list(factor_exposure_yields.keys()):
+            if key.startswith("Industry"):
+                del factor_exposure_yields[key]
+        factor_exposure_yields['Industry'] = industry_exposure_yields
+        
+        # relative_rtn = self.strategy.fund.sheet["net_value"].pct_change() - self.get_benchmark().pct_change()
+        # risk_yields = pd.DataFrame(factor_exposure_yields).sum(1)
+        # factor_exposure_yields['Alpha'] = (relative_rtn - risk_yields).dropna()
+
+        return {
+            key: [
+                [int(idx.timestamp() * 1000), value]
+                for idx, value in series.cumsum().iteritems()
+            ]
+            for key, series in factor_exposure_yields.items()
+        }
+        
 
     def generate_style_risks(self, weights):
         style_risks = {}

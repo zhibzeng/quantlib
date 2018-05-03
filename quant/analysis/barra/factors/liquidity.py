@@ -21,9 +21,9 @@ class STOM(Descriptor):
 
     @LOCALIZER.wrap(filename="descriptors", const_key="stom")
     def get_raw_value(self):
-        volume = wind.get_wind_data("AShareEODPrices", "s_dq_volume")
-        shares = wind.get_wind_data("AShareEODDerivativeIndicator", "float_a_shr_today") * 10
-        stom = np.log((volume / shares).dropna(how='all').rolling(self.T).sum())
+        amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
+        size = wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_mv")
+        stom = np.log((amount / size).dropna(how='all').rolling(self.T).sum() + 1e-6)
         return stom
 
 
@@ -69,4 +69,4 @@ class STOA(Descriptor):
         return stoa
 
 
-Liquidity = Factor("Liquidity", [STOM(), STOQ(), STOA()], [0.35, 0.35, 0.30])
+Liquidity = Factor("Liquidity", [STOM(), STOQ(), STOA()], [0.35, 0.35, 0.30], disentangle=['Size'])

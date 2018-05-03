@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from ....common.localize import LOCALIZER
-from ....data import wind
+from ....data import wind, to_trade_data
 from .base import Descriptor, Factor
 
 
@@ -32,7 +32,7 @@ class CEToP(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="cetop")
     def get_raw_value(self):
         capital = wind.get_wind_data("AShareEODDerivativeIndicator", "s_dq_mv")
-        cash_earnings = wind.get_wind_data("AShareCashFlow", "net_cash_flows_oper_act", index="ann_dt").ffill()
+        cash_earnings = to_trade_data(wind.get_wind_data("AShareCashFlow", "net_cash_flows_oper_act", index="ann_dt")).dropna(how='all')
         return cash_earnings / capital
 
 
@@ -49,7 +49,7 @@ class EToP(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="etop")
     def get_raw_value(self):
         price = wind.get_wind_data("AShareEODPrices", "s_dq_close")
-        eps = wind.get_wind_data("AShareFinancialIndicator", "s_fa_eps_basic", index="ann_dt").ffill()
+        eps = to_trade_data(wind.get_wind_data("AShareFinancialIndicator", "s_fa_eps_basic", index="ann_dt"))
         return eps / price
 
 EarningsYield = Factor("EarningsYield", [EPFWD(), CEToP(), EToP()], [0.68, 0.21, 0.11])

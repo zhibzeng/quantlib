@@ -84,19 +84,11 @@ def get_factor_exposure(position, factor_value, benchmark=None):
         weights = wind.get_index_weight("AIndexHS300FreeWeight", benchmark)
     common_index = set(position.index) & set(factor_value.index)
     for date in sorted(common_index):
+        absolute_exposure = ((position.loc[date] * factor_value.loc[date]).sum() / (position.loc[date].sum() + 1e-5))
         if benchmark:
-            offset_days = -date.day              # 计算当前的基准因子暴露
-            while 1:
-                try:
-                    offset = pd.tseries.offsets.DateOffset(months=1, days=offset_days)
-                    weight = weights.loc[date + offset] / 100
-                    break
-                except KeyError:
-                    offset_days -= 1
-        absolute_exposure = ((position.loc[date] * factor_value.loc[date]).sum()
-                             / (position.loc[date].sum() + 1e-5))
-        if benchmark:
-            benchmark_exposure = (weight * factor_value.loc[date]).sum()
+            # 计算当前的基准因子暴露          
+            benchmark_exposure = (weights.loc[date] * factor_value.loc[date]).sum() / (weights.loc[date].sum() + 1e-5)
+            # 相对暴露等于组合暴露减基准暴露
             relative_exposure = absolute_exposure - benchmark_exposure
             data.loc[date] = relative_exposure
         else:

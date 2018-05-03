@@ -70,22 +70,15 @@ class HSigma(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="hsigma")
     def get_raw_value(self):
         rtns = wind.get_wind_data("AShareEODPrices", "s_dq_pctchange").loc["2005-01-01":] / 100
-        beta = BetaDescriptor().get_raw_value()
-        size = Size.get_exposures()
+        beta = Descriptor.Beta().get_raw_value()
         resid = {}
-        for idx, row in rtns.iterrows():
+        common_index = sorted(set(rtns.index) & set(beta.index))
+        for idx in common_index:
+            row = rtns.loc[idx]
             resid[idx] = row - row.mean() - beta.loc[idx]
         resid = pd.DataFrame(resid).T
         sigma = pd.ewmstd(resid, halflife=self.T)
-        disentangled = {}
-        for idx, row in sigma.iterrows():
-            df = pd.concat([row, size.loc[idx], beta.loc[idx]], 1).dropna()
-            if not len(df):
-                continue
-            series = LinearRegression().fit(df.values[:, 1:], df.values[:, 0]).predict(df.values[:, 1:])
-            disentangled[idx] = df.iloc[:, 0] - pd.Series(series, index=df.index)
-        disentangled = pd.DataFrame(disentangled).T
-        return disentangled
+        return sigma
 
 
-ResidualVolatility = Factor("ResidualVolatility", [DASTD(), CMRA(), HSigma()], [0.74, 0.16, 0.10])
+ResidualVolatility = Factor("ResidualVolatility", [DASTD(), CMRA(), HSigma()], [0.74, 0.16, 0.10], disentangle=["Size", "Beta"])

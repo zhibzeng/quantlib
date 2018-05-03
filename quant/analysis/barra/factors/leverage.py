@@ -1,7 +1,9 @@
+from datetime import date
 import numpy as np
 import pandas as pd
 from ....common.localize import LOCALIZER
-from ....data import wind
+from ....data import wind, to_trade_data
+from ....utils.calendar import TDay
 from .base import Descriptor, Factor
 
 
@@ -15,8 +17,8 @@ class LD(Descriptor):
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="ld")
     def get_raw_value(self):
-        lb = wind.get_wind_data("AShareBalanceSheet", "lt_borrow", index="ann_dt").ffill()
-        bp = wind.get_wind_data("AShareBalanceSheet", "bonds_payable", index="ann_dt").ffill()
+        lb = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "lt_borrow", index="ann_dt")).fillna(0).dropna(how='all').dropna(1, how='all')
+        bp = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "bonds_payable", index="ann_dt")).fillna(0).dropna(how='all').dropna(1, how='all')
         return lb + bp
 
 
@@ -34,7 +36,7 @@ class MLEV(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="mlev")
     def get_raw_value(self):
         me = wind.get_wind_data("AShareEODDerivativeIndicator", "s_dq_mv")
-        pe = wind.get_wind_data("AShareBalanceSheet", "other_equity_tools_p_shr", index="ann_dt").ffill()
+        pe = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "other_equity_tools_p_shr", index="ann_dt")).fillna(0)
         ld = LD().get_raw_value()
         return 1 + (pe + ld) / me
 
@@ -52,8 +54,8 @@ class BLEV(Descriptor):
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="blev")
     def get_raw_value(self):
-        book_equity = wind.get_wind_data("AShareBalanceSheet", "tot_shrhldr_eqy_excl_min_int", index="ann_dt").ffill()
-        pe = wind.get_wind_data("AShareBalanceSheet", "other_equity_tools_p_shr", index="ann_dt").ffill()
+        book_equity = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "tot_shrhldr_eqy_excl_min_int", index="ann_dt")).fillna(0)
+        pe = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "other_equity_tools_p_shr", index="ann_dt")).fillna(0)
         ld = LD().get_raw_value()
         return 1 + (pe + ld) / book_equity
 
@@ -72,7 +74,9 @@ class DToA(Descriptor):
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="dtoa")
     def get_raw_value(self):
-        return wind.get_wind_data("AShareFinancialIndicator", "s_fa_debttoassets", index="ann_dt").ffill()
+        data = to_trade_data(wind.get_wind_data("AShareFinancialIndicator", "s_fa_debttoassets", index="ann_dt")).loc["2005-01-01":] / 100
+        return data
+
 
 
 Leverage = Factor("Leverage", [MLEV(), DToA(), BLEV()], [0.38, 0.35, 0.27])

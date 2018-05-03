@@ -1,4 +1,4 @@
-from .wind import WindDB
+from .wind import WindDB, to_trade_data
 
 
 try:

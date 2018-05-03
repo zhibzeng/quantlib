@@ -31,7 +31,7 @@ def in_ipynb():
         return False
 
 
-@AbstractMod.register
+# @AbstractMod.register
 class WebVisualizer(AbstractMod):
     """回测结束后在网页中显示回测的详细信息"""
 

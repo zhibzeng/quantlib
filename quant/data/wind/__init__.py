@@ -19,8 +19,19 @@ from ...common.localize import LOCALIZER
 from ...common.settings import CONFIG, DATA_PATH
 from ...common.db.sql import SQLClient
 from ...common.logging import Logger
+from ...utils.calendar import TDay
 
-__all__ = ['WindDB', 'tables']
+__all__ = ['WindDB', 'tables', 'to_trade_data']
+
+
+def to_trade_data(data):
+    today = date.today().strftime("%Y-%m-%d")
+    index = pd.Series(pd.date_range(data.index[0], today, freq=TDay))
+    columns = data.columns
+    final_data = pd.DataFrame(np.full((len(index), len(columns)), np.nan), index=index, columns=columns)
+    final_data.update(data)
+    final_data = final_data.ffill()
+    return final_data
 
 
 class WindDB:
@@ -185,8 +196,10 @@ class WindDB:
         sql_statement = sql.select(columns).select_from(table).where(table.s_info_windcode==s_info_windcode)
         conn = self.get_wind_connection().engine
         data = pd.read_sql(sql_statement, conn, parse_dates={"trade_dt": "%Y%m%d"})
-        data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight")
-        return data.sort_index()
+        data = data.pivot(index="trade_dt", columns="s_con_windcode", values="i_weight").sort_index().fillna(0) / 100
+        
+        data = to_trade_data(data)
+        return data
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="basics", format="fixed")
     def get_stock_basics(self) -> pd.DataFrame:
@@ -332,6 +345,7 @@ class WindDB:
             .arrange_entry_table(industry, field_name)
             .bfill()
             .replace(industry_codes, industry_names)
+            .dropna(1, how='all')
             # .astype({col: catetory_dtype for col in set(industry.s_info_windcode.dropna())})
         )
         return industry

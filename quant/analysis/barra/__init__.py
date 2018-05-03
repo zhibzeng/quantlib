@@ -1,1 +1,2 @@
-from .factors import Factor
+from .factors import *
+from .entities import *

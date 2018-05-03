@@ -4,7 +4,7 @@ from datetime import date
 from scipy.optimize import linprog
 import numpy as np
 import pandas as pd
-from progressbar import Bar, ProgressBar, ETA, Percentage
+from tqdm import tqdm
 from .common.events import EventManager, EventType
 from .common.mods import MODS
 from .common.fund import Fund
@@ -67,8 +67,7 @@ class AbstractStrategy:
         self._initialize_fund()
         self._load_mods()
         self.event_manager.trigger(EventType.BACKTEST_START)
-        bar = ProgressBar(widgets=[Percentage(), Bar(), ETA()])
-        for day in bar(self.market.trading_days):
+        for day in tqdm(self.market.trading_days):
             self.today = day
             self.market.on_newday(day)
             self.fund.on_newday(day)
@@ -178,7 +177,7 @@ class ConstraintStrategy(SimpleStrategy):
         weights = weights[weights > 0].sort_values(ascending=False)
         if self.buy_count:
             weights = weights.iloc[:self.buy_count]
-            weights /= weights.sum()
+            weights /= weights.sum() / 0.995
         self.change_position(dict(weights.iteritems()))
 
     def optimize_with_scipy(self, predicted, today):
@@ -255,7 +254,7 @@ class ConstraintStrategy(SimpleStrategy):
         But since it's a commercial software, a license is needed. If you don't have one, use optlang
         instead.
         """
-        from mosek.fusion import Expr, Model, ObjectiveSense, Domain
+        from mosek.fusion import Expr, Model, ObjectiveSense, Domain, SolutionError
         index_weight = self.index_weights.loc[today].fillna(0)
         index_weight = index_weight / index_weight.sum()
         stocks = list(predicted.index)
@@ -276,7 +275,10 @@ class ConstraintStrategy(SimpleStrategy):
                 M.constraint(industry_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-limit, index_exposure+limit))
             M.objective("MaxRtn", ObjectiveSense.Maximize, Expr.dot(predicted.tolist(), x))
             M.solve()
-            weights = pd.Series(list(x.level()), index=stocks)
+            try:
+                weights = pd.Series(list(x.level()), index=stocks)
+            except SolutionError:
+                raise RuntimeError("Mosek fail to find a feasible solution @ {}".format(str(today)))
         return weights[weights > 0]
 
     def optimize_with_optlang(self, predicted, today):
