@@ -55,7 +55,6 @@ def get_factor_yields():
     factors = xr.concat(factors, 'factor')
 
     industry_factors = [f for f in factors.factor.data if f.startswith("Industry")]
-    # factors = factors.drop(industry_factors, 'factor')
 
     data = xr.concat([factors, yields], 'factor').sel(date=slice("2005-01-01", None))
     yields_data = {}

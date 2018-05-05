@@ -67,7 +67,7 @@ class DToA(Descriptor):
 
     Computed as
 
-    DTOA = \frac{TD}{TA}
+    DTOA = TD / TA
 
     where TD is the book value of total debt (long-term debt and current liabilities), 
     and TA is most recent book value of total assets.

@@ -25,6 +25,9 @@ __all__ = ['WindDB', 'tables', 'to_trade_data']
 
 
 def to_trade_data(data):
+    """
+    把按季度公布的数据转换成交易日数据
+    """
     today = date.today().strftime("%Y-%m-%d")
     index = pd.Series(pd.date_range(data.index[0], today, freq=TDay))
     columns = data.columns
@@ -35,12 +38,15 @@ def to_trade_data(data):
 
 
 class WindDB:
-    """Wind Financial Database"""
+    """万得金融数据库借口"""
     def __init__(self):
         self.wind_connection = None
         self.__registry = self._init_registry()
 
     def _init_registry(self):
+        """
+        初始化注册表。注册表用于记录每个数据库的最后更新时间，方便增量更新
+        """
         try:
             with open(os.path.join(DATA_PATH, "registry.pkl"), "rb") as f:
                 registry = pickle.load(f)
@@ -48,10 +54,26 @@ class WindDB:
             registry = dict()
         return registry
 
-    def _get_last_update(self, table_name, default=None):
+    def _get_last_update(self, table_name: str, default=None):
+        """
+        获取一个库的最后更新时间
+
+        Parameters
+        ==========
+        table_name: str
+            查询的数据库名称
+        """
         return self.__registry.get(table_name, default)
 
     def _set_last_update(self, table_name, time):
+        """
+        更新一个库的最后更新时间
+
+        Parameters
+        ==========
+        table_name: str
+            查询的数据库名称
+        """
         self.__registry[table_name] = time
         with open(os.path.join(DATA_PATH, "registry.pkl"), "wb") as f:
             pickle.dump(self.__registry, f)
@@ -185,9 +207,9 @@ class WindDB:
         Parameters
         ----------
         table
-            要取权重的数据表
+            要取权重的数据表，例如AIndexHS300FreeWeight
         s_info_windcode
-            要取权重的指数的万得代码
+            要取权重的指数的万得代码，中证500为000905.SH，沪深300为399300.SZ。
         """
         # data = self.get_wind_table(table, columns=["trade_dt", "s_con_windcode", "i_weight", "s_info_windcode"])
         # data = data[data.s_info_windcode == s_info_windcode]
@@ -203,11 +225,14 @@ class WindDB:
 
     @LOCALIZER.wrap("wind_basics.h5", const_key="basics", format="fixed")
     def get_stock_basics(self) -> pd.DataFrame:
+        """
+        从AShareDescription表中获取每个股票的基本信息
+        """
         table = self.get_wind_table("AShareDescription")
         table.set_axis(table.s_info_windcode, axis=0)
         return table.drop("s_info_windcode", axis=1)
 
-    # @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"], format="fixed")
+    @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field", "columns"], format="fixed")
     def arrange_entry_table(self, table: str, field: str="", columns: str=None):
         """
         把带有entry_dt, remove_dt的表重新整理成以股票为列、日期为行的透视表
@@ -221,8 +246,8 @@ class WindDB:
             columns: str
                 指定要作为列名的字段，默认为s_info_windcode
         """
-        from ...utils.calendar import TDay
         if isinstance(table, str):
+            # 如果table是str，向数据库查询
             column_names = [col.name for col in getattr(tables, table).__table__.columns]
             if columns is None:
                 if "s_info_windcode" in column_names:
@@ -239,6 +264,7 @@ class WindDB:
                 columns = ["entry_dt", "remove_dt", column]
             table = self.get_wind_table(table, columns=columns)
         elif isinstance(table, pd.DataFrame):
+            # 如果table是DataFrame，直接使用
             column_names = set(table.columns)
             if columns is None:
                 if "s_info_windcode" in column_names:
@@ -340,13 +366,11 @@ class WindDB:
         industry = self.get_wind_table(table, ["s_info_windcode", field_name, "entry_dt", "remove_dt"])
         industry[field_name] = industry[field_name].str[:lengths[level]]
         catetory_dtype = pd.api.types.CategoricalDtype(categories=set(industry_names))
-        # catetory_dtype = pd.api.types.CategoricalDtype(categories=set(industry[field_name].dropna()))
         industry = (self
             .arrange_entry_table(industry, field_name)
             .bfill()
             .replace(industry_codes, industry_names)
             .dropna(1, how='all')
-            # .astype({col: catetory_dtype for col in set(industry.s_info_windcode.dropna())})
         )
         return industry
 

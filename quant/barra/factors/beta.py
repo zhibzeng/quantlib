@@ -15,9 +15,9 @@ class BetaDescriptor(Descriptor):
     Beta
 
     Computed as the slope coefficient in a time-series regression of excess stock return, 
-    r_t - r_{ft} , against the cap-weighted excess return of the estimation universe R_t ,
+    :math:`r_t - r_{ft}`, against the cap-weighted excess return of the estimation universe :math:`R_t`,
 
-    r_t-r_{ft} = \alpha + \beta R_t + e_t
+    ..  math:: r_t-r_{ft} = \alpha + \beta R_t + e_t
 
     The regression coefficients are estimated over the trailing 252 trading days of returns 
     with a half-life of 63 trading days.

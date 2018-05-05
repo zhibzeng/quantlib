@@ -22,25 +22,6 @@ def load_class_from_file(path):
 class QuantMain:
     """Main entry for quantlib"""
     @staticmethod
-    def gen_docs(path="."):
-        """
-        Generate documents for factors defined under a specific path.
-        """
-        from .analysis.factors import AbstractFactor
-        from .common.logging import Logger
-        filenames = [path] if path.endswith(".py") else glob.glob(os.path.join(path, "*.py"))
-        num = 0
-        for filename in filenames:
-            if os.path.split(filename)[-1].startswith("__"):
-                continue
-            obj_name, obj = load_class_from_file(filename)
-            if hasattr(obj, "generate_doc"):
-                Logger.info("Generating documents for %s ..." % obj_name)
-                obj.generate_doc()
-                num += 1
-        Logger.info("Gen-doc finished. %d documents generated." % num)
-
-    @staticmethod
     def reset_config():
         """Rewrite config file with default settings"""
         from .common.settings import create_default_config

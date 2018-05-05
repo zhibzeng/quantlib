@@ -12,7 +12,7 @@ class STOM(Descriptor):
 
     Computed as the log of the sum of daily turnover during the previous 21 trading days,
 
-    STOM = ln[\Sigma_{t=1}^{21}\frac{V_t}{S_t}]
+    ..  math:: STOM = ln[\Sigma_{t=1}^{21}\frac{V_t}{S_t}]
 
     where Vt is the trading volume on day t , and St is the number of shares outstanding.
     """
@@ -35,7 +35,7 @@ class STOQ(Descriptor):
     Let STOM_t be the share turnover for month t , with each month consisting of 21 trading days. 
     The quarterly share turnover is defined by
     
-    STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
+    ..  math:: STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
     where T = 3 months.
     """
     def __init__(self):
@@ -56,7 +56,7 @@ class STOA(Descriptor):
     Let STOM_t be the share turnover for month t , with each month consisting of 21 trading days. 
     The quarterly share turnover is defined by
     
-    STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
+    ..  math:: STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
     where T = 12 months.
     """
     def __init__(self):

@@ -3,9 +3,14 @@
 [![Documentation Status](https://readthedocs.org/projects/quantlib/badge/?version=latest)](http://quantlib.readthedocs.io/?badge=latest)
 [![Build Status](https://travis-ci.org/SnowWalkerJ/quantlib.svg?branch=master)](https://travis-ci.org/SnowWalkerJ/quantlib)
 
-Quantlib是一个个人维护、使用的量化模块，主要用于金融数据的获取、清洗、变换和分析等功能。
+Quantlib is a library that serves quantitative trading. It offers data querying, data cleansing, calculation and backtesting.
 
 ------------------
+
+## About language
+
+This project is specialized in China A Share stocks, and highly depends on Wind database. So the users are expected to be Chinese.
+Thus all the documents and comments will be Chinese.
 
 ## Get started
 
@@ -21,14 +26,15 @@ python setup.py install
 ```bash
 vim ~/.quantlib/config.cfg
 ```
+
 And change the settings items such as wind db accounts and other preferences.
 
 ## Wind Data
 
 ```python
 from quant.data import wind
-wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100   # 获取涨跌幅
-wind.get_wind_table("AShareST")                               # 获取ST信息
+wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100 # get price change
+wind.get_wind_table("AShareST")                               # get special treatment list
 ```
 
 ## Backtest

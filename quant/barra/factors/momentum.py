@@ -13,9 +13,9 @@ class RSTR(Descriptor):
 
     Computed as the sum of excess log returns over the trailing T = 504 trading days with a lag of L=21 tradingdays,
     
-    RSTR = \Sigma_{t=L}^{T+L}w_t[ln(1+r_t)-ln(1+r_{ft})]
+    ..  math:: RSTR = \Sigma_{t=L}^{T+L}w_t[ln(1+r_t)-ln(1+r_{ft})]
     
-    where r_t is the stock return on day t, r_{ft} is the risk-free return, and w_t is an
+    where :math:`r_t` is the stock return on day t, :math:`r_{ft}` is the risk-free return, and :math:`w_t` is an
     exponential weight with a half-life of 126 trading days.
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="rstr")

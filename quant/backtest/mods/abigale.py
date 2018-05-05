@@ -1,5 +1,4 @@
 import json
-import ujson
 import pandas as pd
 from ...abigale import Abigale, exceptions
 from ...common.math_helpers import get_factor_exposure

@@ -38,4 +38,4 @@ class TradingCalendar:
 
 trading_calendar = TradingCalendar()
 TDay = trading_calendar.TradingDay
-"""Trading Day, as pd.tseries.offset.CustomBusinessDay"""
+"""交易日， pd.tseries.offset.CustomBusinessDay"""

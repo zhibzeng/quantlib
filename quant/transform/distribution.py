@@ -1,3 +1,6 @@
+"""
+与数据分布有关的变换
+"""
 import numpy as np
 import scipy.stats
 import pandas as pd

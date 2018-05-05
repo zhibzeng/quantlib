@@ -23,26 +23,3 @@ def get_rtn(x: pd.Series, rtn_len: int, shift: bool= False):
     if shift:
         data = data.shift(-rtn_len)
     return data
-
-
-@LOCALIZER.wrap("filter_st", const_key="filter_st")
-def get_st_filter():
-    st = wind.get_wind_table("AShareST")
-    st["entry_dt"] = pd.to_datetime(st.entry_dt)
-    st["remove_dt"] = pd.to_datetime(st.remove_dt)
-    return st
-
-
-def remove_st(data):
-    """把ST的股票去除
-    Parameters
-    ----------
-    data: pd.DataFrame / pd.Panel
-        要处理的数据框，至少是二维的，第一维为事件，第二维为股票
-    Returns
-    -------
-    pandas结构，和输入的data同一形状、类型，将ST股票的记录置为NaN
-    """
-    # TODO
-    pass
-

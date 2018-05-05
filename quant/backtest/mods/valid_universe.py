@@ -16,30 +16,21 @@ class NoSTUniverse(AbstractMod):
     将持有的已经进入ST的股票主动卖出。
     """
     def __init__(self):
-        self.st = self.get_st_list()
-        self.st_stocks = []
+        self.st = wind.arange_entry_table("AShareST").fillna(False)
+        self.st_stocks = set()
         super(NoSTUniverse, self).__init__()
 
-    @staticmethod
-    def get_st_list():
-        st = wind.get_wind_table("AShareST", ["ann_dt", "remove_dt", "s_info_windcode", "s_type_st"])
-        st = st[(st['s_type_st'] == 'S') | (st['s_type_st'] == 'L')]
-        st["ann_dt"] = pd.to_datetime(st["ann_dt"])
-        st["remove_dt"] = pd.to_datetime(st["remove_dt"])
-        return st
-
     def on_get_universe(self, universe):
+        """
+        把待选股票池中ST的股票去除
+        """
         today = self.strategy.today
-        # st = self.st.query("(entry_dt<'%(dt)s')&(remove_dt>'%(dt)s')" % {"dt": str(today)})
-        st = self.st
-        st = st[(st['ann_dt'] <= today) & ((st['remove_dt'].isnull()) | (st['remove_dt'] > today))]
-        self.st_stocks = set(st.s_info_windcode)
+        self.st_stocks = set(self.st.columns[self.st.loc[today]])
         universe.difference_update(self.st_stocks)
     
     def on_backtest_after_handle(self):
         """
-        Sell the ST stocks if they are in the tobuy-list (for whatever reason)
-        or poisition.
+        把买入目标（由于未知原因产生的）或已购持仓中的ST股票卖出
         """
         fund = self.strategy.fund
         if self.st_stocks is None:
@@ -62,7 +53,10 @@ class NoSTUniverse(AbstractMod):
 
 @AbstractMod.register
 class NoIPOUniverse(AbstractMod):
-    def __init__(self, days=30):
+    """
+    把新上市60天内的股票去除
+    """
+    def __init__(self, days=60):
         self.ipo = wind.get_wind_table("AShareIPO", ["s_ipo_listdate", "s_info_windcode"]).dropna()
         self.ipo["s_ipo_listdate"] += timedelta(days=days)
         super(NoIPOUniverse, self).__init__()
