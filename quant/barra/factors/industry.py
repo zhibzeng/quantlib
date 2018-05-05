@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
-from ....data import wind
+from ...data import wind
 from .base import Descriptor, Factor
 
 

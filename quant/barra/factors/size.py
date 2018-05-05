@@ -1,6 +1,6 @@
 import numpy as np
-from ....data import wind
-from ....common.localize import LOCALIZER
+from ...data import wind
+from ...common.localize import LOCALIZER
 from .base import Descriptor, Factor
 
 

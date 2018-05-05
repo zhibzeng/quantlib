@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
-from ....common.localize import LOCALIZER
-from ....data import wind
+from ...common.localize import LOCALIZER
+from ...data import wind
 from .base import Descriptor, Factor
 
 

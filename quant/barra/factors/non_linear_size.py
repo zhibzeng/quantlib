@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from ....common.localize import LOCALIZER
+from ...common.localize import LOCALIZER
 from .base import Descriptor, Factor
 from .size import Size
 

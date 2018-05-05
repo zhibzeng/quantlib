@@ -3,10 +3,10 @@ import pandas as pd
 import xarray as xr
 from tqdm import tqdm
 import statsmodels.api as sm
-from ....data import wind
-from ....common.localize import LOCALIZER
-from ....common.logging import Logger
-from ....transform import get_rtn
+from ...data import wind
+from ...common.localize import LOCALIZER
+from ...common.logging import Logger
+from ...transform import get_rtn
 from .base import Factor, Descriptor
 from .industry import INDUSTRY_FACTORS
 
@@ -71,13 +71,13 @@ def get_factor_yields():
             w = w.values[valid]
         except KeyError:
             continue
-        model = sm.WLS(y, x, weights=w, missing="drop").fit()
-        # model = sm.OLS(y, x, missing='drop').fit()
+        model = sm.WLS(y, x, weights=w, missing='drop').fit()
         beta = pd.Series(model.params, index=sorted(f for f in row.factor.data if f != "yields"))
         
+        # Extract yield of country factor from industry factors
         industry_weights = get_industry_weights(size.loc[date], factors.sel(factor=industry_factors, date=date))
         cne_yield = (industry_weights * beta[industry_factors]).sum()
-        beta[industry_factors] -= industry_weights
+        beta[industry_factors] -= cne_yield
 
         yields_data[date] = beta
     yields_data = pd.DataFrame(yields_data).T

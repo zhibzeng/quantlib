@@ -1,5 +1,5 @@
 import pandas as pd
-from ....data import wind
+from ...data import wind
 
 
 class Portfolio:

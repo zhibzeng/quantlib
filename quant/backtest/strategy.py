@@ -12,8 +12,8 @@ from .common.market import AShareMarket
 from ..common.settings import CONFIG
 from ..common.logging import Logger
 from ..data import wind
-from ..analysis.barra import Factor
-from ..analysis.barra.factors.industry import INDUSTRY_FACTORS
+from ..barra import Factor
+from ..barra.factors.industry import INDUSTRY_FACTORS
 from ..utils.calendar import TradingCalendar, TDay
 
 
@@ -145,7 +145,7 @@ class ConstraintStrategy(SimpleStrategy):
     def __init__(self, neutral_config, *args, **kwargs):
         self.neutral_config = neutral_config
         self.factor_data = {
-            factor_name: getattr(Factor, factor_name).get_exposures()
+            factor_name: getattr(Factor, factor_name).get_exposures(True)
             for factor_name in neutral_config['factors'].keys()
         }
         self.industry_data = {
@@ -156,7 +156,7 @@ class ConstraintStrategy(SimpleStrategy):
                             .resample("1d").ffill()
         rest_index = pd.date_range(self.index_weights.index[-1], pd.to_datetime(date.today()), freq=TDay)
         rest_df = pd.DataFrame(np.full((len(rest_index)-1, len(self.index_weights.columns)), None), index=rest_index[1:], columns=self.index_weights.columns)
-        self.index_weights = pd.concat([self.index_weights, rest_df], 0).ffill() / 100
+        self.index_weights = pd.concat([self.index_weights, rest_df], 0).ffill()
         try:
             import mosek
         except ImportError:
@@ -264,7 +264,7 @@ class ConstraintStrategy(SimpleStrategy):
             M.constraint("sum", Expr.sum(x), Domain.equalsTo(1.0))
             for factor_name, limit in self.neutral_config['factors'].items():
                 factor_data = self.factor_data[factor_name].loc[today]
-                factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
+                factor_data = factor_data.fillna(factor_data.mean())
                 index_exposure = (index_weight * factor_data).sum()
                 stocks_exposure = factor_data.loc[stocks].values
                 M.constraint(factor_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-limit, index_exposure+limit))

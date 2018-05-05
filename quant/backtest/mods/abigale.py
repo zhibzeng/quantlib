@@ -2,13 +2,13 @@ import json
 import ujson
 import pandas as pd
 from ...abigale import Abigale, exceptions
-from ...analysis import get_factor_exposure
-from ...analysis.barra.factors import get_factor_yields
+from ...common.math_helpers import get_factor_exposure
+from ...barra.factors import get_factor_yields
 from ...common.settings import CONFIG
 from ...common.logging import Logger
 from ...data import wind
 from ..common.mods import AbstractMod
-from ...analysis.barra import Factor
+from ...barra import Factor
 
 
 @AbstractMod.register
@@ -71,12 +71,15 @@ class AbigaleMod(AbstractMod):
         return data
 
     def generate_net_values(self, net_values):
-        return [
-            [int(idx.timestamp() * 1000), value]
-            for idx, value in net_values.iteritems()
-        ]
+        """
+        生成净值序列
+        """
+        return self._series_to_list(net_values)
 
     def generate_factor_exposure_yields(self):
+        """
+        因子归因
+        """
         position = self.strategy.fund.position.apply(lambda x: x / x.sum(), axis=1)
         factor_yields = get_factor_yields()
         factor_exposure_yields = {}
@@ -100,40 +103,50 @@ class AbigaleMod(AbstractMod):
         # factor_exposure_yields['Alpha'] = (relative_rtn - risk_yields).dropna()
 
         return {
-            key: [
-                [int(idx.timestamp() * 1000), value]
-                for idx, value in series.cumsum().iteritems()
-            ]
+            key: self._series_to_list(series.cumsum())
             for key, series in factor_exposure_yields.items()
         }
         
 
     def generate_style_risks(self, weights):
+        """
+        风格暴露
+        """
         style_risks = {}
         for factor in Factor.get_factors().values():
             if factor.name.startswith("Industry"):
                 continue
             series = self.get_exposure(weights, factor)
-            style_risks[factor.name] = [
-                [int(idx.timestamp() * 1000), value]
-                for idx, value in series.iteritems()
-            ]
+            style_risks[factor.name] = self._series_to_list(series)
         return style_risks
 
     def generate_industry_risks(self, weights):
+        """
+        行业暴露
+        """
         industry_risks = {}
         for factor in Factor.get_factors().values():
             if not factor.name.startswith("Industry"):
                 continue
             series = self.get_exposure(weights, factor)
-            industry_risks[factor.name[8:]] = [
-                [int(idx.timestamp() * 1000), value]
-                for idx, value in series.iteritems()
-            ]
+            industry_risks[factor.name[8:]] = self._series_to_list(series)
         return industry_risks
 
     @staticmethod
+    def _series_to_list(series):
+        """
+        把DatetimeIndex的Series转换成Highstocks的序列格式
+        """
+        return [
+            [int(idx.timestamp() * 1000), value]
+            for idx, value in series.iteritems()
+        ]
+
+    @staticmethod
     def _basic_info_item(name, nv, weights):
+        """
+        基本统计信息
+        """
         rtns = nv.pct_change()
         rtn = rtns.mean() * 252
         std = rtns.std() * 252 ** 0.5

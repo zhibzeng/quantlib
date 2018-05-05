@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from ....common.localize import LOCALIZER
-from ....common.math_helpers import exponential_decay_weight
-from ....data import wind
+from ...common.localize import LOCALIZER
+from ...common.math_helpers import exponential_decay_weight
+from ...data import wind
 from .base import Descriptor, Factor
 
 

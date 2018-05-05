@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from ....common.localize import LOCALIZER
-from ....common.math_helpers import exponential_decay_weight
-from ....data import wind
+from ...common.localize import LOCALIZER
+from ...common.math_helpers import exponential_decay_weight
+from ...data import wind
 from .base import Descriptor, Factor
 from .size import Size
 from .beta import BetaDescriptor, Beta

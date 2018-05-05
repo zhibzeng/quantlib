@@ -4,10 +4,10 @@ import xarray as xr
 import statsmodels.api as sm
 from sklearn.linear_model import LinearRegression
 from ..entities.portfolio import get_estimation_universe
-from ....common.localize import LOCALIZER
-from ....common.logging import Logger
-from ....data import wind
-from ....transform import compute_zscore
+from ...common.localize import LOCALIZER
+from ...common.logging import Logger
+from ...data import wind
+from ...transform import compute_zscore
 
 
 def size_weighted_standardize(data):
@@ -25,7 +25,7 @@ class Descriptor:
         raise NotImplementedError
 
     def get_zscore(self) -> pd.DataFrame:
-        wrapper = LOCALIZER.wrap(self.name + "_z")
+        wrapper = LOCALIZER.wrap("descriptors", const_key=self.name + "_z")
         return wrapper(self._get_zscore)()
 
     def _get_zscore(self) -> pd.DataFrame:
@@ -126,7 +126,7 @@ class Factor:
         )
         if self.disentangle:
             disentangled = {}
-            exog = [getattr(Factor, f).get_exposures() for f in self.disentangle]
+            exog = [getattr(Factor, f).get_exposures(True) for f in self.disentangle]
             for idx, row in values.iterrows():
                 x = [df.loc[idx] for df in exog]
                 x.append(row.rename('target'))
