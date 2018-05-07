@@ -1,5 +1,4 @@
 import json
-import ujson
 import numpy as np
 import pandas as pd
 
@@ -17,13 +16,12 @@ class SerializerBase:
 class DataFrameSerializer(SerializerBase):
     @staticmethod
     def serialize(df, to_json=False):
-        parser = json if np.any(df.isnull()) else ujson
         if isinstance(df.index, pd.DatetimeIndex):
             df = df.copy()
             df.index = df.index.strftime("%Y-%m-%d %H:%M:%S")
         data = df.to_dict("split")
         if to_json:
-            return parser.dumps(data)
+            return json.dumps(data)
         else:
             return data
 

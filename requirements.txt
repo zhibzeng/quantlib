@@ -1,6 +1,8 @@
 # core
 sqlalchemy
 pandas
+numpy
+xarray
 tables
 scipy
 richenum
