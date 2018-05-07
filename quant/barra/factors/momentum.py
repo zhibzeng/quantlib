@@ -20,13 +20,16 @@ class RSTR(Descriptor):
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="rstr")
     def get_raw_value(self):
-        T = 504
+        # TODO: weighted isnull
+        T = 252
         L = 21
         halflife = 126
         weights = exponential_decay_weight(halflife, T)
-        data = np.log(1 + wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100)
+        data = np.log1p(wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100)
         # Truncated exponential moving average
-        return data.rolling(T).apply(lambda y: np.nansum(y*weights) / (~np.isnan(y) @ weights)).shift(L)
+        # return Rolling(data, T, min_periods=T//2).apply(lambda y: np.nansum(y*weights) / (~np.isnan(y) @ weights)).shift(L)
+        # return data.rolling(T).apply(lambda y: np.nansum(y*weights) / (~np.isnan(y) @ weights)).shift(L)
+        return data.ewm(halflife=halflife).mean().shift(L)
 
 
 Momentum = Factor("Momentum", [RSTR()], [1.0])

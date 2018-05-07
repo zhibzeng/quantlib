@@ -29,11 +29,12 @@ def to_trade_data(data):
     把按季度公布的数据转换成交易日数据
     """
     today = date.today().strftime("%Y-%m-%d")
-    index = pd.Series(pd.date_range(data.index[0], today, freq=TDay))
+    target_index = pd.Series(pd.date_range(data.index[0], today, freq=TDay))
+    index = sorted(set(target_index) | set(data.index))
     columns = data.columns
     final_data = pd.DataFrame(np.full((len(index), len(columns)), np.nan), index=index, columns=columns)
     final_data.update(data)
-    final_data = final_data.ffill()
+    final_data = final_data.ffill().loc[target_index]
     return final_data
 
 

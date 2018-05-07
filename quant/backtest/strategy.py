@@ -141,6 +141,7 @@ class SimpleStrategy(AbstractStrategy):
 class ConstraintStrategy(SimpleStrategy):
     """
     中性策略，在SimpleStrategy的基础上控制行业和因子暴露
+    # TODO: cost in objective
     """
     def __init__(self, neutral_config, *args, **kwargs):
         """
@@ -283,10 +284,11 @@ class ConstraintStrategy(SimpleStrategy):
             # 最大化期望收益率
             M.objective("MaxRtn", ObjectiveSense.Maximize, Expr.dot(predicted.tolist(), x))
             M.solve()
-            try:
-                weights = pd.Series(list(x.level()), index=stocks)
-            except SolutionError:
-                raise RuntimeError("Mosek fail to find a feasible solution @ {}".format(str(today)))
+            weights = pd.Series(list(x.level()), index=stocks)
+            # try:
+            #     weights = pd.Series(list(x.level()), index=stocks)
+            # except SolutionError:
+            #     raise RuntimeError("Mosek fail to find a feasible solution @ {}".format(str(today)))
         return weights[weights > 0]
 
     def optimize_with_optlang(self, predicted, today):

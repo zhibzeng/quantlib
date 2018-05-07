@@ -21,9 +21,9 @@ class STOM(Descriptor):
 
     @LOCALIZER.wrap(filename="descriptors", const_key="stom")
     def get_raw_value(self):
-        amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount")
+        amount = wind.get_wind_data("AShareEODPrices", "s_dq_amount").replace(0, np.nan)
         size = wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_mv")
-        stom = np.log((amount / size).dropna(how='all').rolling(self.T).sum() + 1e-6)
+        stom = np.log((amount / size).dropna(how='all').rolling(self.T, min_periods=self.T//2).sum() + 1e-6)
         return stom
 
 
@@ -44,7 +44,8 @@ class STOQ(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="stoq")
     def get_raw_value(self):
         stom = STOM().get_raw_value()
-        stoq = np.log(np.exp(stom).rolling(self.T*21).mean())
+        trailing = self.T*21
+        stoq = np.log(np.exp(stom).rolling(trailing, min_periods=trailing//2).mean())
         return stoq
 
 
@@ -65,7 +66,8 @@ class STOA(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="stoa")
     def get_raw_value(self):
         stom = STOM().get_raw_value()
-        stoa = np.log(np.exp(stom).rolling(self.T*21).mean())
+        trailing = self.T*21
+        stoa = np.log(np.exp(stom).rolling(trailing, min_periods=trailing//2).mean())
         return stoa
 
 
