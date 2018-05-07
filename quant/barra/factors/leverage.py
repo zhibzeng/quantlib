@@ -44,7 +44,7 @@ class MLEV(Descriptor):
 @Descriptor.register("BLEV")
 class BLEV(Descriptor):
     r"""
-    Market leverage
+    Book leverage
 
     Computed as
     BLEV = (BE + PE + LD) / ME

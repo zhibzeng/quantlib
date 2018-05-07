@@ -25,9 +25,15 @@ def size_weighted_standardize(data):
 
 class Descriptor:
     def get_raw_value(self) -> pd.DataFrame:
+        """
+        返回原始值。需重载此方法
+        """
         raise NotImplementedError
 
     def get_zscore(self) -> pd.DataFrame:
+        """
+        返回zscore
+        """
         wrapper = LOCALIZER.wrap("descriptors", const_key=self.name + "_z")
         return wrapper(self._get_zscore)()
 
@@ -47,7 +53,7 @@ class Descriptor:
     @classmethod
     def register(cls, name):
         """
-        Register a descriptor so that you can access it using `Descriptor.xxx`
+        注册一个Descriptor，注册以后可以通过Descriptor.xxx来引用这个类
         """
         def wrapper(subcls):
             setattr(cls, name, subcls)
@@ -69,7 +75,7 @@ class Factor:
 
     def get_exposures(self, fillna=True) -> pd.DataFrame:
         """
-        Returns the each stock's exposure to the factor each day
+        返回每只股票每天在该因子上的暴露
         """
         if self.__data is None:
             wrapper = LOCALIZER.wrap(filename="factors", const_key=self.name)
@@ -83,6 +89,13 @@ class Factor:
 
     @classmethod
     def get_factors(cls) -> dict:
+        """
+        返回所有已注册的因子
+
+        Returns
+        =======
+        dict: key:因子名，value:因子对象
+        """
         return {
             key: getattr(cls, key)
             for key in dir(cls)

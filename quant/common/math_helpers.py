@@ -21,6 +21,21 @@ def cal_mdd(netvalue, compound=True):
     Returns
     -------
     最大回撤值(正值)
+
+    Examples
+    --------
+
+    ..  ipython::
+
+        In [1]: import pandas as pd
+
+        In [2]: from quant.common.math_helpers import cal_mdd
+
+        In [3]: series = pd.Series([1.0, 1.1, 1.11, 1.04, 1.02, 1.08])
+
+        In [4]: cal_mdd(series)
+
+        In [5]: 1.02 / 1.11 - 1
     """
     cm = netvalue.cummax()
     if compound:
@@ -52,6 +67,24 @@ def get_ic(table1, table2, method="spearman"):
     See Also
     --------
     pd.Series.corr
+
+    Examples
+    --------
+
+    ..  ipython::
+
+        In [1]: import numpy as np
+
+        In [2]: import pandas as pd
+
+        In [3]: from quant.common.math_helpers import get_ic
+
+        In [4]: df1 = pd.DataFrame(np.random.randn(10, 10))
+
+        In [5]: df2 = pd.DataFrame(np.random.randn(10, 10))
+
+        In [6]: get_ic(df1, df2)
+    
     """
     common_index = sorted(set(table1.index) & set(table2.index))
     ic = pd.Series(np.empty(len(common_index)), index=common_index)
@@ -93,6 +126,18 @@ def get_factor_exposure(position, factor_value, benchmark=None):
 
 
 def exponential_decay_weight(halflife, truncate_length, reverse=True):
+    """
+    产生截断的指数衰减权重
+
+    Parameters
+    ==========
+    halflife: int
+        半衰期
+    truncate_length: int
+        截断长度
+    reverse: bool
+        是否反转序列。如果为False则为升序，如果为True则为降序
+    """
     lamb = 0.5 ** (1 / halflife)
     weights = lamb ** np.arange(truncate_length)
     weights /= weights.sum()

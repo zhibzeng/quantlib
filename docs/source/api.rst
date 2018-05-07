@@ -2,11 +2,12 @@ API
 ###
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Document
 
-   api/analysis
+   api/barra
    api/backtest
    api/data
+   api/math_helpers
    api/transform
    api/utils

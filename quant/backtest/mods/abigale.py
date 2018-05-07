@@ -12,6 +12,9 @@ from ...barra import Factor
 
 @AbstractMod.register
 class AbigaleMod(AbstractMod):
+    """
+    根据回测结果生成用于Abigale2的分析数据
+    """
     def __init__(self):
         self.weights = {}
         super(AbigaleMod, self).__init__()

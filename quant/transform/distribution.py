@@ -26,6 +26,20 @@ def find_extreme_values(data, distribution="norm", alpha=0.975):
     -------
         pd.Series
             是否为离散值的布尔值序列
+
+    Examples
+    --------
+
+    ..  ipython::
+
+        In [1]: import numpy as np
+
+        In [2]: from quant.transform.distribution import find_extreme_values
+
+        In [2]: data = np.array([0.2, 0.02, 0.1, -0.1, 0.2, 0.15, 100])
+
+        In [3]: find_extreme_values(data)
+    
     """
     distribution_family = getattr(scipy.stats, distribution)
     dist_parameters = distribution_family.fit(data[np.isfinite(data)])
@@ -71,7 +85,7 @@ def __compute_zscore(data: np.ndarray, axis: int = -1, clip: float = 3.0):
 
 def compute_zscore(data, axis=-1, clip=3.0, inplace=False):
     """
-    计算Z分数
+    计算Z分数（标准化）
 
     Parameters
     ----------
@@ -83,6 +97,22 @@ def compute_zscore(data, axis=-1, clip=3.0, inplace=False):
         clip
     inplace: bool, optional
         在原数据上修改还是返回新的数据
+
+    Examples
+    --------
+
+    ..  ipython::
+
+        In [1]: import numpy as np
+
+        In [2]: from quant.transform.distribution import compute_zscore
+
+        In [3]: data = np.array([[0.1, 0.2, 0.3, 0.25], [0.02, 0.14, 0.28, 0.45]])
+        
+        In [4]: compute_zscore(data, axis=0)
+
+        In [5]: Out[4].std(1)
+
     """
     if not inplace:
         data = data.copy()

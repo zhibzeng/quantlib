@@ -4,7 +4,7 @@ from dateutil.parser import parse
 from .trading_calendar import trading_calendar
 
 
-class MonthCalendar:
+class MonthlyCalendar:
     """
     应对python自带的timedelta不能以月为单位加减的问题。
     自带

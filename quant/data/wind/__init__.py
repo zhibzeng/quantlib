@@ -174,6 +174,28 @@ class WindDB:
         sys.stdout.flush()
 
     def get_wind_table(self, table_name: str, columns: Union[List[str], str]=None, format="table") -> pd.DataFrame:
+        """
+        万得数据库原始表
+
+        Parameters
+        ==========
+        table_name: str
+            数据库中数据表的名称
+        columns: List[str], 可选
+            要查询的数据字段，如果为None则查询所有字段
+
+        Returns
+        =======
+        pd.DataFrame
+
+        Examples
+        ========
+
+        ..  code-block::
+            python
+
+            wind.get_wind_table("AShareEODPrices", ["s_info_windcode", "trade_dt", "s_dq_adjclose", "s_dq_adjopen"])
+        """
         non_existing_columns = self._check_columns(table_name, columns)
         if non_existing_columns:
             self._add_wind_columns(table_name, non_existing_columns)
@@ -187,6 +209,28 @@ class WindDB:
 
     @LOCALIZER.wrap("wind_pivot.h5", keys=["table", "field"], format="fixed")
     def get_wind_data(self, table: str, field: str, index: str=None, columns: str=None) -> pd.DataFrame:
+        """
+        获取万得交易数据
+
+        Parameters
+        ==========
+        table: str
+            数据库中数据表的名称
+        field: str
+            要查询的字段名
+        index: str
+            要作为行的字段名，默认为trade_dt
+        column: str
+            要作为列的字段名，默认为s_info_windcode
+
+        Examples
+        ========
+
+        ..  code-block::
+            python
+
+            wind.get_wind_data("AShareEODPrices", "s_dq_pctchange")
+        """
         column_names = [col.name for col in getattr(tables, table).__table__.columns]
         if columns is None:
             if "s_info_windcode" in column_names:
@@ -211,6 +255,15 @@ class WindDB:
             要取权重的数据表，例如AIndexHS300FreeWeight
         s_info_windcode
             要取权重的指数的万得代码，中证500为000905.SH，沪深300为399300.SZ。
+
+        Examples
+        --------
+
+        ..  code-block::
+            python
+
+            # 获取中证500指数的免费权重
+            wind.get_index_weight("AIndexHS300FreeWeight", "000905.SH")
         """
         # data = self.get_wind_table(table, columns=["trade_dt", "s_con_windcode", "i_weight", "s_info_windcode"])
         # data = data[data.s_info_windcode == s_info_windcode]
@@ -246,6 +299,17 @@ class WindDB:
                 以某字段为内容。如果为空，则生成的数据只含有True，False
             columns: str
                 指定要作为列名的字段，默认为s_info_windcode
+
+        Examples
+        ========
+
+        ..  code-block::
+            python
+
+            # AShareST表示通过entry_dt和remove_dt来维护股票进入ST和离开ST的时间的
+            # arrange_entry_table把该信息重新整理成以交易日为行、股票为列的“交易日”表
+            # 最后把剩下的NA用False填充
+            wind.arrange_entry_table("AShareST").fillna(False)
         """
         if isinstance(table, str):
             # 如果table是str，向数据库查询
@@ -317,6 +381,23 @@ class WindDB:
     def get_consensus_data(self, field: str, est_years: int=1) -> pd.DataFrame:
         """
         A股盈利预测汇总
+
+        Parameters
+        ==========
+
+        field: str
+            分析师预测数据字段
+        est_years: {1, 2, 3}
+            预测周期（年）
+
+        Examples
+        ========
+
+        ..  code-block::
+            python
+
+            # 获取预测一年的平均每股收益
+            wind.get_consensus_data('eps_avg', 1)
         """
         sql = """
         select s_info_windcode, est_dt, {}
@@ -338,12 +419,25 @@ class WindDB:
         Parameters
         ==========
         table: str
+
             AShareIndustriesClass 中国A股行业分类
+
             AShareSECNIndustriesClass 中国A股证监会新版行业分类
+
             AShareSECIndustriesClass 中国A股证监会行业分类
+
             AShareIndustriesClassCITICS 中国A股中信行业分类
         level: {1, 2, 3}
             行业等级
+
+        Examples
+        ========
+
+        ..  code-block::
+            python
+
+            # 获取中国A股中信行业分类 （一级分类）
+            wind.get_stock_industries("AShareIndustriesClassCITICS", 1)
         """
         level = level
         tables = {

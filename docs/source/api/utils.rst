@@ -9,7 +9,7 @@ quant.utils
 ..  automodule:: quant.utils
     :members:
 
-..  autoclass:: quant.utils.LocalizeWrapper
+..  autoclass:: quant.utils.Localizer
     :members:
 
 ..  autoclass:: quant.utils.ConfigManager

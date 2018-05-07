@@ -8,6 +8,7 @@ MODS = {}
 
 class AbstractMod(metaclass=ABCMeta):
     """抽象的模块类"""
+    # TODO: more flexible mod management interface
     def __init__(self):
         self.strategy = None
 

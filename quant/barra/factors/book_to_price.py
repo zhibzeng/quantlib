@@ -6,7 +6,7 @@ from .base import Descriptor, Factor
 
 
 @Descriptor.register("B2P")
-class B2P(Descriptor):
+class BToP(Descriptor):
     """
     Book-to-price ratio
 
@@ -17,4 +17,4 @@ class B2P(Descriptor):
         return 1 / wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_pb_new")
 
 
-BookToPrice = Factor("BookToPrice", [B2P()], [1.0])
+BookToPrice = Factor("BookToPrice", [BToP()], [1.0])

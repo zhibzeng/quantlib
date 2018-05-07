@@ -17,6 +17,7 @@ statsmodels
 sphinxcontrib-fulltoc
 numpydoc
 sphinx_rtd_theme
+IPython
 
 # For pypi document
 pypandoc

@@ -11,13 +11,13 @@ class Localizer:
     """
     把DataFrame缓存到本地hdf5文件中。通过设置key和const_key参数，可以设定需要跟踪哪些参数。
 
-    Example
-    =======
+    Examples
+    ========
 
     无参数
-    ------
 
-    ..  code-block:: python
+    ..  code-block::
+        python
 
         localilzer = Localizer('./.cache')
         @localizer.wrap('foo', const_key="foo")
@@ -27,9 +27,9 @@ class Localizer:
     由于hdf5文件需要key来定位数据，因此，对于没有参数的函数，需要给装饰器提供const_key参数方便保存
 
     跟踪参数
-    --------
 
-    ..  code-block: python
+    ..  code-block::
+        python
 
         localilzer = Localizer('./.cache')
         @localizer.wrap('zeros', keys=["length"])
@@ -63,9 +63,9 @@ class Localizer:
         format: {'fixed', 'table'}
             详见pd.DataFrame.to_hdf
 
-        See Also
-        ========
-            pd.DataFrame.to_hdf
+        ::
+
+            See :func:`pd.DataFrame.to_hdf`
         """
         if keys is None and const_key is None:
             raise ValueError("Either `keys` or `const_key` must not be None")

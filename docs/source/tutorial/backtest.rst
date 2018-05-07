@@ -3,8 +3,8 @@ quant.backtest
 
 ..  currentmodule:: quant.backtest
 
-Get Started
-===========
+起步
+####
 
 一个简单的股票回测程序只需要继承一个抽象策略类，定义一个选股策略就可以，一个简单的例子是:
 
@@ -24,36 +24,112 @@ Get Started
 
 ..  image:: ../_static/backtest_web.jpg
 
-Data
-====
+回测方法
+########
 
-原则上，在回测中可以使用普通的quant.data.wind接口获取数据，但是这样难以控制获取未来数据的风险，
-为了在一定程度上减轻这个问题，用户可以使用``quant.backtest.common.market.get_wind_data``来代替
-原有的``quant.data.wind.get_wind_data``，该函数会自动对获取的数据进行截取，来确保不会出现未来函数。
+quantlib提供`quant.backtest.strategy.Strategy`类作为所有策略的基类。用户可以继承该类并通过重载`__init__`方法和`handle`方法来自定义策略的行为。
+另外，quantlib也提供SimpleStrategy和ConstraintStrategy来提供通用而方便的回测功能
+
+SimpleStrategy
+==============
+
+..  code:: python
+
+    SimpleStrategy(predicted, name=None, buy_count=50, mods=None)
+
+通过传入一个`DataFrame`对象，`SimpleStrategy`每期做多分数最高的`buy_count`只股票
+
+ConstraintStrategy
+==================
+
+`ConstraintStrategy`根据传入的DataFrame的值、及一系列约束条件，来优化出在给定风险暴露的前提下
+期望收益率最大的组合，并买入该组合。
+
+..  code:: python
+
+    import numpy as np
+    import pandas as pd
+    from quant.backtest.strategy import ConstraintStrategy
+    from quant.backtest.common.mods import AbstractMod
+    from quant.common.settings import CONFIG
+
+    CONFIG.BENCHMARK = "000905.SH"
+
+    config = {
+        "factors": {
+            "Beta": 1.0,
+            "Size": 0.5,
+            "BookToPrice": 0.5,
+            "ResidualVolatility": 0.5,
+            "NonLinearSize": 0.5,
+            "Liquidity": 0.5,
+            "Leverage": 0.5,
+            "Momentum": 0.5
+        },
+        "industries": {
+            "Automobile": 0.05,
+            "LightIndustry": 0.05,
+            "Medical": 0.05,
+            "FundamentalChemistry": 0.05,
+            "Media": 0.05,
+            "BuildingMaterials": 0.05,
+            "ElectricDevice": 0.05,
+            "Construction": 0.05,
+            "ElectronicComponents": 0.05,
+            "RealEstate": 0.05,
+            "Food": 0.05,
+            "Retail": 0.05,
+            "Petroleum": 0.05,
+            "Composite": 0.05,
+            "Computer": 0.05,
+            "Communication": 0.05,
+            "Mechanism": 0.05,
+            "Iron": 0.05,
+            "NonbankFinance": 0.05,
+            "Transportation": 0.05,
+            "Public": 0.05,
+            "Agriculture": 0.05,
+            "Military": 0.05,
+            "ElectricalAppliance": 0.05,
+            "Clothing": 0.05,
+            "NonferrousMetal": 0.05,
+            "Bank": 0.05,
+            "Tourism": 0.05,
+            "Coal": 0.05
+        },
+        "stocks": 0.02
+    }
+    data = pd.DataFrame(...)
+    strategy = ConstraintStrategy(config, data, name="technical_ZZ500")
+    strategy.run()
+
+以上代码在约束单只股票最大持仓2%、行业暴露5%、风格暴露0.5的前提下优化目标收益率最大的持仓比例并进行回测。
 
 
-Mods
-====
+模块
+####
 
 本回测框架提供一些可选模块来支持扩展特性，同时也允许用户自定义模块。默认提供的模块有：
 
-+-----------------+---------------------------------------------------+
-|Mod Name         |Purpose                                            |
-+=================+===================================================+
-|NoSTUniverse     |Remove ST stocks from universe                     |
-+-----------------+---------------------------------------------------+
-|NoIPOUniverse    |Remove new stocks from universe                    |
-+-----------------+---------------------------------------------------+
-|NoUpLimitUniverse|Remove stocks that reach up-limit from universe    |
-+-----------------+---------------------------------------------------+
-|ActivelyTraded   |Remove inactive stocks (daily amount<10million)    |
-+-----------------+---------------------------------------------------+
-|ShowBasicResults |Show simple statistic infomation after backtest    |
-+-----------------+---------------------------------------------------+
-|WebVisualizer    |Show detailed information in webpage after backtest|
-+-----------------+---------------------------------------------------+
-|Output           |Save position information to 'output.h5'           +
-+-----------------+---------------------------------------------------+
++------------------+-----------------------------------------------------------+
+|Mod Name          |Purpose                                                    |
++==================+===========================================================+
+|NoSTUniverse*     |Remove ST stocks from universe                             |
++------------------+-----------------------------------------------------------+
+|NoIPOUniverse*    |Remove new stocks from universe                            |
++------------------+-----------------------------------------------------------+
+|NoUpLimitUniverse*|Remove stocks that reach up-limit from universe            |
++------------------+-----------------------------------------------------------+
+|ActivelyTraded*   |Remove inactive stocks (daily amount<10million)            |
++------------------+-----------------------------------------------------------+
+|ShowBasicResults* |Show simple statistic infomation after backtest            |
++------------------+-----------------------------------------------------------+
+|Abigale*          |Generate analytical details for abigale2                   |
++------------------+-----------------------------------------------------------+
+|Output            |Save position information to 'output.h5'                   |
++------------------+-----------------------------------------------------------+
+|Visualizer        |Show details of backtest in webpage (abigale is preferred) |
++------------------+-----------------------------------------------------------+
 
 默认以上所有模块都会自动被加载，用户也可以在策略类的mods属性中定义自己要使用的模块，如::
 
@@ -63,7 +139,7 @@ Mods
 则以上策略只会显示简单的回测信息，且不会对可选股票池作任何变化。
 
 
-Developer
-=========
+开发者
+######
 
 To be expected.

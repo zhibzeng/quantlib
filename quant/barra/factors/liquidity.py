@@ -36,6 +36,7 @@ class STOQ(Descriptor):
     The quarterly share turnover is defined by
     
     ..  math:: STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
+    
     where T = 3 months.
     """
     def __init__(self):
@@ -58,6 +59,7 @@ class STOA(Descriptor):
     The quarterly share turnover is defined by
     
     ..  math:: STOQ = ln[\frac{1}{T}\Sigma_{t=1}{T}exp\{STOM_t\}]
+
     where T = 12 months.
     """
     def __init__(self):
