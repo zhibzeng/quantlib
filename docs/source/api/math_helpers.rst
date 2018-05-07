@@ -8,3 +8,5 @@ Math Helpers
 ..  autofunction:: get_ic
 
 ..  autofunction:: get_factor_exposure
+
+..  autofunction:: exponential_decay_weight
