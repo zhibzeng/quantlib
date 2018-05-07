@@ -16,8 +16,11 @@ def size_weighted_standardize(data):
     """
     weight = get_estimation_universe().weight
     index = sorted(set(weight.index) & set(data.index))
-    z = pd.DataFrame({idx: (data.loc[idx] - (data.loc[idx] * weight.loc[idx]).sum()) / data.loc[idx].std() for idx in index}).T.clip(-3, 3)
-    return z
+    mean = data.loc[index].mul(weight.loc[index]).sum(1)
+    z = data.sub(mean, 0).div(data.std(1), 0).dropna(how='all')# .clip(-3, 3)
+    np.testing.assert_array_almost_equal(z.std(1).values, np.ones(z.shape[0]))
+    # z = pd.DataFrame({idx: (data.loc[idx] - (data.loc[idx] * weight.loc[idx]).sum()) / data.loc[idx].std() for idx in index}).T.clip(-3, 3)
+    return z.clip(-3, 3)
 
 
 class Descriptor:

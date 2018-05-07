@@ -19,7 +19,7 @@ def get_rtn(x: pd.Series, rtn_len: int, shift: bool= False):
         如果False，则每天的数据对应当天以前的收益率
     """
     # data = (1 + x.pct_change()).rolling(rtn_len).prod() - 1
-    data = np.exp(np.log(x).diff().rolling(rtn_len).sum()) - 1
+    data = np.exp(np.log(x).diff().rolling(rtn_len, min_periods=1).sum()) - 1
     if shift:
         data = data.shift(-rtn_len)
     return data

@@ -35,7 +35,7 @@ class MLEV(Descriptor):
     """
     @LOCALIZER.wrap(filename="descriptors", const_key="mlev")
     def get_raw_value(self):
-        me = wind.get_wind_data("AShareEODDerivativeIndicator", "s_dq_mv")
+        me = wind.get_wind_data("AShareEODDerivativeIndicator", "s_val_mv") * 1e4
         pe = to_trade_data(wind.get_wind_data("AShareBalanceSheet", "other_equity_tools_p_shr", index="ann_dt")).fillna(0)
         ld = LD().get_raw_value()
         return 1 + (pe + ld) / me

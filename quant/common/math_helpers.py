@@ -99,3 +99,36 @@ def exponential_decay_weight(halflife, truncate_length, reverse=True):
     if reverse:
         weights = np.array(list(reversed(weights)))
     return weights
+
+
+
+class Rolling:
+    def __init__(self, data, period, min_periods=None):
+        self.data = data
+        self.period = period
+        self.min_periods = period if min_periods is None else min_periods
+    
+    def mean(self):
+        return self.data.rolling(self.period, min_periods=self.min_periods).mean()
+
+    def std(self):
+        return self.data.rolling(self.period, min_periods=self.min_periods).std()
+
+    def sum(self):
+        return self.data.rolling(self.period, min_periods=self.min_periods).sum()
+
+    def max(self):
+        return self.data.rolling(self.period, min_periods=self.min_periods).max()
+
+    def min(self):
+        return self.data.rolling(self.period, min_periods=self.min_periods).min()
+
+    def apply(self, func):
+        result = {}
+        for i in range(self.period, len(self.data)):
+            idx = self.data.index[i]
+            sub_data = self.data.iloc[i-self.period:i].dropna(1, thresh=self.min_periods)
+            result[idx] = sub_data.apply(func, raw=False, reduce=True)
+        return pd.DataFrame(result).T
+
+

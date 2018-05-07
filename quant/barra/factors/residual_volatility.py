@@ -1,9 +1,11 @@
+from functools import partial
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from ...common.localize import LOCALIZER
-from ...common.math_helpers import exponential_decay_weight
+from ...common.math_helpers import exponential_decay_weight, Rolling
 from ...data import wind
+from ..entities import get_estimation_universe
 from .base import Descriptor, Factor
 from .size import Size
 from .beta import BetaDescriptor, Beta
@@ -25,8 +27,13 @@ class DASTD(Descriptor):
         weights = exponential_decay_weight(self.halflife, self.T, reverse=True)
         data = wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100
         data[data==0] = np.nan
-        ewmstd = lambda series: (np.nansum(np.sqrt(((series-series.mean())**2 * weights)) / (~np.isnan(series) @ weights)))
-        return data.rolling(self.T).apply(ewmstd)
+        return data.ewm(halflife=self.halflife).std()
+        # return Rolling(data, self.T, min_periods=self.T//2).apply(partial(self.ewmstd, weights=weights))
+
+    def ewmstd(self, series, weights):
+        if np.isnan(series).all():
+            return np.nan
+        return np.sqrt(np.nansum(((series-series.mean())**2 * weights)) / (~np.isnan(series) @ weights))
 
 
 @Descriptor.register("CMRA")
@@ -45,11 +52,12 @@ class CMRA(Descriptor):
     @LOCALIZER.wrap(filename="descriptors", const_key="cmra")
     def get_raw_value(self):
         daily_rtn = wind.get_wind_data("AShareEODPrices", "s_dq_pctchange") / 100
-        return daily_rtn.rolling(self.months * self.days_per_month).apply(self.cmra)
+        trailing = self.months * self.days_per_month
+        return Rolling(daily_rtn.rolling, trailing, min_periods=trailing//2).apply(self.cmra)
 
     def cmra(self, series):
-        monthly_rtn = series.reshape(self.months, self.days_per_month).sum(1)
-        z = np.log(1 + np.log(monthly_rtn + 1))
+        monthly_rtn = series.reshape(self.months, self.days_per_month).sum()
+        z = np.log1p(np.log1p(monthly_rtn))
         return z.max() - z.min()
 
 
@@ -73,9 +81,10 @@ class HSigma(Descriptor):
         beta = Descriptor.Beta().get_raw_value()
         resid = {}
         common_index = sorted(set(rtns.index) & set(beta.index))
+        R = get_estimation_universe().get_returns()
         for idx in common_index:
             row = rtns.loc[idx]
-            resid[idx] = row - row.mean() - beta.loc[idx]
+            resid[idx] = row - beta.loc[idx] * R.loc[idx]
         resid = pd.DataFrame(resid).T
         sigma = pd.ewmstd(resid, halflife=self.T)
         return sigma
