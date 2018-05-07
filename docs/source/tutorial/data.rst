@@ -41,7 +41,7 @@ Wind Data
     wind.get_wind_data("AShareEODPrices", "s_dq_pctchange")
 
 
-格式为wind.get_wind_data(表名,列名),会以trade_dt为index,s_info_windcode为column重新排列数据。
+格式为 ``wind.get_wind_data(表名,列名)`` ,会以trade_dt为index,s_info_windcode为column重新排列数据。
 
 日衍生数据
 ==========

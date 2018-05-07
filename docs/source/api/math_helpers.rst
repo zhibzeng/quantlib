@@ -1,5 +1,5 @@
 Math Helpers
-============
+############
 
 ..  currentmodule:: quant.common.math_helpers
 

@@ -7,3 +7,4 @@ Tutorial
 
     tutorial/data
     tutorial/backtest
+    tutorial/command

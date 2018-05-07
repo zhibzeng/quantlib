@@ -1,8 +1,8 @@
 quant.utils
-===========
+###########
 
 quant.utils
------------
+===========
 
 ..  currentmodule:: quant.utils
 
@@ -20,7 +20,7 @@ quant.utils
 
 
 quant.utils.calendar
---------------------
+====================
 
 ..  currentmodule:: quant.utils.calendar
 

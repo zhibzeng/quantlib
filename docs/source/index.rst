@@ -12,6 +12,7 @@ Welcome to quantlib's documentation!
 
    tutorial
    api
+   advanced
 
 
 Indices and tables

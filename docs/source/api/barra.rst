@@ -1,8 +1,8 @@
 quant.barra
-===========
+###########
 
 基类
-----
+====
 
 ..  currentmodule:: quant.barra.factors
 
@@ -13,10 +13,10 @@ quant.barra
     :members: get_exposures, get_factors
 
 Descriptor
-----------
+==========
 
 Beta
-^^^^
+----
 
 ..  class:: quant.barra.factors.beta.BetaDescriptor
 
@@ -31,7 +31,7 @@ Beta
     with a half-life of 63 trading days.
 
 RSTR
-^^^^
+----
 
 ..  class:: quant.barra.factors.momentum.RSTR
 
@@ -45,7 +45,7 @@ RSTR
     exponential weight with a half-life of 126 trading days.
 
 LnCap
-^^^^^
+-----
 
 ..  class:: quant.barra.factors.size.LnCap
 
@@ -54,7 +54,7 @@ LnCap
     Given by the logarithm of the total market capitalization of the firm.
 
 BToP
-^^^^
+----
 
 ..  class:: quant.barra.factors.book_to_price.B2P
 
@@ -63,7 +63,7 @@ BToP
     Last reported book value of common equity divided by current market capitalization.
 
 EPFWD
-^^^^^
+-----
 
 ..  class:: quant.barra.factors.earnings_yield.EPFWD
 
@@ -75,7 +75,7 @@ EPFWD
     the current and next fiscal years.
 
 CEToP
-^^^^^
+-----
 
 ..  class:: quant.barra.factors.earnings_yield.CEToP
 
@@ -84,7 +84,7 @@ CEToP
     Given by the trailing 12-month cash earnings divided by current price.
 
 EToP
-^^^^
+----
 
 ..  class:: quant.barra.factors.earnings_yield.EToP
 
@@ -97,7 +97,7 @@ EToP
 
 
 EGRLF
-^^^^^
+-----
 
 ..  class:: quant.barra.factors.growth.EGRLF
 
@@ -106,7 +106,7 @@ EGRLF
     Long-term (3-5 years) earnings growth forecasted by analysts.
 
 EGRSF
-^^^^^
+-----
 
 ..  class:: quant.barra.factors.growth.EGSRLF
 
@@ -115,7 +115,7 @@ EGRSF
     Short-term (1 year) earnings growth forecasted by analysts.
 
 EGRO
-^^^^
+----
 
 ..  class:: quant.barra.factors.growth.EGSRO
 
@@ -126,7 +126,7 @@ EGRO
     annual earnings per share to obtain the earnings growth.
 
 MLEV
-^^^^
+----
 
 ..  class:: quant.barra.factors.leverage.MLEV
 
@@ -139,7 +139,7 @@ MLEV
     most recent book value of long-term debt.
 
 BLEV
-^^^^
+----
 
 ..  class:: quant.barra.factors.leverage.BLEV
 
@@ -152,7 +152,7 @@ BLEV
     most recent book value of long-term debt.
 
 DToA
-^^^^
+----
 
 ..  class:: quant.barra.factors.leverage.DToA
 
@@ -166,7 +166,7 @@ DToA
     and TA is most recent book value of total assets.
 
 STOM
-^^^^
+----
 
 ..  class:: quant.barra.factors.liquidity.STOM
 
@@ -179,7 +179,7 @@ STOM
     where Vt is the trading volume on day t , and St is the number of shares outstanding.
 
 STOQ
-^^^^
+----
 
 ..  class:: quant.barra.factors.liquidity.STOQ
 
@@ -193,7 +193,7 @@ STOQ
     where T = 3 months.
 
 STOA
-^^^^
+----
 
 ..  class:: quant.barra.factors.liquidity.STOA
 
@@ -207,7 +207,7 @@ STOA
     where T = 12 months.
 
 NLSize
-^^^^^^
+------
 
 ..  class: quant.barra.factors.non_linear_size.NLSize
 
@@ -218,7 +218,7 @@ NLSize
     on a regression-weighted basis. Finally, the factor is winsorized and standardized.
 
 DASTD
-^^^^^
+-----
 
 ..  class: quant.barra.factors.residual_volatility.DASTD
 
@@ -227,7 +227,7 @@ DASTD
     Computed as the volatility of daily excess returns over the past 252 trading days with a half-life of 42 trading days.
 
 CMRA
-^^^^
+----
 
 ..  class: quant.barra.factors.residual_volatility.CMRA
 
@@ -238,7 +238,7 @@ CMRA
     excess log return over the past T months, with each month defined as the previous 21 trading days.
 
 HSigma
-^^^^^^
+------
 
 ..  class: quant.barra.factors.residual_volatility.HSigma
 
@@ -250,54 +250,54 @@ HSigma
     The Residual Volatility factor is orthogonalized with respect to Beta and Size to reduce collinearity.
 
 Factors
--------
+=======
 
 Beta
-^^^^
+----
 
 ..  math:: Beta = 1.0 * BetaDescriptor
 
 BookToPrice
-^^^^^^^^^^^
+-----------
 
 ..  math:: BookToPrice = 1.0 * BToP
 
 EarningsYield
-^^^^^^^^^^^^^
+-------------
 
 ..  math:: EarningsYield = 0.68 * EPFWD + 0.21 * CEToP +  0.11 * EToP
 
 Growth
-^^^^^^
+------
 
 ..  math:: Growth = 0.18 * EGRLF + 0.11 * EGRSF + 0.24 * EGRO + 0.47 * SGRO
 
 Leverage
-^^^^^^^^
+--------
 
 ..  math:: Leverage = 0.38 * MLEV + 0.35 * DToA + 0.27 * BLEV
 
 Liquidity
-^^^^^^^^^
+---------
 
 ..  math:: Liquidity = 0.35 * STOM + 0.35 * STOQ + 0.30 * STOA
 
 Momentum
-^^^^^^^^
+--------
 
 ..  math:: Momentum = 1.0 * RSTR
 
 NonLinearSize
-^^^^^^^^^^^^^
+-------------
 
 ..  math:: NonLinearSize = 1.0 * NLSize
 
 ResidualVolatility
-^^^^^^^^^^^^^^^^^^
+------------------
 
 ..  math:: ResidualVolatility = 0.74 * DASTD + 0.16 * CMRA + 0.10 * HSigma
 
 Size
-^^^^
+----
 
 ..  math:: Size = 1.0 * LnCap
