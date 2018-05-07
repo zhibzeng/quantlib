@@ -1,7 +1,7 @@
 import pandas as pd
-from pandas.tseries.offsets import CustomBusinessDay
+from pandas.tseries.offsets import CustomBusinessDay, BDay
 from ...common.localize import LOCALIZER
-from ...data import wind
+
 
 __all__ = ["TradingCalendar"]
 
@@ -14,6 +14,7 @@ class TradingCalendar:
     @staticmethod
     @LOCALIZER.wrap("holiday.h5", const_key="holiday")
     def get_holidays():
+        from ...data import wind
         calendar = wind.get_wind_table("AShareCalendar", ["trade_days"])
         trading_days = list(pd.to_datetime(calendar.trade_days).drop_duplicates().sort_values())
         all_days = pd.date_range(start=trading_days[0], end=trading_days[-1])
@@ -34,7 +35,10 @@ class TradingCalendar:
     @property
     def TradingDay(self):
         """根据获取的节假日信息生成pd.tseries.offsets.CustomBusinessDay对象"""
-        return CustomBusinessDay(holidays=self.holidays)
+        try:
+            return CustomBusinessDay(holidays=self.holidays)
+        except:
+            return BDay
 
 trading_calendar = TradingCalendar()
 TDay = trading_calendar.TradingDay
