@@ -1,5 +1,7 @@
 """股票类回测策略"""
 from abc import abstractmethod
+import os
+import json
 from datetime import date
 from scipy.optimize import linprog
 import numpy as np
@@ -9,7 +11,7 @@ from .common.events import EventManager, EventType
 from .common.mods import ModManager
 from .common.fund import Fund
 from .common.market import AShareMarket
-from ..common.settings import CONFIG
+from ..common.settings import CONFIG, MAIN_PATH
 from ..common.logging import Logger
 from ..data import wind
 from ..barra import Factor
@@ -134,13 +136,16 @@ class ConstraintStrategy(SimpleStrategy):
     中性策略，在SimpleStrategy的基础上控制行业和因子暴露
     # TODO: cost in objective
     """
-    def __init__(self, neutral_config, *args, **kwargs):
+    def __init__(self, *args, constraint_config=None, **kwargs):
         """
         """
-        self.neutral_config = neutral_config
+        if constraint_config is None:
+            config_path = os.path.join(MAIN_PATH, "constraint.json")
+            constraint_config = json.load(open(config_path))
+        self.constraint_config = constraint_config
         self.factor_data = {
             factor_name: getattr(Factor, factor_name).get_exposures(True)
-            for factor_name in neutral_config['factors'].keys()
+            for factor_name in constraint_config['factors'].keys()
         }
         self.industry_data = {
             industry_name: industry_factor.get_exposures()
@@ -203,7 +208,7 @@ class ConstraintStrategy(SimpleStrategy):
         A_ub = []
         b_ub = []
 
-        for factor_name, epsilon in self.neutral_config['factors'].items():
+        for factor_name, epsilon in self.constraint_config['factors'].items():
             factor_data = self.factor_data[factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
@@ -215,7 +220,7 @@ class ConstraintStrategy(SimpleStrategy):
             A_ub.append(-stocks_exposure)
             b_ub.append(epsilon - index_exposure)
 
-        for industry_name, epsilon in self.neutral_config['industries'].items():
+        for industry_name, epsilon in self.constraint_config['industries'].items():
             industry_data = self.industry_data[industry_name].loc[today].fillna(0)
             index_exposure = (index_weight * industry_data).sum()
             stocks_exposure = industry_data.loc[stocks].values
@@ -229,7 +234,7 @@ class ConstraintStrategy(SimpleStrategy):
         kwargs["A_ub"] = np.stack(A_ub)
         kwargs["b_ub"] = np.stack(b_ub)
 
-        kwargs["bounds"] = [(0, self.neutral_config['stocks'])] * len(stocks)
+        kwargs["bounds"] = [(0, self.constraint_config['stocks'])] * len(stocks)
 
         result = linprog(**kwargs)
 
@@ -252,13 +257,13 @@ class ConstraintStrategy(SimpleStrategy):
         stocks = list(predicted.index)
 
         with Model("portfolio") as M:
-            x = M.variable("x", len(stocks), Domain.inRange(0, self.neutral_config['stocks']))
+            x = M.variable("x", len(stocks), Domain.inRange(0, self.constraint_config['stocks']))
 
             # 权重总和等于一
             M.constraint("sum", Expr.sum(x), Domain.equalsTo(1.0))
 
             # 控制风格暴露
-            for factor_name, limit in self.neutral_config['factors'].items():
+            for factor_name, limit in self.constraint_config['factors'].items():
                 factor_data = self.factor_data[factor_name].loc[today]
                 factor_data = factor_data.fillna(factor_data.mean())
                 index_exposure = (index_weight * factor_data).sum()
@@ -266,7 +271,7 @@ class ConstraintStrategy(SimpleStrategy):
                 M.constraint(factor_name, Expr.dot(stocks_exposure.tolist(), x), Domain.inRange(index_exposure-limit, index_exposure+limit))
 
             # 控制行业暴露
-            for industry_name, limit in self.neutral_config['industries'].items():
+            for industry_name, limit in self.constraint_config['industries'].items():
                 industry_data = self.industry_data[industry_name].loc[today].fillna(0)
                 index_exposure = (index_weight * industry_data).sum()
                 stocks_exposure = industry_data.loc[stocks].values
@@ -301,15 +306,15 @@ class ConstraintStrategy(SimpleStrategy):
         index_weight = index_weight / index_weight.sum()
         stocks = list(predicted.index)
         model = opt.Model(name="portfolio")
-        x = [opt.Variable(stock, lb=0, ub=self.neutral_config['stocks']) for stock in stocks]
+        x = [opt.Variable(stock, lb=0, ub=self.constraint_config['stocks']) for stock in stocks]
         constraints = [opt.Constraint(sum(x), lb=1.0, ub=1.0)]
-        for factor_name, limit in self.neutral_config['factors'].items():
+        for factor_name, limit in self.constraint_config['factors'].items():
             factor_data = self.factor_data[factor_name].loc[today]
             factor_data.fillna(np.nanmean(factor_data.values), inplace=True)
             index_exposure = (index_weight * factor_data).sum()
             stocks_exposure = factor_data.loc[stocks].values
             constraints.append(opt.Constraint(dot(x, stocks_exposure), lb=index_exposure-limit, ub=index_exposure+limit))
-        for industry_name, limit in self.neutral_config['industries'].items():
+        for industry_name, limit in self.constraint_config['industries'].items():
             industry_data = self.industry_data[industry_name].loc[today].fillna(0)
             index_exposure = (index_weight * industry_data).sum()
             stocks_exposure = industry_data.loc[stocks].values

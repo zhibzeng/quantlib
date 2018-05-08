@@ -64,11 +64,14 @@ class AbigaleMod(AbstractMod):
         years = sorted(net_values.index.year.unique())
         data = []
         for year in years:
-            idx = net_values.index[net_values.index.year == year]
-            nv = net_values.loc[idx]
-            idx = weights.index[weights.index.year == year]
-            w = weights.loc[idx]
-            data.append(self._basic_info_item(str(year), nv, w))
+            try:
+                idx = net_values.index[net_values.index.year == year]
+                nv = net_values.loc[idx]
+                idx = weights.index[weights.index.year == year]
+                w = weights.loc[idx]
+                data.append(self._basic_info_item(str(year), nv, w))
+            except IndexError:
+                continue
         data.append(self._basic_info_item("Total", net_values, weights))
         return data
 

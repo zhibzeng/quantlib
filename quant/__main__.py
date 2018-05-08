@@ -100,23 +100,34 @@ class QuantMain:
             wind._update_wind_table(table)
 
     @staticmethod
-    def backtest(strategy_filename, key, freq=1):
+    def backtest(strategy_filename, key, freq=1, debug=False):
         key = str(key)
         predicted = pd.read_hdf(strategy_filename, key)
         predicted.index = pd.to_datetime(predicted.index)
-        from .utils.calendar import TDay
-        dates = pd.date_range(start=predicted.index[0], end=predicted.index[-1], freq=freq*TDay)
-        predicted = predicted.loc[dates]
-        # import ipdb; ipdb.set_trace()
-        final_day = pd.DataFrame(np.zeros([1, predicted.shape[1]]), columns=predicted.columns, index=[predicted.index[-1] + freq*TDay])
-        predicted = pd.concat([predicted, final_day])
+        if freq > 0:
+            from .utils.calendar import TDay
+            dates = pd.date_range(start=predicted.index[0], end=predicted.index[-1], freq=freq*TDay)
+            predicted = predicted.loc[dates]        
+            final_day = pd.DataFrame(np.zeros([1, predicted.shape[1]]), columns=predicted.columns, index=[predicted.index[-1] + freq*TDay])
+            predicted = pd.concat([predicted, final_day])
 
         config_path = os.path.join(MAIN_PATH, "constraint.json")
         config = json.load(open(config_path))
         from .backtest import ConstraintStrategy
+        if debug:
+            import ipdb; ipdb.set_trace()
         strategy = ConstraintStrategy(config, predicted, name=key.replace("/", "_"))
         strategy.run()
 
+    @staticmethod
+    def alpha(filename, key):
+        key = str(key)
+        data = pd.read_hdf(filename, key)
+        from .barra.alpha import AlphaReport
+        report = AlphaReport(data, name=key)
+        output_name = ".".join(filename.split(".")[:-1]) + key.replace("/", "_") + ".html"
+        report.generate_report().render(output_name)
+        
 
 if __name__ == "__main__":
     fire.Fire(QuantMain)

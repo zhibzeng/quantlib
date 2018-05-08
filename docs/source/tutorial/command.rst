@@ -87,4 +87,12 @@ quantlib的WindDB会把从wind数据库取得的原始数据缓存在wind_table.
 
 quantlib会调用ConstraintStrategy来对指定的数据进行回测。
 
+因子分析
+########
 
+..  code-block::
+    bash
+
+    python -m quant alpha 文件名.h5 键名
+
+对指定因子数据生成简单的分析报告，包括因子分布、排序收益、收益衰减等。
