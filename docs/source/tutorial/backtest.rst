@@ -1,5 +1,5 @@
-quant.backtest
-**************
+策略回测
+********
 
 ..  currentmodule:: quant.backtest
 
@@ -19,7 +19,7 @@ quant.backtest
             self.change_position({universe[0]: 0.1})
 
 这个简单的策略定义了从2017年3月开始回测，每天选择可选股票池中的第一只股票买入10%的仓位。
-运行``SimpleStrategy().run()``运行回测，几秒钟后，会输出简单的年化收益率、年化波动率和夏普率信息。
+运行 ``SimpleStrategy().run()`` 运行回测，几秒钟后，会输出简单的年化收益率、年化波动率和夏普率信息。
 同时，还会生成一个以策略名和运行时间命名的网页，记录着回测的详细信息。如果是在视窗环境下的话，浏览器会自动打开该网页。如图所示。
 
 ..  image:: ../_static/backtest_web.jpg
@@ -27,8 +27,9 @@ quant.backtest
 回测方法
 ########
 
-quantlib提供`quant.backtest.strategy.Strategy`类作为所有策略的基类。用户可以继承该类并通过重载`__init__`方法和`handle`方法来自定义策略的行为。
-另外，quantlib也提供SimpleStrategy和ConstraintStrategy来提供通用而方便的回测功能
+quantlib提供 ``quant.backtest.strategy.Strategy`` 类作为所有策略的基类。用户可以继承该类并通过重载 ``__init__`` 方法
+和 ``handle`` 方法来自定义策略的行为。另外，quantlib也提供 ``SimpleStrategy`` 和 ``ConstraintStrategy`` 来提供通用
+而方便的回测功能。
 
 SimpleStrategy
 ==============
@@ -37,12 +38,12 @@ SimpleStrategy
 
     SimpleStrategy(predicted, name=None, buy_count=50, mods=None)
 
-通过传入一个`DataFrame`对象，`SimpleStrategy`每期做多分数最高的`buy_count`只股票
+通过传入一个 ``DataFrame`` 对象， ``SimpleStrategy`` 每期做多分数最高的 ``buy_count`` 只股票。
 
 ConstraintStrategy
 ==================
 
-`ConstraintStrategy`根据传入的DataFrame的值、及一系列约束条件，来优化出在给定风险暴露的前提下
+ ``ConstraintStrategy`` 根据传入的DataFrame的值、及一系列约束条件，来优化出在给定风险暴露的前提下
 期望收益率最大的组合，并买入该组合。
 
 ..  code:: python
@@ -100,7 +101,7 @@ ConstraintStrategy
         "stocks": 0.02
     }
     data = pd.DataFrame(...)
-    strategy = ConstraintStrategy(config, data, name="technical_ZZ500")
+    strategy = ConstraintStrategy(config, data, name="constraint_strategy")
     strategy.run()
 
 以上代码在约束单只股票最大持仓2%、行业暴露5%、风格暴露0.5的前提下优化目标收益率最大的持仓比例并进行回测。
