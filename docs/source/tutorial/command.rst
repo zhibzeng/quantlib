@@ -45,6 +45,22 @@ quantlib的WindDB会把从wind数据库取得的原始数据缓存在wind_table.
 
     python -m quant table ls
 
+增量更新所有的表
+================
+
+..  code-block::
+    bash
+
+    python -m quant table update
+
+增量更新指定的表
+================
+
+..  code-block::
+    bash
+
+    python -m quant table update "表名"
+
 删除某个数据表
 ==============
 
@@ -60,5 +76,15 @@ quantlib的WindDB会把从wind数据库取得的原始数据缓存在wind_table.
     bash
     
     python -m quant table rm "表名/字段名"
+
+策略回测
+########
+
+..  code-block::
+    bash
+
+    python -m quant backtest 文件名.h5 键名 --freq 换仓周期
+
+quantlib会调用ConstraintStrategy来对指定的数据进行回测。
 
 

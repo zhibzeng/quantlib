@@ -7,7 +7,7 @@ from ...common.settings import CONFIG
 from ...data import wind
 
 
-@ModManager.register(enable=True)
+@ModManager.register(enabled=True)
 class ShowBasicResults(AbstractMod):
     """简单显示年化平均收益、年化波动和夏普率"""
     def on_backtest_finish(self, fund):

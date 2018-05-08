@@ -53,7 +53,7 @@ class ModManager:
                 elif not issubclass(mod, AbstractMod):
                     raise TypeError("Mod must be inherited from `quant.backtest.common.mods.AbstractMod`, not `{}`".format(mod.__base__))
                 else:
-                    cls.__mods[mod] = enable
+                    cls.__mods[mod] = enabled
                 return mod
             return wrapper
 

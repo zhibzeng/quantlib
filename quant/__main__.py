@@ -1,11 +1,13 @@
 import os
 import importlib.util
 import glob
+import json
 from collections import defaultdict
 import fire
+import numpy as np
 import pandas as pd
 from .data import wind
-from .common.settings import CONFIG, DATA_PATH
+from .common.settings import CONFIG, DATA_PATH, MAIN_PATH
 from .common.logging import Logger
 
 
@@ -98,24 +100,21 @@ class QuantMain:
             wind._update_wind_table(table)
 
     @staticmethod
-    def backtest(strategy_filename, key=None):
-        if strategy_filename.endswith(".h5"):
-            QuantMain._backtest_simple(strategy_filename, key)
-        else:
-            if not strategy_filename.endswith(".py"):
-                strategy_filename += ".py"
-            QuantMain._backtest_strategy(strategy_filename)
+    def backtest(strategy_filename, key, freq=1):
+        key = str(key)
+        predicted = pd.read_hdf(strategy_filename, key)
+        predicted.index = pd.to_datetime(predicted.index)
+        from .utils.calendar import TDay
+        dates = pd.date_range(start=predicted.index[0], end=predicted.index[-1], freq=freq*TDay)
+        predicted = predicted.loc[dates]
+        # import ipdb; ipdb.set_trace()
+        final_day = pd.DataFrame(np.zeros([1, predicted.shape[1]]), columns=predicted.columns, index=[predicted.index[-1] + freq*TDay])
+        predicted = pd.concat([predicted, final_day])
 
-    @staticmethod
-    def _backtest_strategy(py_file):
-        strategy_class = load_class_from_file(py_file)[1]
-        strategy_class.run()
-
-    @staticmethod
-    def _backtest_simple(h5_file, key):
-        from .backtest import SimpleStrategy
-        predicted = pd.read_hdf(h5_file, key)
-        strategy = SimpleStrategy(predicted)
+        config_path = os.path.join(MAIN_PATH, "constraint.json")
+        config = json.load(open(config_path))
+        from .backtest import ConstraintStrategy
+        strategy = ConstraintStrategy(config, predicted, name=key.replace("/", "_"))
         strategy.run()
 
 
