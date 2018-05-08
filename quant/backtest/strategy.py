@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from .common.events import EventManager, EventType
-from .common.mods import MODS
+from .common.mods import ModManager
 from .common.fund import Fund
 from .common.market import AShareMarket
 from ..common.settings import CONFIG
@@ -37,17 +37,8 @@ class AbstractStrategy:
 
     def _load_mods(self):
         """加载外部模块"""
-        available_mods = self.mods if self.mods is not None else list(MODS.values())
-        self.mods = []
-        for mod_cls in available_mods:
-            if isinstance(mod_cls, str):
-                try:
-                    mod_cls = MODS[mod_cls]
-                except KeyError:
-                    raise KeyError("Mod `%s` not found!" % mod_cls)
-            mod = mod_cls()
-            mod.__plug_in__(self)
-            self.mods.append(mod)
+        self.mods = self.mods or ModManager()
+        self.mods.plug_in(self)
 
     def _initialize_market_data(self):
         """初始化行情（收益率）数据"""
@@ -63,9 +54,9 @@ class AbstractStrategy:
 
     def run(self):
         """运行回测过程"""
+        self._load_mods()
         self._initialize_market_data()
         self._initialize_fund()
-        self._load_mods()
         self.event_manager.trigger(EventType.BACKTEST_START)
         for day in tqdm(self.market.trading_days):
             self.today = day
@@ -115,7 +106,7 @@ class SimpleStrategy(AbstractStrategy):
             策略名称，用于显示
         buy_count: int
             每期做多股票数量
-        mods: list
+        mods: ModManager
             使用的模块列表，None则为全部已注册模块
         """
         self.predicted = predicted

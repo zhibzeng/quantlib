@@ -161,15 +161,20 @@ class WindDB:
         columns = self._get_dataset_columns(table_name) + ["object_id"]
         parse_dates = {col: "%Y%m%d" for col in columns if col.endswith("_dt") or col.endswith("date")}
         opdate = sa.Column("opdate")
-        sql_statement = sql.select([sa.Column(col) for col in columns]).select_from(table)
-        sql_statement = sql_statement.where(opdate > last_update)
+        sql_statement = (
+            sql
+            .select([sa.Column(col) for col in columns])
+            .select_from(table)
+            .where(opdate > last_update)
+        )
         engine = self.get_wind_connection().engine
         df = pd.read_sql_query(sql_statement, engine, index_col="object_id", parse_dates=parse_dates)
         if len(df) != 0:
             filename = os.path.join(DATA_PATH, "wind.h5")
             for col in df.columns:
                 df[col].to_hdf(filename, key="/".join([table_name, col]), format="table", append=True, complevel=9)
-        self._set_last_update(table_name, datetime.now())
+        # self._set_last_update(table_name, datetime.now())
+        self._set_last_update(table_name, df["opdate"].max())
         sys.stdout.write("\rUpdate table [{table}]..........[Done]\n\r{nrows} rows updated.\n".format(table=table_name, nrows=len(df)))
         sys.stdout.flush()
 
@@ -359,7 +364,7 @@ class WindDB:
         data = defaultdict(list)
         for _, row in table.iterrows():
             key = row[column]
-            start = row.entry_dt
+            start = start_date if pd.isnull(row.entry_dt) else row.entry_dt
             end = end_date if pd.isnull(row.remove_dt) else row.remove_dt
             idx = pd.date_range(start, end, freq=TDay)
             value = [True if not field else row[field]] * len(idx)

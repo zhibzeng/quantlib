@@ -1,12 +1,12 @@
 """
 把回测的结构输出到HDF5文件中
 """
-from ..common import AbstractMod, EventType
+from ..common import AbstractMod, EventType, ModManager
 from ...common.settings import CONFIG
 from ...common.logging import Logger
 
 
-@AbstractMod.register
+@ModManager.register(enabled=False)
 class Output(AbstractMod):
     """在回测结束后将每期的持仓、净值等信息输出为hdf5文件"""
     def __init__(self):

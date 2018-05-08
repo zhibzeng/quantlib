@@ -1,13 +1,13 @@
 """Output simple backtest results on screen"""
 
-from ..common.mods import AbstractMod
+from ..common.mods import AbstractMod, ModManager
 from ..common.events import EventType
 from ...common.logging import Logger
 from ...common.settings import CONFIG
 from ...data import wind
 
 
-@AbstractMod.register
+@ModManager.register(enable=True)
 class ShowBasicResults(AbstractMod):
     """简单显示年化平均收益、年化波动和夏普率"""
     def on_backtest_finish(self, fund):

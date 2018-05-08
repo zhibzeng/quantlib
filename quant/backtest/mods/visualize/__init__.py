@@ -10,7 +10,7 @@ import jinja2
 import matplotlib.pyplot as plt
 from IPython.display import display, IFrame
 from ...common.events import EventType
-from ...common.mods import AbstractMod
+from ...common.mods import ModManager, AbstractMod
 from ....analysis import get_factor_exposure
 from ....data import wind
 from ....analysis.barra import Factor
@@ -31,7 +31,7 @@ def in_ipynb():
         return False
 
 
-# @AbstractMod.register
+@ModManager.register(enabled=False)
 class WebVisualizer(AbstractMod):
     """回测结束后在网页中显示回测的详细信息"""
 

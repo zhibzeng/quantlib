@@ -2,21 +2,21 @@
 from datetime import timedelta
 import numpy as np
 import pandas as pd
-from ..common.mods import AbstractMod
+from ..common.mods import AbstractMod, ModManager
 from ..common.events import EventType
 from ...data import wind
 from ...common.logging import Logger
 from ...utils.calendar import TDay
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class NoSTUniverse(AbstractMod):
     """NoSTUniverse模块
     会自动将universe中ST的股票去除。
     将持有的已经进入ST的股票主动卖出。
     """
     def __init__(self):
-        self.st = wind.arange_entry_table("AShareST").fillna(False)
+        self.st = wind.arrange_entry_table("AShareST").fillna(False)
         self.st_stocks = set()
         super(NoSTUniverse, self).__init__()
 
@@ -51,7 +51,7 @@ class NoSTUniverse(AbstractMod):
                 fund.exceptional_sell(to_sell)
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class NoIPOUniverse(AbstractMod):
     """
     把新上市60天内的股票去除
@@ -67,7 +67,7 @@ class NoIPOUniverse(AbstractMod):
         universe.difference_update(invalid_stock)
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class NoSmallUniverse(AbstractMod):
     """
     去除市值50亿以下的股票
@@ -82,23 +82,24 @@ class NoSmallUniverse(AbstractMod):
         universe.intersection_update(stocks)
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class NoUpLimitUniverse(AbstractMod):
     """从可交易股票池中去除涨停股票"""
     def __init__(self):
+        self.market = None
         self.open_prices = None
         self.preclose_prices = None
         super(NoUpLimitUniverse, self).__init__()
 
-    def __plug_in__(self, caller):
-        super(NoUpLimitUniverse, self).__plug_in__(caller)
-        self.open_prices = caller.market.open_prices
-        self.preclose_prices = caller.market.preclose_prices
+    def on_init_after_load_data(self, market):
+        self.market = market
+        self.open_prices = market.open_prices
+        self.preclose_prices = market.preclose_prices
 
     def on_get_universe(self, universe: set):
         today = self.strategy.today
         next_trading_day = today + TDay
-        if next_trading_day not in self.strategy.market.market_data.index:
+        if next_trading_day not in self.market.market_data.index:
             return
         next_open = self.open_prices.loc[next_trading_day]
         this_close = self.preclose_prices.loc[next_trading_day]
@@ -107,7 +108,7 @@ class NoUpLimitUniverse(AbstractMod):
         universe.intersection_update(no_up_limit)
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class ActivelyTraded(AbstractMod):
     """ActivelyTraded模块
     会自动将universe中交易额小于阈值的股票去除。

@@ -6,11 +6,11 @@ from ...barra.factors import get_factor_yields
 from ...common.settings import CONFIG
 from ...common.logging import Logger
 from ...data import wind
-from ..common.mods import AbstractMod
+from ..common.mods import AbstractMod, ModManager
 from ...barra import Factor
 
 
-@AbstractMod.register
+@ModManager.register(True)
 class AbigaleMod(AbstractMod):
     """
     根据回测结果生成用于Abigale2的分析数据
